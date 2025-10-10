@@ -1,9 +1,180 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+# ========================================
+# 管理者太郎（admin1@example.com）
+# 管理者、A級、東京かるた会
+# ========================================
+admin1_user = User.find_or_create_by!(email: 'admin1@example.com') do |user|
+  user.password = 'password'
+  user.role = :admin
+  user.receives_announcements = true
+end
+
+admin1_member = Member.find_or_create_by!(user: admin1_user) do |member|
+  member.name = '管理者太郎'
+  member.organization_name = '東京かるた会'
+  member.rank = :a
+end
+
+# ========================================
+# 管理者花子（admin2@example.com）
+# 管理者、B級、横浜かるた会
+# ========================================
+admin2_user = User.find_or_create_by!(email: 'admin2@example.com') do |user|
+  user.password = 'password'
+  user.role = :admin
+  user.receives_announcements = true
+end
+
+admin2_member = Member.find_or_create_by!(user: admin2_user) do |member|
+  member.name = '管理者花子'
+  member.organization_name = '横浜かるた会'
+  member.rank = :b
+end
+
+# ========================================
+# 山田次郎（member1@example.com）
+# メンバー、C級、川崎かるた会
+# ========================================
+member1_user = User.find_or_create_by!(email: 'member1@example.com') do |user|
+  user.password = 'password'
+  user.role = :member
+  user.receives_announcements = true
+end
+
+player1 = Member.find_or_create_by!(user: member1_user) do |member|
+  member.name = '山田次郎'
+  member.organization_name = '川崎かるた会'
+  member.rank = :c
+end
+
+# ========================================
+# 佐藤三郎（member2@example.com）
+# メンバー、D級、千葉かるた会、お知らせ受信OFF
+# ========================================
+member2_user = User.find_or_create_by!(email: 'member2@example.com') do |user|
+  user.password = 'password'
+  user.role = :member
+  user.receives_announcements = false
+end
+
+player2 = Member.find_or_create_by!(user: member2_user) do |member|
+  member.name = '佐藤三郎'
+  member.organization_name = '千葉かるた会'
+  member.rank = :d
+end
+
+# ========================================
+# 施設マスタ
+# ========================================
+venue1 = Venue.find_or_create_by!(name: '渋谷区民会館 3階和室') do |venue|
+  venue.address = '東京都渋谷区宇田川町1-1'
+  venue.url = 'https://example.com/shibuya'
+  venue.access_info = 'JR渋谷駅より徒歩5分'
+  venue.notes = ''
+end
+
+venue2 = Venue.find_or_create_by!(name: '品川区スポーツセンター 体育室A') do |venue|
+  venue.address = '東京都品川区豊町2-1-17'
+  venue.url = 'https://example.com/shinagawa'
+  venue.access_info = '東急大井町線戸越公園駅より徒歩3分'
+  venue.notes = ''
+end
+
+venue3 = Venue.find_or_create_by!(name: '新宿文化センター 303号室') do |venue|
+  venue.address = '東京都新宿区新宿6-14-1'
+  venue.url = 'https://example.com/shinjuku'
+  venue.access_info = '東京メトロ副都心線東新宿駅直結'
+  venue.notes = ''
+end
+
+# ========================================
+# お知らせテンプレート
+# ========================================
+AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフォルト）') do |template|
+  template.subject = '【練習会のお知らせ】{{date}} {{venue}}'
+  template.body = <<~BODY
+    お疲れ様です。
+
+    下記の日程で練習会を開催します。
+    参加される方は、アプリより参加登録をお願いします。
+
+    ■ 日時
+    {{date}} {{start_time}}〜{{end_time}}
+
+    ■ 場所
+    {{venue}}
+    {{address}}
+
+    ■ アクセス
+    {{access_info}}
+
+    ■ 備考
+    {{notes}}
+
+    よろしくお願いします。
+  BODY
+  template.is_default = true
+end
+
+# ========================================
+# イベント1：2週間後の渋谷区民会館
+# ========================================
+event1 = Event.find_or_create_by!(
+  venue: venue1,
+  date: 2.weeks.from_now.to_date
+) do |event|
+  event.start_time = '13:00'
+  event.end_time = '17:00'
+  event.notes = '初心者の方も歓迎します'
+end
+
+# イベント1の参加状況
+# 管理者太郎：参加、13:00から、アフターあり
+Attendance.find_or_create_by!(event: event1, player: admin1_member) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '13:00'
+  attendance.after_party = true
+  attendance.message = ''
+end
+
+# 管理者花子：参加、13:00から、アフターあり
+Attendance.find_or_create_by!(event: event1, player: admin2_member) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '13:00'
+  attendance.after_party = true
+  attendance.message = ''
+end
+
+# 山田次郎：参加、13:30から16:00まで、アフターなし、2本目から
+Attendance.find_or_create_by!(event: event1, player: player1) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '13:30'
+  attendance.departure_time = '16:00'
+  attendance.after_party = false
+  attendance.message = '2本目から参加予定です'
+end
+
+# 佐藤三郎：未定、仕事の都合
+Attendance.find_or_create_by!(event: event1, player: player2) do |attendance|
+  attendance.status = :undecided
+  attendance.message = '仕事の都合で未定です'
+end
+
+# ========================================
+# イベント2：1ヶ月後の品川区スポーツセンター
+# ========================================
+event2 = Event.find_or_create_by!(
+  venue: venue2,
+  date: 1.month.from_now.to_date
+) do |event|
+  event.start_time = '10:00'
+  event.end_time = '16:00'
+  event.notes = '昼食は各自ご持参ください'
+end
+
+puts "Seed data created successfully!"
+puts "Users: admin1@example.com, admin2@example.com, member1@example.com, member2@example.com"
+puts "Password: password"
