@@ -1,0 +1,58 @@
+ja:
+  helpers:
+    submit:
+      create: "登録"
+      update: "更新"
+      submit: "保存"
+    select:
+      prompt: "選択してください"
+
+  sessions:
+    new:
+      title: "ログイン"
+      email_address: "メールアドレス"
+      password: "パスワード"
+      sign_in: "ログイン"
+      forgot_password: "パスワードを忘れた場合"
+    create:
+      success: "ログインしました"
+      failure: "メールアドレスまたはパスワードが正しくありません"
+    destroy:
+      success: "ログアウトしました"
+
+  passwords:
+    new:
+      title: "パスワードリセット"
+      email_address: "メールアドレス"
+      send_reset_email: "リセットメールを送信"
+    edit:
+      title: "新しいパスワードを設定"
+      password: "新しいパスワード"
+      password_confirmation: "パスワード（確認）"
+      reset_password: "パスワードを変更"
+
+  events:
+    index:
+      title: "練習会一覧"
+      new_event: "新しい練習会を作成"
+    show:
+      title: "練習会詳細"
+      edit: "編集"
+      delete: "削除"
+      confirm_delete: "本当に削除しますか？"
+    new:
+      title: "新しい練習会を作成"
+    edit:
+      title: "練習会を編集"
+    form:
+      venue: "会場"
+      date: "日付"
+      start_time: "開始時刻"
+      end_time: "終了時刻"
+      notes: "備考"
+    create:
+      success: "練習会を作成しました"
+    update:
+      success: "練習会を更新しました"
+    destroy:
+      success: "練習会を削除しました"
