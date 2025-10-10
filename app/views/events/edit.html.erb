@@ -1,4 +1,15 @@
-<div>
-  <h1 class="font-bold text-4xl">Events#edit</h1>
-  <p>Find me in app/views/events/edit.html.erb</p>
+<div class="w-full max-w-2xl">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= t('events.edit.title') %></h1>
+  </div>
+
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <%= render "form", event: @event %>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "← 練習会詳細に戻る", event_path(@event), class: "text-blue-600 hover:text-blue-700" %>
+  </div>
 </div>

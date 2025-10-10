@@ -1,4 +1,17 @@
 ja:
+  date:
+    formats:
+      default: "%Y/%m/%d"
+      long: "%Y年%m月%d日（%a）"
+    abbr_day_names:
+      - 日
+      - 月
+      - 火
+      - 水
+      - 木
+      - 金
+      - 土
+
   helpers:
     submit:
       create: "登録"
@@ -19,6 +32,7 @@ ja:
       failure: "メールアドレスまたはパスワードが正しくありません"
     destroy:
       success: "ログアウトしました"
+    rate_limit: "しばらく時間をおいてから再度お試しください"
 
   passwords:
     new:
@@ -30,6 +44,8 @@ ja:
       password: "新しいパスワード"
       password_confirmation: "パスワード（確認）"
       reset_password: "パスワードを変更"
+    create:
+      success: "パスワードリセットのメールを送信しました"
 
   events:
     index:
