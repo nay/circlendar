@@ -15,9 +15,7 @@ Rails.application.routes.draw do
   root "events#index"
 
   resources :events do
-    member do
-      get :attendances
-    end
+    resources :attendances, only: [:index, :create, :update, :destroy]
   end
 
   resources :announcements do

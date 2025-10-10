@@ -120,7 +120,7 @@ AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフ
 end
 
 # ========================================
-# イベント1：2週間後の渋谷区民会館
+# イベント1：2週間後の渋谷区民会館（公開済み）
 # ========================================
 event1 = Event.find_or_create_by!(
   venue: venue1,
@@ -129,6 +129,7 @@ event1 = Event.find_or_create_by!(
   event.start_time = '13:00'
   event.end_time = '17:00'
   event.notes = '初心者の方も歓迎します'
+  event.status = :published
 end
 
 # イベント1の参加状況
@@ -164,7 +165,7 @@ Attendance.find_or_create_by!(event: event1, player: player2) do |attendance|
 end
 
 # ========================================
-# イベント2：1ヶ月後の品川区スポーツセンター
+# イベント2：1ヶ月後の品川区スポーツセンター（下書き）
 # ========================================
 event2 = Event.find_or_create_by!(
   venue: venue2,
@@ -173,6 +174,35 @@ event2 = Event.find_or_create_by!(
   event.start_time = '10:00'
   event.end_time = '16:00'
   event.notes = '昼食は各自ご持参ください'
+  event.status = :draft
+end
+
+# ========================================
+# イベント3：1週間前の新宿文化センター（公開済み・過去）
+# ========================================
+event3 = Event.find_or_create_by!(
+  venue: venue3,
+  date: 1.week.ago.to_date
+) do |event|
+  event.start_time = '14:00'
+  event.end_time = '17:00'
+  event.notes = '2本目 15:20〜
+
+可能な方は札を持ってきてください！'
+  event.status = :published
+end
+
+# イベント3の参加状況
+Attendance.find_or_create_by!(event: event3, player: admin1_member) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '14:00'
+  attendance.after_party = false
+end
+
+Attendance.find_or_create_by!(event: event3, player: player1) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '15:00'
+  attendance.after_party = false
 end
 
 puts "Seed data created successfully!"
