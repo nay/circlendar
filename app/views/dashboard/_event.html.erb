@@ -23,10 +23,30 @@
         <% end %>
       </div>
       <div class="flex items-center gap-2">
-        <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700" %>
-        <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700" %>
-        <%= button_to "保留", event_attendance_path(event), method: :patch, params: { attendance: { status: :undecided } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-yellow-600 text-white hover:bg-yellow-700" %>
-        <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
+        <% if attendance.present? %>
+          <!-- 回答済みの場合：ステータス表示 + 詳細ボタンのみ -->
+          <% case attendance.status %>
+          <% when "attending" %>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              参加
+            </span>
+          <% when "not_attending" %>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
+              欠席
+            </span>
+          <% when "undecided" %>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+              保留
+            </span>
+          <% end %>
+          <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
+        <% else %>
+          <!-- 未回答の場合：参加/欠席/保留/詳細ボタン -->
+          <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700" %>
+          <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700" %>
+          <%= button_to "保留", event_attendance_path(event), method: :patch, params: { attendance: { status: :undecided } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-yellow-600 text-white hover:bg-yellow-700" %>
+          <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
+        <% end %>
       </div>
     </div>
   </div>
