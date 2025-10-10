@@ -3,6 +3,13 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # ========================================
+# グローバル設定
+# ========================================
+Setting.find_or_create_by!(id: 1) do |setting|
+  setting.circle_name = 'サンプルかるた会'
+end
+
+# ========================================
 # 管理者太郎（admin1@example.com）
 # 管理者、A級、東京かるた会
 # ========================================
@@ -204,6 +211,36 @@ Attendance.find_or_create_by!(event: event3, player: player1) do |attendance|
   attendance.arrival_time = '15:00'
   attendance.after_party = false
 end
+
+# ========================================
+# イベント4：3週間後の新宿文化センター（公開済み・未回答）
+# ========================================
+event4 = Event.find_or_create_by!(
+  venue: venue3,
+  date: 3.weeks.from_now.to_date
+) do |event|
+  event.start_time = '13:00'
+  event.end_time = '17:30'
+  event.notes = '級位者向け練習会です'
+  event.status = :published
+end
+
+# イベント4の参加状況
+# 管理者花子：参加
+Attendance.find_or_create_by!(event: event4, player: admin2_member) do |attendance|
+  attendance.status = :attending
+  attendance.arrival_time = '13:00'
+  attendance.after_party = false
+end
+
+# 山田次郎：欠席
+Attendance.find_or_create_by!(event: event4, player: player1) do |attendance|
+  attendance.status = :not_attending
+  attendance.message = '用事があり参加できません'
+end
+
+# 管理者太郎：未回答（レコードなし）
+# 佐藤三郎：未回答（レコードなし）
 
 puts "Seed data created successfully!"
 puts "Users: admin1@example.com, admin2@example.com, member1@example.com, member2@example.com"

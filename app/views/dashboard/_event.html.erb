@@ -1,0 +1,33 @@
+<li>
+  <div class="px-4 py-4 sm:px-6">
+    <div class="flex items-center justify-between">
+      <div class="flex-1">
+        <p class="text-lg font-medium text-blue-600">
+          <%= l(event.date, format: :long) %>
+        </p>
+        <p class="mt-1 text-sm text-gray-600">
+          <%= event.venue.name %>
+        </p>
+        <p class="mt-1 text-sm text-gray-500">
+          <%= event.start_time.strftime('%H:%M') %> 〜 <%= event.end_time.strftime('%H:%M') %>
+        </p>
+        <% if attendance&.status == "attending" && attendance.arrival_time.present? %>
+          <p class="mt-1 text-sm text-green-600">
+            到着予定: <%= attendance.arrival_time.strftime('%H:%M') %>
+          </p>
+        <% end %>
+        <% if attendance&.message.present? %>
+          <p class="mt-1 text-sm text-gray-600">
+            <%= attendance.message %>
+          </p>
+        <% end %>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700" %>
+        <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700" %>
+        <%= button_to "保留", event_attendance_path(event), method: :patch, params: { attendance: { status: :undecided } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-yellow-600 text-white hover:bg-yellow-700" %>
+        <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
+      </div>
+    </div>
+  </div>
+</li>

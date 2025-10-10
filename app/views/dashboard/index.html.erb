@@ -4,35 +4,14 @@
     <p class="mt-2 text-gray-600">こんにちは、<%= current_member.name %>さん</p>
   </div>
 
-  <!-- 未連絡の練習会 -->
+  <!-- 未回答の練習会 -->
   <% if @undecided_events.any? %>
     <div class="mb-8">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">未連絡の練習会</h2>
+      <h2 class="text-xl font-bold text-gray-900 mb-4">未回答の練習会</h2>
       <div class="bg-white shadow overflow-hidden sm:rounded-md">
         <ul class="divide-y divide-gray-200">
           <% @undecided_events.each do |item| %>
-            <li>
-              <div class="px-4 py-4 sm:px-6">
-                <div class="flex items-center justify-between">
-                  <div class="flex-1">
-                    <p class="text-lg font-medium text-blue-600">
-                      <%= l(item[:event].date, format: :long) %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-600">
-                      <%= item[:event].venue.name %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-500">
-                      <%= item[:event].start_time.strftime('%H:%M') %> 〜 <%= item[:event].end_time.strftime('%H:%M') %>
-                    </p>
-                  </div>
-                  <div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                      <%= item[:attendance] ? "未定" : "未回答" %>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
+            <%= render 'event', event: item[:event], attendance: item[:attendance] %>
           <% end %>
         </ul>
       </div>
@@ -46,33 +25,7 @@
       <div class="bg-white shadow overflow-hidden sm:rounded-md">
         <ul class="divide-y divide-gray-200">
           <% @attending_events.each do |item| %>
-            <li>
-              <div class="px-4 py-4 sm:px-6">
-                <div class="flex items-center justify-between">
-                  <div class="flex-1">
-                    <p class="text-lg font-medium text-blue-600">
-                      <%= l(item[:event].date, format: :long) %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-600">
-                      <%= item[:event].venue.name %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-500">
-                      <%= item[:event].start_time.strftime('%H:%M') %> 〜 <%= item[:event].end_time.strftime('%H:%M') %>
-                    </p>
-                    <% if item[:attendance].arrival_time.present? %>
-                      <p class="mt-1 text-sm text-green-600">
-                        到着予定: <%= item[:attendance].arrival_time.strftime('%H:%M') %>
-                      </p>
-                    <% end %>
-                  </div>
-                  <div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                      参加
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
+            <%= render 'event', event: item[:event], attendance: item[:attendance] %>
           <% end %>
         </ul>
       </div>
@@ -86,28 +39,7 @@
       <div class="bg-white shadow overflow-hidden sm:rounded-md opacity-75">
         <ul class="divide-y divide-gray-200">
           <% @not_attending_events.each do |item| %>
-            <li>
-              <div class="px-4 py-4 sm:px-6">
-                <div class="flex items-center justify-between">
-                  <div class="flex-1">
-                    <p class="text-lg font-medium text-gray-600">
-                      <%= l(item[:event].date, format: :long) %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-500">
-                      <%= item[:event].venue.name %>
-                    </p>
-                    <p class="mt-1 text-sm text-gray-400">
-                      <%= item[:event].start_time.strftime('%H:%M') %> 〜 <%= item[:event].end_time.strftime('%H:%M') %>
-                    </p>
-                  </div>
-                  <div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
-                      不参加
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
+            <%= render 'event', event: item[:event], attendance: item[:attendance] %>
           <% end %>
         </ul>
       </div>

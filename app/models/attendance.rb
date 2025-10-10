@@ -10,4 +10,8 @@ class Attendance < ApplicationRecord
 
   validates :event, presence: true
   validates :player, presence: true
+  validates :player_id, uniqueness: {
+    scope: :event_id,
+    message: ->(object, data) { "はすでにこの#{Event.model_name.human}について回答しています" }
+  }
 end

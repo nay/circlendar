@@ -1,4 +1,14 @@
 ja:
+  activerecord:
+    models:
+      event: "練習会"
+    attributes:
+      attendance:
+        statuses:
+          attending: "参加"
+          not_attending: "欠席"
+          undecided: "保留"
+
   date:
     formats:
       default: "%Y/%m/%d"

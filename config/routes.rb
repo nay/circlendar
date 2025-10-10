@@ -17,10 +17,15 @@ Rails.application.routes.draw do
   # Dashboard for members
   get "dashboard", to: "dashboard#index"
 
+  # Member attendances
+  resources :events, only: [] do
+    resource :attendance, only: [:edit, :update]
+  end
+
   # Admin namespace
   namespace :admin do
     resources :events do
-      resources :attendances, only: [:index, :create, :update, :destroy]
+      resources :attendances, only: [:index, :create, :update]
     end
 
     resources :announcements do
