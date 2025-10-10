@@ -1,6 +1,6 @@
 <div class="w-full max-w-2xl">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900"><%= t('events.new.title') %></h1>
+    <h1 class="text-3xl font-bold text-gray-900"><%= t('events.edit.title') %></h1>
   </div>
 
   <div class="bg-white shadow sm:rounded-lg">
@@ -10,6 +10,6 @@
   </div>
 
   <div class="mt-6">
-    <%= link_to "← 練習会一覧に戻る", events_path, class: "text-blue-600 hover:text-blue-700" %>
+    <%= link_to "← 練習会詳細に戻る", admin_event_path(@event), class: "text-blue-600 hover:text-blue-700" %>
   </div>
 </div>

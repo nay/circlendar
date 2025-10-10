@@ -1,5 +1,5 @@
-class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy attendances ]
+class Admin::EventsController < ApplicationController
+  before_action :set_event, only: %i[ show edit update destroy ]
 
   def index
     @events = Event.includes(:venue).order(date: :desc)
@@ -17,7 +17,7 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
 
     if @event.save
-      redirect_to @event, notice: I18n.t('events.create.success')
+      redirect_to [:admin, @event], notice: I18n.t('events.create.success')
     else
       @venues = Venue.all
       render :new, status: :unprocessable_entity
@@ -30,7 +30,7 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to @event, notice: I18n.t('events.update.success')
+      redirect_to [:admin, @event], notice: I18n.t('events.update.success')
     else
       @venues = Venue.all
       render :edit, status: :unprocessable_entity
@@ -39,11 +39,7 @@ class EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to events_path, notice: I18n.t('events.destroy.success')
-  end
-
-  def attendances
-    @attendances = @event.attendances.includes(:player)
+    redirect_to admin_events_path, notice: I18n.t('events.destroy.success')
   end
 
   private
@@ -52,6 +48,6 @@ class EventsController < ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:venue_id, :date, :start_time, :end_time, :notes)
+      params.require(:event).permit(:venue_id, :date, :start_time, :end_time, :notes, :status)
     end
 end
