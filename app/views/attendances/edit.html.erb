@@ -11,10 +11,10 @@
       <!-- ステータス -->
       <div>
         <%= form.label :status, "出席状況", class: "block text-sm font-medium text-gray-700 mb-2" %>
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-3 gap-3" data-controller="radio-buttons">
           <% Attendance.statuses.keys.each do |status| %>
-            <label class="flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer <%= @attendance.status == status ? 'border-blue-500 bg-blue-50' : 'border-gray-300' %>">
-              <%= form.radio_button :status, status, class: "sr-only" %>
+            <label class="flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer <%= @attendance.status == status ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white' %>" data-radio-buttons-target="option">
+              <%= form.radio_button :status, status, class: "sr-only", data: { action: "change->radio-buttons#select" } %>
               <span class="text-sm font-medium text-gray-900">
                 <%= I18n.t("activerecord.attributes.attendance.statuses.#{status}") %>
               </span>
