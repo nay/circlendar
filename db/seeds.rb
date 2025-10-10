@@ -6,7 +6,7 @@
 # 管理者太郎（admin1@example.com）
 # 管理者、A級、東京かるた会
 # ========================================
-admin1_user = User.find_or_create_by!(email: 'admin1@example.com') do |user|
+admin1_user = User.find_or_create_by!(email_address: 'admin1@example.com') do |user|
   user.password = 'password'
   user.role = :admin
   user.receives_announcements = true
@@ -22,7 +22,7 @@ end
 # 管理者花子（admin2@example.com）
 # 管理者、B級、横浜かるた会
 # ========================================
-admin2_user = User.find_or_create_by!(email: 'admin2@example.com') do |user|
+admin2_user = User.find_or_create_by!(email_address: 'admin2@example.com') do |user|
   user.password = 'password'
   user.role = :admin
   user.receives_announcements = true
@@ -38,7 +38,7 @@ end
 # 山田次郎（member1@example.com）
 # メンバー、C級、川崎かるた会
 # ========================================
-member1_user = User.find_or_create_by!(email: 'member1@example.com') do |user|
+member1_user = User.find_or_create_by!(email_address: 'member1@example.com') do |user|
   user.password = 'password'
   user.role = :member
   user.receives_announcements = true
@@ -54,7 +54,7 @@ end
 # 佐藤三郎（member2@example.com）
 # メンバー、D級、千葉かるた会、お知らせ受信OFF
 # ========================================
-member2_user = User.find_or_create_by!(email: 'member2@example.com') do |user|
+member2_user = User.find_or_create_by!(email_address: 'member2@example.com') do |user|
   user.password = 'password'
   user.role = :member
   user.receives_announcements = false

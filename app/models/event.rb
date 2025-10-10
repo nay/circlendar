@@ -3,7 +3,7 @@ class Event < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :players, through: :attendances
   has_many :members, -> { where(type: 'Member') }, through: :attendances, source: :player
-  has_one :announcement, dependent: :destroy
+  has_many :announcements, dependent: :nullify
 
   validates :date, presence: true
   validates :start_time, presence: true
