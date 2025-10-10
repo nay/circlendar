@@ -6,6 +6,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def show
+    @attendances = @event.attendances.includes(:player).order('players.name')
   end
 
   def new

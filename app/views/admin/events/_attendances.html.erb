@@ -1,0 +1,95 @@
+<!-- 出席状況 -->
+<div class="mt-8">
+  <h2 class="text-2xl font-bold text-gray-900 mb-4">出席状況</h2>
+
+  <!-- 参加者一覧 -->
+  <% attending = attendances.attending %>
+  <div class="bg-white shadow sm:rounded-lg mb-6">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">参加者（<%= attending.count %>名）</h3>
+    </div>
+
+    <% if attending.any? %>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メンバー</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">到着時刻</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">退出時刻</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アフター</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">連絡内容</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% attending.each do |attendance| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <%= attendance.player.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= attendance.arrival_time&.strftime('%H:%M') || '-' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= attendance.departure_time&.strftime('%H:%M') || '-' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= attendance.after_party ? '○' : '-' %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= attendance.message.presence || '-' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="px-4 py-5 sm:p-6 text-center text-gray-500">
+        参加者はいません
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 欠席・保留者一覧 -->
+  <% not_attending_or_undecided = attendances.where(status: [:not_attending, :undecided]) %>
+  <% if not_attending_or_undecided.any? %>
+    <div class="bg-white shadow sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">欠席・保留</h3>
+      </div>
+
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メンバー</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">連絡内容</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% not_attending_or_undecided.each do |attendance| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <%= attendance.player.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% case attendance.status %>
+                <% when "not_attending" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                    欠席
+                  </span>
+                <% when "undecided" %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    保留
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= attendance.message.presence || '-' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

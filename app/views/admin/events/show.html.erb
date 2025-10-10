@@ -54,6 +54,8 @@
     </div>
   </div>
 
+  <%= render 'attendances', attendances: @attendances %>
+
   <div class="mt-8">
     <%= link_to "← 練習会一覧に戻る", admin_events_path, class: "text-blue-600 hover:text-blue-700" %>
   </div>
