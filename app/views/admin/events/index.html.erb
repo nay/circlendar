@@ -18,9 +18,16 @@
             <div class="px-4 py-4 sm:px-6">
               <div class="flex items-center justify-between">
                 <div class="flex-1">
-                  <p class="text-lg font-medium text-blue-600">
-                    <%= l(event.date, format: :long) %>
-                  </p>
+                  <div class="flex items-center gap-2">
+                    <p class="text-lg font-medium text-blue-600">
+                      <%= l(event.date, format: :long) %>
+                    </p>
+                    <% if event.published? %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">公開中</span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
+                    <% end %>
+                  </div>
                   <p class="mt-1 text-sm text-gray-600">
                     <%= event.venue.name %>
                   </p>
