@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+万葉の2025年のハッカソン作品です。
 
-Things you may want to cover:
+趣味のサークル（自分が使う想定としては競技かるた）の練習会のお知らせや出欠確認をする「circlender」というアプリケーションです。
 
-* Ruby version
+構想: https://github.com/everyleaf/hc2025_circlender/issues/4
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+できたところ：出欠登録くらいまで
