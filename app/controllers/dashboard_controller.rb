@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
     # 自分の出席情報を先に取得してインデックス化（現在日以降すべて）
     my_attendances = current_member.attendances
                                    .joins(:event)
-                                   .where('events.date >= ?', Date.current)
+                                   .where("events.date >= ?", Date.current)
                                    .index_by(&:event_id)
 
     # 公開済みかつ未開催の練習会（日付の早い順）

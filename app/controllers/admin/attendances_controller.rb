@@ -2,7 +2,7 @@ class Admin::AttendancesController < ApplicationController
   before_action :set_event
 
   def index
-    @attendances = @event.attendances.includes(:player).order('players.name')
+    @attendances = @event.attendances.includes(:player).order("players.name")
     @all_members = Member.order(:name)
   end
 
@@ -10,9 +10,9 @@ class Admin::AttendancesController < ApplicationController
     @attendance = @event.attendances.build(attendance_params)
 
     if @attendance.save
-      redirect_to admin_event_attendances_path(@event), notice: '出席情報を登録しました。'
+      redirect_to admin_event_attendances_path(@event), notice: "出席情報を登録しました。"
     else
-      @attendances = @event.attendances.includes(:player).order('players.name')
+      @attendances = @event.attendances.includes(:player).order("players.name")
       @all_members = Member.order(:name)
       render :index, status: :unprocessable_entity
     end
@@ -22,9 +22,9 @@ class Admin::AttendancesController < ApplicationController
     @attendance = @event.attendances.find(params[:id])
 
     if @attendance.update(attendance_params)
-      redirect_to admin_event_attendances_path(@event), notice: '出席情報を更新しました。'
+      redirect_to admin_event_attendances_path(@event), notice: "出席情報を更新しました。"
     else
-      @attendances = @event.attendances.includes(:player).order('players.name')
+      @attendances = @event.attendances.includes(:player).order("players.name")
       @all_members = Member.order(:name)
       render :index, status: :unprocessable_entity
     end

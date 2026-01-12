@@ -10,7 +10,7 @@ class AttendancesController < ApplicationController
     @attendance.assign_attributes(attendance_params)
 
     if @attendance.save
-      redirect_to dashboard_path, notice: '出席情報を更新しました。'
+      redirect_to dashboard_path, notice: "出席情報を更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
