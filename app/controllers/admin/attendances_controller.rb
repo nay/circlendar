@@ -1,4 +1,4 @@
-class Admin::AttendancesController < ApplicationController
+class Admin::AttendancesController < Admin::BaseController
   before_action :set_event
 
   def index

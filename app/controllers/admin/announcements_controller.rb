@@ -1,4 +1,4 @@
-class Admin::AnnouncementsController < ApplicationController
+class Admin::AnnouncementsController < Admin::BaseController
   before_action :set_announcement, only: %i[ show edit update destroy send_email ]
 
   def index
