@@ -82,3 +82,39 @@ ja:
       success: "練習会を更新しました"
     destroy:
       success: "練習会を削除しました"
+
+  announcements:
+    index:
+      title: "お知らせ一覧"
+      new_announcement: "新しいお知らせを作成"
+      no_announcements: "お知らせはありません"
+      sent: "送信済み"
+      draft: "下書き"
+    show:
+      title: "お知らせ詳細"
+      edit: "編集"
+      delete: "削除"
+      confirm_delete: "本当に削除しますか？"
+      send_email: "メール送信"
+      confirm_send: "メールを送信しますか？"
+      already_sent: "送信済み"
+    new:
+      title: "新しいお知らせを作成"
+    edit:
+      title: "お知らせを編集"
+    form:
+      event: "関連する練習会"
+      event_prompt: "（なし）"
+      subject: "件名"
+      body: "本文"
+      to_address: "To（送信元として表示）"
+      bcc_addresses: "BCC（受信者）"
+    create:
+      success: "お知らせを作成しました"
+    update:
+      success: "お知らせを更新しました"
+    destroy:
+      success: "お知らせを削除しました"
+    send_email:
+      success: "メールを送信しました"
+      already_sent: "このお知らせは既に送信済みです"
