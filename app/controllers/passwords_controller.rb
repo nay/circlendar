@@ -12,7 +12,7 @@ class PasswordsController < ApplicationController
       PasswordsMailer.reset(user).deliver_later
     end
 
-    redirect_to new_session_path, notice: I18n.t('passwords.create.success')
+    redirect_to new_session_path, notice: I18n.t("passwords.create.success")
   end
 
   def edit

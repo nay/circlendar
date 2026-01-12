@@ -19,13 +19,13 @@ Rails.application.routes.draw do
 
   # Member attendances
   resources :events, only: [] do
-    resource :attendance, only: [:edit, :update]
+    resource :attendance, only: [ :edit, :update ]
   end
 
   # Admin namespace
   namespace :admin do
     resources :events do
-      resources :attendances, only: [:index, :create, :update]
+      resources :attendances, only: [ :index, :create, :update ]
     end
 
     resources :announcements do

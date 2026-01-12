@@ -6,7 +6,7 @@ class Admin::EventsController < ApplicationController
   end
 
   def show
-    @attendances = @event.attendances.includes(:player).order('players.name')
+    @attendances = @event.attendances.includes(:player).order("players.name")
   end
 
   def new
@@ -18,7 +18,7 @@ class Admin::EventsController < ApplicationController
     @event = Event.new(event_params)
 
     if @event.save
-      redirect_to [:admin, @event], notice: I18n.t('events.create.success')
+      redirect_to [ :admin, @event ], notice: I18n.t("events.create.success")
     else
       @venues = Venue.all
       render :new, status: :unprocessable_entity
@@ -31,7 +31,7 @@ class Admin::EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
-      redirect_to [:admin, @event], notice: I18n.t('events.update.success')
+      redirect_to [ :admin, @event ], notice: I18n.t("events.update.success")
     else
       @venues = Venue.all
       render :edit, status: :unprocessable_entity
@@ -40,7 +40,7 @@ class Admin::EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to admin_events_path, notice: I18n.t('events.destroy.success')
+    redirect_to admin_events_path, notice: I18n.t("events.destroy.success")
   end
 
   private
