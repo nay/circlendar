@@ -1,4 +1,7 @@
 <div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
     <div class="flex gap-2">
@@ -73,9 +76,5 @@
         </div>
       </dl>
     </div>
-  </div>
-
-  <div class="mt-8">
-    <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700" %>
   </div>
 </div>

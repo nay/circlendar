@@ -1,4 +1,7 @@
 <div class="w-full max-w-2xl">
+  <div class="mb-4">
+    <%= link_to "← 練習会一覧に戻る", admin_events_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t('events.new.title') %></h1>
   </div>
@@ -7,9 +10,5 @@
     <div class="px-4 py-5 sm:p-6">
       <%= render "form", event: @event %>
     </div>
-  </div>
-
-  <div class="mt-6">
-    <%= link_to "← 練習会一覧に戻る", admin_events_path, class: "text-blue-600 hover:text-blue-700" %>
   </div>
 </div>
