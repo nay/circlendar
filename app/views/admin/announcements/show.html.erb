@@ -1,0 +1,80 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
+    <div class="flex gap-2">
+      <% unless @announcement.sent? %>
+        <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        <%= button_to t("announcements.show.send_email"), send_email_admin_announcement_path(@announcement), method: :post, data: { turbo_confirm: t("announcements.show.confirm_send") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+      <% end %>
+      <%= button_to t("announcements.show.delete"), admin_announcement_path(@announcement), method: :delete, data: { turbo_confirm: t("announcements.show.confirm_delete") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+    </div>
+  </div>
+
+  <% if notice = flash[:notice] %>
+    <div class="rounded-md bg-green-50 p-4 mb-6">
+      <p class="text-sm font-medium text-green-800"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <% if alert = flash[:alert] %>
+    <div class="rounded-md bg-yellow-50 p-4 mb-6">
+      <p class="text-sm font-medium text-yellow-800"><%= alert %></p>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <%= @announcement.subject %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        <% if @announcement.sent? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.already_sent") %></span>
+          <%= l(@announcement.sent_at, format: :long) %> に送信
+        <% else %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.index.draft") %></span>
+        <% end %>
+      </p>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <% if @announcement.event %>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.event") %></dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= link_to l(@announcement.event.date, format: :long), admin_event_path(@announcement.event), class: "text-blue-600 hover:text-blue-700" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.to_address") %></dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <%= @announcement.to_address %>
+          </dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.bcc_addresses") %></dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <% if @announcement.bcc_addresses.present? %>
+              <%= @announcement.bcc_addresses.join(", ") %>
+            <% else %>
+              <span class="text-gray-400">（なし）</span>
+            <% end %>
+          </dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:items-start">
+          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.body") %></dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">
+            <%= simple_format(@announcement.body, {}, sanitize: true) %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

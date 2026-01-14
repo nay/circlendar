@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Circlendar" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <% if Current.user %>
+      <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-5">
+          <div class="flex justify-between items-center h-16">
+            <div class="flex items-center space-x-8">
+              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %> - Circlendar</h1>
+              <div class="flex space-x-4">
+                <%= link_to "ダッシュボード", dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50" %>
+                <% if Current.user.admin? %>
+                  <%= link_to "管理画面", admin_events_path, class: "px-3 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-900" %>
+                <% end %>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-sm text-gray-600"><%= current_member&.name || Current.user.email_address %></span>
+              <%= button_to "ログアウト", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-900" %>
+            </div>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+
+    <main class="container mx-auto mt-8 px-5">
+      <%= render "admin/shared/nav" %>
+      <div class="flex">
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>

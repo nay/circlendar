@@ -1,0 +1,62 @@
+<div class="w-full">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.index.title") %></h1>
+    <%= link_to t("announcements.index.new_announcement"), new_admin_announcement_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+  </div>
+
+  <% if notice = flash[:notice] %>
+    <div class="rounded-md bg-green-50 p-4 mb-6">
+      <p class="text-sm font-medium text-green-800"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <% if @announcements.any? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+      <ul class="divide-y divide-gray-200">
+        <% @announcements.each do |announcement| %>
+          <li>
+            <%= link_to admin_announcement_path(announcement), class: "block hover:bg-gray-50 transition duration-150" do %>
+              <div class="px-4 py-4 sm:px-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                      <p class="text-lg font-medium text-blue-600">
+                        <%= announcement.subject %>
+                      </p>
+                      <% if announcement.sent? %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.index.sent") %></span>
+                      <% else %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.index.draft") %></span>
+                      <% end %>
+                    </div>
+                    <% if announcement.event %>
+                      <p class="mt-1 text-sm text-gray-600">
+                        <%= l(announcement.event.date, format: :long) %> の練習会
+                      </p>
+                    <% end %>
+                    <p class="mt-1 text-sm text-gray-500">
+                      作成日: <%= l(announcement.created_at.to_date) %>
+                      <% if announcement.sent? %>
+                        / 送信日: <%= l(announcement.sent_at.to_date) %>
+                      <% end %>
+                    </p>
+                  </div>
+                  <div>
+                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-gray-500 text-lg"><%= t("announcements.index.no_announcements") %></p>
+      <p class="text-gray-400 text-sm mt-2">「新しいお知らせを作成」ボタンから作成できます</p>
+    </div>
+  <% end %>
+</div>
