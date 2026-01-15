@@ -2,6 +2,8 @@ ja:
   activerecord:
     models:
       event: "練習会"
+      announcement: "お知らせ"
+      announcement_template: "お知らせテンプレート"
     attributes:
       attendance:
         statuses:
@@ -131,3 +133,31 @@ ja:
     send_email:
       success: "メールを送信しました"
       already_sent: "このお知らせは既に送信済みです"
+
+  announcement_templates:
+    index:
+      title: "お知らせテンプレート一覧"
+      new_announcement_template: "新しいお知らせテンプレートを作成"
+      no_announcement_templates: "お知らせテンプレートはありません"
+      default: "デフォルト"
+      subject_label: "件名"
+    show:
+      title: "お知らせテンプレート詳細"
+      edit: "編集"
+      delete: "削除"
+      confirm_delete: "本当に削除しますか？"
+    new:
+      title: "新しいお知らせテンプレートを作成"
+    edit:
+      title: "お知らせテンプレートを編集"
+    form:
+      name: "テンプレート名"
+      subject: "件名"
+      body: "本文"
+      is_default: "デフォルトにする"
+    create:
+      success: "お知らせテンプレートを作成しました"
+    update:
+      success: "お知らせテンプレートを更新しました"
+    destroy:
+      success: "お知らせテンプレートを削除しました"
