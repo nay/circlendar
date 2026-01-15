@@ -1,4 +1,14 @@
 class AnnouncementTemplate < ApplicationRecord
+  PLACEHOLDERS = {
+    "日付" => "{{日付}}",
+    "会場" => "{{会場}}",
+    "住所" => "{{住所}}",
+    "アクセス" => "{{アクセス}}",
+    "開始時刻" => "{{開始時刻}}",
+    "終了時刻" => "{{終了時刻}}",
+    "備考" => "{{備考}}"
+  }.freeze
+
   validates :subject, presence: true
   validates :body, presence: true
 
