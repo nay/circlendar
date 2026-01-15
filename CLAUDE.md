@@ -22,3 +22,11 @@
   - 翻訳は `config/locales/ja.yml` の `activerecord.models` に定義
 - ビューの文言は `t()` ヘルパーを使って翻訳する
   - 翻訳は `config/locales/ja.yml` に定義
+
+## 命名規則
+
+- booleanカラムは `is_xxx` のような接頭辞を使わない
+  - 良い例: `default`, `published`, `active`
+  - 悪い例: `is_default`, `is_published`, `is_active`
+- booleanの値を参照するときは `?` メソッドを使う
+  - 例: `template.default?`, `event.published?`

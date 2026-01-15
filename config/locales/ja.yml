@@ -140,7 +140,6 @@ ja:
       new_announcement_template: "新しいお知らせテンプレートを作成"
       no_announcement_templates: "お知らせテンプレートはありません"
       default: "デフォルト"
-      subject_label: "件名"
     show:
       title: "お知らせテンプレート詳細"
       edit: "編集"
@@ -151,10 +150,9 @@ ja:
     edit:
       title: "お知らせテンプレートを編集"
     form:
-      name: "テンプレート名"
       subject: "件名"
       body: "本文"
-      is_default: "デフォルトにする"
+      default: "デフォルトにする"
     create:
       success: "お知らせテンプレートを作成しました"
     update:

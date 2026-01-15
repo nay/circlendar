@@ -100,8 +100,7 @@ end
 # ========================================
 # お知らせテンプレート
 # ========================================
-AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフォルト）') do |template|
-  template.subject = '【練習会のお知らせ】{{date}} {{venue}}'
+AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{date}} {{venue}}') do |template|
   template.body = <<~BODY
     お疲れ様です。
 
@@ -123,7 +122,7 @@ AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフ
 
     よろしくお願いします。
   BODY
-  template.is_default = true
+  template.default = true
 end
 
 # ========================================
