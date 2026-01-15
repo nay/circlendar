@@ -14,3 +14,11 @@
 
 - 作業ブランチで最初のコミットをしたら、Draft PRを作成する
 - 作業中はDraft状態を維持し、完了したらReady for Reviewにする
+
+## 翻訳（I18n）のルール
+
+- モデル名は `Model.model_name.human` を使って表示する
+  - 例: `Event.model_name.human` → "練習会"
+  - 翻訳は `config/locales/ja.yml` の `activerecord.models` に定義
+- ビューの文言は `t()` ヘルパーを使って翻訳する
+  - 翻訳は `config/locales/ja.yml` に定義
