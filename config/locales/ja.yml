@@ -42,6 +42,9 @@ ja:
       create: "登録"
       update: "更新"
       submit: "保存"
+      announcement:
+        create: "下書きとして保存"
+        update: "下書きを更新"
     select:
       prompt: "選択してください"
 
@@ -118,12 +121,18 @@ ja:
     edit:
       title: "お知らせを編集"
     form:
+      template: "テンプレート"
+      template_prompt: "テンプレートを選択..."
       event: "関連する練習会"
       event_prompt: "（なし）"
+      no_event: "練習会と関連付けない"
+      no_templates: "テンプレートがありません"
       subject: "件名"
       body: "本文"
       to_address: "To（送信元として表示）"
       bcc_addresses: "BCC（受信者）"
+      apply_template: "反映"
+      confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
     create:
       success: "お知らせを作成しました"
     update:
@@ -133,6 +142,9 @@ ja:
     send_email:
       success: "メールを送信しました"
       already_sent: "このお知らせは既に送信済みです"
+    apply_template:
+      template_required: "テンプレートを選択してください"
+      event_required: "このテンプレートを利用するには練習会を選択する必要があります"
 
   announcement_templates:
     index:

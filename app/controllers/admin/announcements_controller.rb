@@ -11,34 +11,41 @@ class Admin::AnnouncementsController < Admin::BaseController
   def new
     @announcement = Announcement.new
     @announcement.event_id = params[:event_id] if params[:event_id]
-    @events = Event.upcoming.order(:date)
-    set_default_recipients
+    prepare_form_data
   end
 
   def create
     @announcement = Announcement.new(announcement_params)
-    @announcement.sender = Current.user
+
+    if params[:submit_type] == "apply_template"
+      apply_template
+      render :new, status: :unprocessable_entity and return
+    end
 
     if @announcement.save
       redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.create.success")
     else
-      @events = Event.upcoming.order(:date)
-      set_default_recipients
+      prepare_form_data
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @events = Event.upcoming.order(:date)
-    set_default_recipients
+    prepare_form_data
   end
 
   def update
-    if @announcement.update(announcement_params)
+    @announcement.assign_attributes(announcement_params)
+
+    if params[:submit_type] == "apply_template"
+      apply_template
+      render :edit, status: :unprocessable_entity and return
+    end
+
+    if @announcement.save
       redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.update.success")
     else
-      @events = Event.upcoming.order(:date)
-      set_default_recipients
+      prepare_form_data
       render :edit, status: :unprocessable_entity
     end
   end
@@ -55,22 +62,40 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     AnnouncementMailer.notify(@announcement).deliver_now
-    @announcement.update!(sent_at: Time.current)
+    @announcement.update!(sent_at: Time.current, sender: Current.user)
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
   end
 
   private
 
+  def prepare_form_data
+    @events = Event.upcoming.order(:date)
+    @announcement_templates = AnnouncementTemplate.order(:subject)
+    @members = Member.includes(:user).where(users: { receives_announcements: true })
+  end
+
+  def apply_template
+    prepare_form_data
+
+    unless @announcement.template
+      flash.now[:alert] = I18n.t("announcements.apply_template.template_required")
+      return
+    end
+
+    if @announcement.template.has_placeholders? && !@announcement.event
+      flash.now[:alert] = I18n.t("announcements.apply_template.event_required")
+      return
+    end
+
+    @announcement.apply_template
+  end
+
   def set_announcement
     @announcement = Announcement.find(params[:id])
   end
 
   def announcement_params
-    params.require(:announcement).permit(:event_id, :subject, :body, :to_address, bcc_addresses: [])
-  end
-
-  def set_default_recipients
-    @members = Member.includes(:user).where(users: { receives_announcements: true })
+    params.require(:announcement).permit(:event_id, :announcement_template_id, :subject, :body, :to_address, bcc_addresses: [])
   end
 end
