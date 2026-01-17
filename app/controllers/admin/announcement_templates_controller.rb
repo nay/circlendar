@@ -1,6 +1,11 @@
 class Admin::AnnouncementTemplatesController < Admin::BaseController
+  before_action :set_announcement_template, only: %i[show edit update]
+
   def index
     @announcement_templates = AnnouncementTemplate.order(:subject)
+  end
+
+  def show
   end
 
   def new
@@ -17,7 +22,22 @@ class Admin::AnnouncementTemplatesController < Admin::BaseController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @announcement_template.update(announcement_template_params)
+      redirect_to admin_announcement_template_path(@announcement_template), notice: t("announcement_templates.update.success")
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def set_announcement_template
+    @announcement_template = AnnouncementTemplate.find(params[:id])
+  end
 
   def announcement_template_params
     params.require(:announcement_template).permit(:subject, :body, :default)

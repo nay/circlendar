@@ -1,0 +1,8 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="mb-4">
+    <%= link_to "← #{AnnouncementTemplate.model_name.human}一覧に戻る", admin_announcement_templates_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+  <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= t("announcement_templates.edit.title") %></h1>
+
+  <%= render "form", announcement_template: @announcement_template %>
+</div>
