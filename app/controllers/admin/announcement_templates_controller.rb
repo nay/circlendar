@@ -1,5 +1,5 @@
 class Admin::AnnouncementTemplatesController < Admin::BaseController
-  before_action :set_announcement_template, only: %i[show edit update]
+  before_action :set_announcement_template, only: %i[show edit update destroy]
 
   def index
     @announcement_templates = AnnouncementTemplate.order(:subject)
@@ -31,6 +31,11 @@ class Admin::AnnouncementTemplatesController < Admin::BaseController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @announcement_template.destroy
+    redirect_to admin_announcement_templates_path, notice: t("announcement_templates.destroy.success")
   end
 
   private
