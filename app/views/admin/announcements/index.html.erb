@@ -23,9 +23,9 @@
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.index.draft") %></span>
                       <% end %>
                     </div>
-                    <% if announcement.event %>
+                    <% if announcement.events.any? %>
                       <p class="mt-1 text-sm text-gray-600">
-                        <%= l(announcement.event.date, format: :long) %> の練習会
+                        <%= announcement.events.map { |e| l(e.date, format: :long) }.join("、") %> の練習会
                       </p>
                     <% end %>
                     <p class="mt-1 text-sm text-gray-500">

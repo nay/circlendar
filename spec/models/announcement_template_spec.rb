@@ -4,7 +4,7 @@ RSpec.describe AnnouncementTemplate, type: :model do
   describe "#valid?" do
     let(:template) { AnnouncementTemplate.new(subject:, body:) }
     let(:subject) { "練習会のお知らせ" }
-    let(:body) { "{{日付}} {{会場名}}" }
+    let(:body) { "{{練習会サマリー}}" }
 
     context "有効な埋め込み情報がある場合" do
       it "検証が通る" do
@@ -13,10 +13,29 @@ RSpec.describe AnnouncementTemplate, type: :model do
     end
 
     context "すべての埋め込み情報を使用した場合" do
-      let(:body) { "{{日付}} {{会場名}} {{会場住所}} {{会場アクセス}} {{開始時刻}} {{終了時刻}} {{備考}}" }
+      let(:subject) { "{{練習会ヘッドライン}}" }
+      let(:body) { "{{練習会サマリー}} {{会場案内}}" }
 
       it "検証が通る" do
         expect(template).to be_valid
+      end
+    end
+
+    context "件名に本文用プレースホルダを使用した場合" do
+      let(:subject) { "{{練習会サマリー}}" }
+
+      it "検証エラーとなる" do
+        expect(template).not_to be_valid
+        expect(template.errors[:subject]).to include("の{{練習会サマリー}}は無効な埋め込み情報です")
+      end
+    end
+
+    context "本文に件名用プレースホルダを使用した場合" do
+      let(:body) { "{{練習会ヘッドライン}}" }
+
+      it "検証エラーとなる" do
+        expect(template).not_to be_valid
+        expect(template.errors[:body]).to include("の{{練習会ヘッドライン}}は無効な埋め込み情報です")
       end
     end
 

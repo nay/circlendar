@@ -77,48 +77,51 @@ end
 # 施設マスタ
 # ========================================
 venue1 = Venue.find_or_create_by!(name: '渋谷区民会館 3階和室') do |venue|
-  venue.address = '東京都渋谷区宇田川町1-1'
   venue.url = 'https://example.com/shibuya'
-  venue.access_info = 'JR渋谷駅より徒歩5分'
-  venue.notes = ''
+  venue.short_name = '渋谷区民会館'
+  venue.announcement_summary = '渋谷区民会館 3階和室（JR渋谷駅より徒歩5分）'
+  venue.announcement_detail = <<~TEXT.strip
+    ☆渋谷区民会館 3階和室
+    JR渋谷駅ハチ公口より徒歩5分。
+    宇田川町方面へ進み、交番を右折してください。
+  TEXT
 end
 
 venue2 = Venue.find_or_create_by!(name: '品川区スポーツセンター 体育室A') do |venue|
-  venue.address = '東京都品川区豊町2-1-17'
   venue.url = 'https://example.com/shinagawa'
-  venue.access_info = '東急大井町線戸越公園駅より徒歩3分'
-  venue.notes = ''
+  venue.short_name = '品川区スポーツセンター'
+  venue.announcement_summary = '品川区スポーツセンター 体育室A（東急大井町線戸越公園駅より徒歩3分）'
+  venue.announcement_detail = <<~TEXT.strip
+    ☆品川区スポーツセンター 体育室A
+    東急大井町線戸越公園駅より徒歩3分。
+    改札を出て左へ進み、商店街を抜けた先です。
+  TEXT
 end
 
 venue3 = Venue.find_or_create_by!(name: '新宿文化センター 303号室') do |venue|
-  venue.address = '東京都新宿区新宿6-14-1'
   venue.url = 'https://example.com/shinjuku'
-  venue.access_info = '東京メトロ副都心線東新宿駅直結'
-  venue.notes = ''
+  venue.short_name = '新宿文化センター'
+  venue.announcement_summary = '新宿文化センター 303号室（東京メトロ副都心線東新宿駅直結）'
+  venue.announcement_detail = <<~TEXT.strip
+    ☆新宿文化センター 303号室
+    東京メトロ副都心線東新宿駅A3出口直結。
+    エレベーターで3階へお越しください。
+  TEXT
 end
 
 # ========================================
 # お知らせテンプレート
 # ========================================
-AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{日付}} {{会場}}') do |template|
+AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{練習会ヘッドライン}}') do |template|
   template.body = <<~BODY
     お疲れ様です。
 
     下記の日程で練習会を開催します。
     参加される方は、アプリより参加登録をお願いします。
 
-    ■ 日時
-    {{日付}} {{開始時刻}}〜{{終了時刻}}
+    {{練習会サマリー}}
 
-    ■ 場所
-    {{会場}}
-    {{住所}}
-
-    ■ アクセス
-    {{アクセス}}
-
-    ■ 備考
-    {{備考}}
+    {{会場案内}}
 
     よろしくお願いします。
   BODY
@@ -132,9 +135,7 @@ event1 = Event.find_or_create_by!(
   venue: venue1,
   date: 2.weeks.from_now.to_date
 ) do |event|
-  event.start_time = '13:00'
-  event.end_time = '17:00'
-  event.notes = '初心者の方も歓迎します'
+  event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
   event.status = :published
 end
 
@@ -177,9 +178,7 @@ event2 = Event.find_or_create_by!(
   venue: venue2,
   date: 1.month.from_now.to_date
 ) do |event|
-  event.start_time = '10:00'
-  event.end_time = '16:00'
-  event.notes = '昼食は各自ご持参ください'
+  event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
   event.status = :draft
 end
 
@@ -190,11 +189,7 @@ event3 = Event.find_or_create_by!(
   venue: venue3,
   date: 1.week.ago.to_date
 ) do |event|
-  event.start_time = '14:00'
-  event.end_time = '17:00'
-  event.notes = '2本目 15:20〜
-
-可能な方は札を持ってきてください！'
+  event.schedule = '１３：００ー１８：００　２本か３本'
   event.status = :published
 end
 
@@ -218,9 +213,7 @@ event4 = Event.find_or_create_by!(
   venue: venue3,
   date: 3.weeks.from_now.to_date
 ) do |event|
-  event.start_time = '13:00'
-  event.end_time = '17:30'
-  event.notes = '級位者向け練習会です'
+  event.schedule = '１３：００ー１８：００　２本か３本'
   event.status = :published
 end
 

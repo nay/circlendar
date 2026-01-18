@@ -64,8 +64,7 @@ ja:
     form:
       venue: "会場"
       date: "日付"
-      start_time: "開始時刻"
-      end_time: "終了時刻"
+      schedule: "練習時間の案内"
       notes: "備考"
     create:
       success: "練習会を作成しました"
@@ -96,14 +95,7 @@ ja:
     form:
       template: "テンプレート"
       template_prompt: "テンプレートを選択..."
-      event: "関連する練習会"
-      event_prompt: "（なし）"
-      no_event: "練習会と関連付けない"
       no_templates: "テンプレートがありません"
-      subject: "件名"
-      body: "本文"
-      to_address: "To（送信元として表示）"
-      bcc_addresses: "BCC（受信者）"
       apply_template: "反映"
       confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
     create:
@@ -144,3 +136,11 @@ ja:
       success: "お知らせテンプレートを更新しました"
     destroy:
       success: "お知らせテンプレートを削除しました"
+
+  venues:
+    create:
+      success: "%{model}を作成しました"
+    update:
+      success: "%{model}を更新しました"
+    destroy:
+      success: "%{model}を削除しました"

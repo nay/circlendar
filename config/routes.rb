@@ -35,5 +35,7 @@ Rails.application.routes.draw do
     end
 
     resources :announcement_templates
+
+    resources :venues
   end
 end

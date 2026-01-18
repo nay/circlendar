@@ -14,6 +14,7 @@ class Admin::EventsController < Admin::BaseController
   end
 
   def show
+    @current_tab = params[:tab] || "announcements"
     @attendances = @event.attendances.includes(:player).order("players.name")
     @announcements = @event.announcements.order(created_at: :desc)
   end
@@ -58,6 +59,6 @@ class Admin::EventsController < Admin::BaseController
     end
 
     def event_params
-      params.require(:event).permit(:venue_id, :date, :start_time, :end_time, :notes, :status)
+      params.require(:event).permit(:venue_id, :date, :schedule, :status)
     end
 end

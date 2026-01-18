@@ -4,7 +4,7 @@
       <div class="flex">
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:
+            <%= t('errors.template.header') %>
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
@@ -19,34 +19,29 @@
   <% end %>
 
   <div>
-    <%= form.label :venue_id, t('events.form.venue'), class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <div class="mb-2">
+      <%= form.label :venue_id, t('events.form.venue'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
+    </div>
     <%= form.collection_select :venue_id, @venues, :id, :name,
           { prompt: t('helpers.select.prompt') },
-          { class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" } %>
+          { class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true } %>
   </div>
 
   <div>
-    <%= form.label :date, t('events.form.date'), class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <div class="mb-2">
+      <%= form.label :date, t('events.form.date'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
+    </div>
     <%= form.date_field :date,
+          required: true,
           class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
   </div>
 
   <div>
-    <%= form.label :start_time, t('events.form.start_time'), class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.time_field :start_time,
-          class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-  </div>
-
-  <div>
-    <%= form.label :end_time, t('events.form.end_time'), class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.time_field :end_time,
-          class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-  </div>
-
-  <div>
-    <%= form.label :notes, t('events.form.notes'), class: "block text-sm font-medium text-gray-700 mb-2" %>
-    <%= form.text_area :notes,
-          rows: 4,
+    <div class="mb-2">
+      <%= form.label :schedule, t('events.form.schedule'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
+    </div>
+    <%= form.text_field :schedule,
+          required: true,
           class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
   </div>
 

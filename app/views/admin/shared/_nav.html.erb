@@ -1,7 +1,0 @@
-<div class="mb-8 border-b border-gray-200">
-  <nav class="-mb-px flex space-x-8">
-    <%= link_to Event.model_name.human, admin_events_path, class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{request.path.start_with?('/admin/events') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-    <%= link_to Announcement.model_name.human, admin_announcements_path, class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{request.path.start_with?('/admin/announcements') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-    <%= link_to AnnouncementTemplate.model_name.human, admin_announcement_templates_path, class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{request.path.start_with?('/admin/announcement_templates') ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-  </nav>
-</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_17_223757) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_18_052504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,14 +27,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_17_223757) do
     t.text "bcc_addresses", default: [], array: true
     t.text "body"
     t.datetime "created_at", null: false
-    t.bigint "event_id"
     t.datetime "sent_at"
     t.integer "sent_by"
     t.text "subject"
     t.string "to_address"
     t.datetime "updated_at", null: false
     t.index ["announcement_template_id"], name: "index_announcements_on_announcement_template_id"
-    t.index ["event_id"], name: "index_announcements_on_event_id"
   end
 
   create_table "attendances", force: :cascade do |t|
@@ -51,12 +49,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_17_223757) do
     t.index ["player_id"], name: "index_attendances_on_player_id"
   end
 
+  create_table "event_announcements", force: :cascade do |t|
+    t.bigint "announcement_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "event_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id"], name: "index_event_announcements_on_announcement_id"
+    t.index ["event_id", "announcement_id"], name: "index_event_announcements_on_event_id_and_announcement_id", unique: true
+    t.index ["event_id"], name: "index_event_announcements_on_event_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date"
-    t.time "end_time"
-    t.text "notes"
-    t.time "start_time"
+    t.string "schedule"
     t.string "status", default: "draft", null: false
     t.datetime "updated_at", null: false
     t.bigint "venue_id", null: false
@@ -103,19 +109,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_17_223757) do
   end
 
   create_table "venues", force: :cascade do |t|
-    t.text "access_info"
-    t.string "address"
+    t.text "announcement_detail"
+    t.text "announcement_summary"
     t.datetime "created_at", null: false
     t.string "name"
-    t.text "notes"
+    t.string "short_name"
     t.datetime "updated_at", null: false
     t.string "url"
   end
 
   add_foreign_key "announcements", "announcement_templates"
-  add_foreign_key "announcements", "events"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "players"
+  add_foreign_key "event_announcements", "announcements"
+  add_foreign_key "event_announcements", "events"
   add_foreign_key "events", "venues"
   add_foreign_key "players", "users"
   add_foreign_key "sessions", "users"

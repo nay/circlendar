@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "b2a7bb460e0c2d92c192635470b91a22b027b70a00f564986653d68ef7457996",
+      "note": "URL is validated with start_with? check and model validation"
+    }
+  ],
+  "updated": "2026-01-18",
+  "brakeman_version": "7.1.2"
+}

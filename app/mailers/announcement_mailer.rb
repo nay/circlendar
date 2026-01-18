@@ -1,7 +1,7 @@
 class AnnouncementMailer < ApplicationMailer
   def notify(announcement)
     @announcement = announcement
-    @event = announcement.event
+    @events = announcement.events
 
     mail(
       to: announcement.to_address,

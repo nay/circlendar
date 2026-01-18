@@ -32,7 +32,10 @@
               <div class="flex space-x-4">
                 <%= link_to "ダッシュボード", dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path == dashboard_path ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                 <% if Current.user.admin? %>
-                  <%= link_to "管理画面", admin_events_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
+                  <%= link_to Event.model_name.human, admin_events_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/events') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
+                  <%= link_to Announcement.model_name.human, admin_announcements_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/announcements') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
+                  <%= link_to "テンプレート", admin_announcement_templates_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/announcement_templates') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
+                  <%= link_to Venue.model_name.human, admin_venues_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/venues') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                 <% end %>
               </div>
             </div>

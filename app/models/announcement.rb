@@ -1,5 +1,7 @@
 class Announcement < ApplicationRecord
-  belongs_to :event, optional: true
+  has_many :event_announcements, dependent: :destroy
+  has_many :events, through: :event_announcements
+
   belongs_to :template, class_name: "AnnouncementTemplate", foreign_key: "announcement_template_id", optional: true
   belongs_to :sender, class_name: "User", foreign_key: "sent_by", optional: true
 
@@ -16,7 +18,7 @@ class Announcement < ApplicationRecord
   def apply_template
     return unless template
 
-    self.subject = AnnouncementTemplate.fill_placeholders(template.subject, event)
-    self.body = AnnouncementTemplate.fill_placeholders(template.body, event)
+    self.subject = AnnouncementTemplate.fill_placeholders(template.subject, events)
+    self.body = AnnouncementTemplate.fill_placeholders(template.body, events)
   end
 end

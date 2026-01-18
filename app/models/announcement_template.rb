@@ -1,13 +1,14 @@
 class AnnouncementTemplate < ApplicationRecord
-  PLACEHOLDERS = {
-    "日付" => "{{日付}}",
-    "会場名" => "{{会場名}}",
-    "会場住所" => "{{会場住所}}",
-    "会場アクセス" => "{{会場アクセス}}",
-    "開始時刻" => "{{開始時刻}}",
-    "終了時刻" => "{{終了時刻}}",
-    "備考" => "{{備考}}"
+  SUBJECT_PLACEHOLDERS = {
+    "練習会ヘッドライン" => "{{練習会ヘッドライン}}"
   }.freeze
+
+  BODY_PLACEHOLDERS = {
+    "練習会サマリー" => "{{練習会サマリー}}",
+    "会場案内" => "{{会場案内}}"
+  }.freeze
+
+  ALL_PLACEHOLDERS = SUBJECT_PLACEHOLDERS.merge(BODY_PLACEHOLDERS).freeze
 
   validates :subject, presence: true
   validates :body, presence: true
@@ -18,31 +19,69 @@ class AnnouncementTemplate < ApplicationRecord
   scope :default_template, -> { find_by(default: true) }
 
   def has_placeholders?
-    PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
+    ALL_PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
   end
 
-  def self.fill_placeholders(text, event)
-    return text unless event
+  def self.fill_placeholders(text, events)
+    events = Array(events).compact.sort_by(&:date)
+    return text if events.empty?
 
     result = text.dup
-    result.gsub!("{{日付}}", I18n.l(event.date, format: :long))
-    result.gsub!("{{会場名}}", event.venue.name)
-    result.gsub!("{{会場住所}}", event.venue.address.to_s)
-    result.gsub!("{{会場アクセス}}", event.venue.access_info.to_s)
-    result.gsub!("{{開始時刻}}", event.start_time.strftime("%H:%M"))
-    result.gsub!("{{終了時刻}}", event.end_time.strftime("%H:%M"))
-    result.gsub!("{{備考}}", event.notes.to_s)
+
+    # 練習会ヘッドライン（サブジェクト用）
+    dates_str = events.map(&:formatted_date_short).join("＆")
+    venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
+    result.gsub!("{{練習会ヘッドライン}}", "#{dates_str} #{venues_str}")
+
+    # 練習会サマリー（複数イベント対応）
+    # 桁がバラバラな場合のみパディング
+    pad_month = events.map { |e| e.date.month >= 10 }.uniq.size > 1
+    pad_day = events.map { |e| e.date.day >= 10 }.uniq.size > 1
+
+    summary_lines = events.map do |event|
+      date_str = format_date_zenkaku(event.date, pad_month:, pad_day:)
+      venue_summary = event.venue.announcement_summary.presence || event.venue.name
+      prefix = "#{date_str}　＠"
+      indent = "　" * (display_width(prefix) / 2)
+      "#{prefix}#{venue_summary}\n#{indent}#{event.schedule}"
+    end
+    result.gsub!("{{練習会サマリー}}", summary_lines.join("\n"))
+
+    # 会場案内（ユニークな会場ごとにannouncement_detailを空行区切りで）
+    venue_details = events.map(&:venue).uniq.filter_map do |venue|
+      venue.announcement_detail.presence
+    end
+    result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
+
     result
+  end
+
+  def self.format_date_zenkaku(date, pad_month: false, pad_day: false)
+    month = date.month.to_s.tr("0-9", "０-９")
+    day = date.day.to_s.tr("0-9", "０-９")
+    wday = %w[日 月 火 水 木 金 土][date.wday]
+
+    # 桁がバラバラな場合のみ全角スペースでパディング
+    month = "　#{month}" if pad_month && date.month < 10
+    day = "　#{day}" if pad_day && date.day < 10
+
+    "#{month}月#{day}日(#{wday})"
+  end
+
+  def self.display_width(str)
+    str.each_char.sum do |char|
+      char.bytesize > 1 ? 2 : 1
+    end
   end
 
   private
 
   def validate_placeholders
-    validate_placeholders_in(:subject, subject)
-    validate_placeholders_in(:body, body)
+    validate_placeholders_in(:subject, subject, SUBJECT_PLACEHOLDERS)
+    validate_placeholders_in(:body, body, BODY_PLACEHOLDERS)
   end
 
-  def validate_placeholders_in(attribute, text)
+  def validate_placeholders_in(attribute, text, allowed_placeholders)
     return if text.blank?
 
     if malformed?(text)
@@ -52,7 +91,7 @@ class AnnouncementTemplate < ApplicationRecord
 
     text.scan(/\{\{([^}]+)\}\}/).each do |match|
       name = match[0]
-      unless PLACEHOLDERS.key?(name)
+      unless allowed_placeholders.key?(name)
         errors.add(attribute, "の{{#{name}}}は無効な埋め込み情報です")
       end
     end
