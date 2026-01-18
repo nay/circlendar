@@ -55,7 +55,7 @@ class AnnouncementTemplate < ApplicationRecord
     result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
 
     # ダッシュボードURL
-    dashboard_url = "#{Setting.instance.url_domain}/dashboard"
+    dashboard_url = Rails.application.routes.url_helpers.dashboard_url
     result.gsub!("{{ダッシュボードURL}}", dashboard_url)
 
     result

@@ -54,7 +54,6 @@ ja:
         schedule: "練習時間の案内"
       setting:
         circle_name: "サークル名"
-        url_domain: "アプリケーションURL"
       venue:
         name: "管理名"
         url: "URL"

@@ -16,6 +16,6 @@ class Admin::SettingsController < Admin::BaseController
   private
 
   def setting_params
-    params.require(:setting).permit(:circle_name, :url_domain)
+    params.require(:setting).permit(:circle_name)
   end
 end
