@@ -1,5 +1,6 @@
 class AnnouncementTemplate < ApplicationRecord
   PLACEHOLDERS = {
+    "練習会サマリー" => "{{練習会サマリー}}",
     "日付" => "{{日付}}",
     "会場名" => "{{会場名}}",
     "会場URL" => "{{会場URL}}",
@@ -19,16 +20,44 @@ class AnnouncementTemplate < ApplicationRecord
     PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
   end
 
-  def self.fill_placeholders(text, event)
-    return text unless event
+  def self.fill_placeholders(text, events)
+    events = Array(events).compact
+    return text if events.empty?
 
     result = text.dup
+
+    # 練習会サマリー（複数イベント対応）
+    # 桁がバラバラな場合のみパディング
+    pad_month = events.map { |e| e.date.month >= 10 }.uniq.size > 1
+    pad_day = events.map { |e| e.date.day >= 10 }.uniq.size > 1
+
+    summary_lines = events.map do |event|
+      date_str = format_date_zenkaku(event.date, pad_month:, pad_day:)
+      venue_summary = event.venue.announcement_summary.presence || event.venue.name
+      "#{date_str}　＠#{venue_summary}"
+    end
+    result.gsub!("{{練習会サマリー}}", summary_lines.join("\n"))
+
+    # 単一イベント用プレースホルダー（最初のイベントを使用）
+    event = events.first
     result.gsub!("{{日付}}", I18n.l(event.date, format: :long))
     result.gsub!("{{会場名}}", event.venue.name)
     result.gsub!("{{会場URL}}", event.venue.url.to_s)
     result.gsub!("{{開始時刻}}", event.start_time.strftime("%H:%M"))
     result.gsub!("{{終了時刻}}", event.end_time.strftime("%H:%M"))
     result
+  end
+
+  def self.format_date_zenkaku(date, pad_month: false, pad_day: false)
+    month = date.month.to_s.tr("0-9", "０-９")
+    day = date.day.to_s.tr("0-9", "０-９")
+    wday = %w[日 月 火 水 木 金 土][date.wday]
+
+    # 桁がバラバラな場合のみ全角スペースでパディング
+    month = "　#{month}" if pad_month && date.month < 10
+    day = "　#{day}" if pad_day && date.day < 10
+
+    "#{month}月#{day}日(#{wday})"
   end
 
   private

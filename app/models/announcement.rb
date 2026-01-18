@@ -18,7 +18,7 @@ class Announcement < ApplicationRecord
   def apply_template
     return unless template
 
-    self.subject = AnnouncementTemplate.fill_placeholders(template.subject, events.first)
-    self.body = AnnouncementTemplate.fill_placeholders(template.body, events.first)
+    self.subject = AnnouncementTemplate.fill_placeholders(template.subject, events)
+    self.body = AnnouncementTemplate.fill_placeholders(template.body, events)
   end
 end
