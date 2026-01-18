@@ -1,19 +1,23 @@
 <div class="w-full max-w-2xl mx-auto">
+  <div class="mb-4">
+    <%= link_to "← ダッシュボードに戻る", dashboard_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">出席情報の登録</h1>
+    <h1 class="text-3xl font-bold text-gray-900"><%= @event.headline %></h1>
     <p class="mt-2 text-gray-600">
-      <%= l(@event.date, format: :long) %> <%= @event.schedule %>
-    </p>
-    <p class="mt-1 text-gray-600">
-      <%= @event.venue.name %>
+      <%= @event.schedule %>
     </p>
   </div>
 
   <%= form_with(model: @attendance, url: event_attendance_path(@event), method: :patch, class: "bg-white shadow sm:rounded-lg") do |form| %>
     <div class="px-4 py-5 sm:p-6 space-y-6">
+      <% if @event.venue.announcement_detail.present? %>
+        <div class="text-sm text-gray-700"><%= format_with_links(@event.venue.announcement_detail) %></div>
+      <% end %>
+
       <!-- ステータス -->
       <div>
-        <%= form.label :status, "出席状況", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.label :status, "練習会への参加", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <div class="grid grid-cols-3 gap-3" data-controller="radio-buttons">
           <% Attendance.statuses.keys.each do |status| %>
             <label class="flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer <%= @attendance.status == status ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white' %>" data-radio-buttons-target="option">
@@ -29,18 +33,18 @@
       <!-- 到着時刻 -->
       <div>
         <%= form.label :arrival_time, "到着予定時刻", class: "block text-sm font-medium text-gray-700 mb-2" %>
-        <%= form.time_field :arrival_time, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        <%= form.time_field :arrival_time, class: "block w-full rounded-md border border-gray-400 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" %>
       </div>
 
       <!-- 退出時刻 -->
       <div>
         <%= form.label :departure_time, "退出予定時刻", class: "block text-sm font-medium text-gray-700 mb-2" %>
-        <%= form.time_field :departure_time, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+        <%= form.time_field :departure_time, class: "block w-full rounded-md border border-gray-400 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3" %>
       </div>
 
       <!-- アフター -->
       <div>
-        <%= form.label :after_party, "アフター", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.label :after_party, "アフターへの参加", class: "block text-sm font-medium text-gray-700 mb-2" %>
         <div class="grid grid-cols-3 gap-3" data-controller="radio-buttons">
           <% Attendance.after_parties.keys.each do |after_party| %>
             <label class="flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer <%= @attendance.after_party == after_party ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white' %>" data-radio-buttons-target="option">
@@ -56,7 +60,7 @@
       <!-- メッセージ -->
       <div>
         <%= form.label :message, "メッセージ", class: "block text-sm font-medium text-gray-700 mb-2" %>
-        <%= form.text_area :message, rows: 4, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", placeholder: "連絡事項があればこちらへどうぞ" %>
+        <%= form.text_area :message, rows: 4, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3", placeholder: "連絡事項があればこちらへどうぞ" %>
       </div>
     </div>
 

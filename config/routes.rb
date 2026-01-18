@@ -33,9 +33,7 @@ Rails.application.routes.draw do
 
   # Admin namespace
   namespace :admin do
-    resources :events do
-      resources :attendances, only: [ :index, :create, :update ]
-    end
+    resources :events
 
     resources :announcements do
       member do

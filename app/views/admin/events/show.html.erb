@@ -47,7 +47,7 @@
             class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'announcements' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
       <%= link_to "参加者(#{attending_count})", admin_event_path(@event, tab: "attending"),
             class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'attending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-      <%= link_to "欠席・保留の回答者(#{not_attending_count})", admin_event_path(@event, tab: "not_attending"),
+      <%= link_to "不参加・保留の回答者(#{not_attending_count})", admin_event_path(@event, tab: "not_attending"),
             class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'not_attending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
     </nav>
   </div>
