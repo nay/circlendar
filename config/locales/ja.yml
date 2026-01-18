@@ -1,173 +1,186 @@
+---
 ja:
   activerecord:
-    models:
-      event: "練習会"
-      announcement: "お知らせ"
-      announcement_template: "お知らせテンプレート"
-    attributes:
-      attendance:
-        statuses:
-          attending: "参加"
-          not_attending: "欠席"
-          undecided: "保留"
-
+    errors:
+      messages:
+        record_invalid: 'バリデーションに失敗しました: %{errors}'
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているので削除できません"
+          has_many: "%{record}が存在しているので削除できません"
   date:
+    abbr_day_names:
+    - 日
+    - 月
+    - 火
+    - 水
+    - 木
+    - 金
+    - 土
+    abbr_month_names:
+    -
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    day_names:
+    - 日曜日
+    - 月曜日
+    - 火曜日
+    - 水曜日
+    - 木曜日
+    - 金曜日
+    - 土曜日
     formats:
       default: "%Y/%m/%d"
-      long: "%Y年%m月%d日（%a）"
-    abbr_day_names:
-      - 日
-      - 月
-      - 火
-      - 水
-      - 木
-      - 金
-      - 土
-
-  time:
-    formats:
-      default: "%Y/%m/%d %H:%M"
-      long: "%Y年%m月%d日（%a） %H:%M"
-    abbr_day_names:
-      - 日
-      - 月
-      - 火
-      - 水
-      - 木
-      - 金
-      - 土
-
+      long: "%Y年%m月%d日(%a)"
+      short: "%m/%d"
+    month_names:
+    -
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
+    order:
+    - :year
+    - :month
+    - :day
+  datetime:
+    distance_in_words:
+      about_x_hours: 約%{count}時間
+      about_x_months: 約%{count}ヶ月
+      about_x_years: 約%{count}年
+      almost_x_years: "%{count}年弱"
+      half_a_minute: 30秒前後
+      less_than_x_seconds: "%{count}秒未満"
+      less_than_x_minutes: "%{count}分未満"
+      over_x_years: "%{count}年以上"
+      x_seconds: "%{count}秒"
+      x_minutes: "%{count}分"
+      x_days: "%{count}日"
+      x_months: "%{count}ヶ月"
+      x_years: "%{count}年"
+    prompts:
+      second: 秒
+      minute: 分
+      hour: 時
+      day: 日
+      month: 月
+      year: 年
+  errors:
+    format: "%{attribute}%{message}"
+    messages:
+      accepted: を受諾してください
+      blank: を入力してください
+      confirmation: と%{attribute}の入力が一致しません
+      empty: を入力してください
+      equal_to: は%{count}にしてください
+      even: は偶数にしてください
+      exclusion: は予約されています
+      greater_than: は%{count}より大きい値にしてください
+      greater_than_or_equal_to: は%{count}以上の値にしてください
+      in: は%{count}の範囲に含めてください
+      inclusion: は一覧にありません
+      invalid: は不正な値です
+      less_than: は%{count}より小さい値にしてください
+      less_than_or_equal_to: は%{count}以下の値にしてください
+      model_invalid: 'バリデーションに失敗しました: %{errors}'
+      not_a_number: は数値で入力してください
+      not_an_integer: は整数で入力してください
+      odd: は奇数にしてください
+      other_than: は%{count}以外の値にしてください
+      password_too_long: が長すぎます
+      present: は入力しないでください
+      required: を入力してください
+      taken: はすでに存在します
+      too_long: は%{count}文字以内で入力してください
+      too_short: は%{count}文字以上で入力してください
+      wrong_length: は%{count}文字で入力してください
+    template:
+      body: 次の項目を確認してください
+      header: "%{model}に%{count}個のエラーが発生しました"
   helpers:
-    submit:
-      create: "登録"
-      update: "更新"
-      submit: "保存"
-      announcement:
-        create: "下書きとして保存"
-        update: "下書きを更新"
     select:
-      prompt: "選択してください"
-
-  sessions:
-    new:
-      title: "ログイン"
-      email_address: "メールアドレス"
-      password: "パスワード"
-      sign_in: "ログイン"
-      forgot_password: "パスワードを忘れた場合"
-    create:
-      success: "ログインしました"
-      failure: "メールアドレスまたはパスワードが正しくありません"
-    destroy:
-      success: "ログアウトしました"
-    rate_limit: "しばらく時間をおいてから再度お試しください"
-
-  passwords:
-    new:
-      title: "パスワードリセット"
-      email_address: "メールアドレス"
-      send_reset_email: "リセットメールを送信"
-    edit:
-      title: "新しいパスワードを設定"
-      password: "新しいパスワード"
-      password_confirmation: "パスワード（確認）"
-      reset_password: "パスワードを変更"
-    create:
-      success: "パスワードリセットのメールを送信しました"
-
-  events:
-    index:
-      title: "練習会一覧"
-      new_event: "新しい練習会を作成"
-    show:
-      title: "練習会詳細"
-      edit: "編集"
-      delete: "削除"
-      confirm_delete: "本当に削除しますか？"
-    new:
-      title: "新しい練習会を作成"
-    edit:
-      title: "練習会を編集"
-    form:
-      venue: "会場"
-      date: "日付"
-      start_time: "開始時刻"
-      end_time: "終了時刻"
-      notes: "備考"
-    create:
-      success: "練習会を作成しました"
-    update:
-      success: "練習会を更新しました"
-    destroy:
-      success: "練習会を削除しました"
-
-  announcements:
-    index:
-      title: "お知らせ一覧"
-      new_announcement: "新しいお知らせを作成"
-      no_announcements: "お知らせはありません"
-      sent: "送信済み"
-      draft: "下書き"
-    show:
-      title: "お知らせ詳細"
-      edit: "編集"
-      delete: "削除"
-      confirm_delete: "本当に削除しますか？"
-      send_email: "メール送信"
-      confirm_send: "メールを送信しますか？"
-      already_sent: "送信済み"
-    new:
-      title: "新しいお知らせを作成"
-    edit:
-      title: "お知らせを編集"
-    form:
-      template: "テンプレート"
-      template_prompt: "テンプレートを選択..."
-      event: "関連する練習会"
-      event_prompt: "（なし）"
-      no_event: "練習会と関連付けない"
-      no_templates: "テンプレートがありません"
-      subject: "件名"
-      body: "本文"
-      to_address: "To（送信元として表示）"
-      bcc_addresses: "BCC（受信者）"
-      apply_template: "反映"
-      confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
-    create:
-      success: "お知らせを作成しました"
-    update:
-      success: "お知らせを更新しました"
-    destroy:
-      success: "お知らせを削除しました"
-    send_email:
-      success: "メールを送信しました"
-      already_sent: "このお知らせは既に送信済みです"
-    apply_template:
-      template_required: "テンプレートを選択してください"
-      event_required: "このテンプレートを利用するには練習会を選択する必要があります"
-
-  announcement_templates:
-    index:
-      title: "お知らせテンプレート一覧"
-      new_announcement_template: "新しいお知らせテンプレートを作成"
-      no_announcement_templates: "お知らせテンプレートはありません"
-      default: "デフォルト"
-    show:
-      title: "お知らせテンプレート詳細"
-      edit: "編集"
-      delete: "削除"
-      confirm_delete: "本当に削除しますか？"
-    new:
-      title: "新しいお知らせテンプレートを作成"
-    edit:
-      title: "お知らせテンプレートを編集"
-    form:
-      subject: "件名"
-      body: "本文"
-      default: "デフォルトにする"
-    create:
-      success: "お知らせテンプレートを作成しました"
-    update:
-      success: "お知らせテンプレートを更新しました"
-    destroy:
-      success: "お知らせテンプレートを削除しました"
+      prompt: 選択してください
+    submit:
+      create: 登録する
+      submit: 保存する
+      update: 更新する
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%n%u"
+        negative_format: "-%u%n"
+        precision: 0
+        separator: "."
+        significant: false
+        strip_insignificant_zeros: false
+        unit: 円
+    format:
+      delimiter: ","
+      precision: 3
+      round_mode: default
+      separator: "."
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: "%n %u"
+        units:
+          billion: 十億
+          million: 百万
+          quadrillion: 千兆
+          thousand: 千
+          trillion: 兆
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: "%n%u"
+        units:
+          byte: バイト
+          eb: EB
+          gb: GB
+          kb: KB
+          mb: MB
+          pb: PB
+          tb: TB
+          zb: ZB
+    percentage:
+      format:
+        delimiter: ''
+        format: "%n%"
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: "、"
+      two_words_connector: "、"
+      words_connector: "、"
+  time:
+    am: 午前
+    formats:
+      default: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
+      long: "%Y/%m/%d %H:%M"
+      short: "%m/%d %H:%M"
+    pm: 午後

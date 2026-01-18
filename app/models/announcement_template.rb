@@ -11,6 +11,7 @@ class AnnouncementTemplate < ApplicationRecord
 
   validates :subject, presence: true
   validates :body, presence: true
+  validate :validate_placeholders
 
   before_save :ensure_single_default
 
@@ -35,6 +36,51 @@ class AnnouncementTemplate < ApplicationRecord
   end
 
   private
+
+  def validate_placeholders
+    validate_placeholders_in(:subject, subject)
+    validate_placeholders_in(:body, body)
+  end
+
+  def validate_placeholders_in(attribute, text)
+    return if text.blank?
+
+    if malformed?(text)
+      errors.add(attribute, "の練習会情報の埋め込み形式が不正です")
+      return
+    end
+
+    text.scan(/\{\{([^}]+)\}\}/).each do |match|
+      name = match[0]
+      unless PLACEHOLDERS.key?(name)
+        errors.add(attribute, "の{{#{name}}}は無効な埋め込み情報です")
+      end
+    end
+  end
+
+  def malformed?(text)
+    open_count = text.scan("{{").count
+    close_count = text.scan("}}").count
+    return true if open_count != close_count
+
+    depth = 0
+    i = 0
+    while i < text.length - 1
+      if text[i, 2] == "{{"
+        depth += 1
+        return true if depth > 1
+        i += 2
+      elsif text[i, 2] == "}}"
+        depth -= 1
+        return true if depth < 0
+        i += 2
+      else
+        i += 1
+      end
+    end
+
+    depth != 0
+  end
 
   def ensure_single_default
     if default? && default_changed?

@@ -1,0 +1,15 @@
+ja:
+  activerecord:
+    models:
+      event: "練習会"
+      announcement: "お知らせ"
+      announcement_template: "お知らせテンプレート"
+    attributes:
+      announcement_template:
+        subject: "件名"
+        body: "本文"
+      attendance:
+        statuses:
+          attending: "参加"
+          not_attending: "欠席"
+          undecided: "保留"
