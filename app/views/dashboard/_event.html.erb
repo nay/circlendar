@@ -38,9 +38,8 @@
             </p>
           <% end %>
         </div>
-        <div class="flex-shrink-0 pointer-events-auto">
+        <div class="flex-shrink-0">
           <% if attendance.present? %>
-            <!-- 回答済みの場合：ステータス表示 -->
             <% case attendance.status %>
             <% when "attending" %>
               <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-green-500 bg-green-50 rounded-lg text-base font-medium text-green-700">参加</span>
@@ -50,11 +49,7 @@
               <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-yellow-500 bg-yellow-50 rounded-lg text-base font-medium text-yellow-700">保留</span>
             <% end %>
           <% else %>
-            <!-- 未回答の場合：参加/欠席ボタン -->
-            <div class="flex gap-2">
-              <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center justify-center px-6 py-3 border-2 border-green-600 rounded-lg text-base font-medium bg-green-600 text-white hover:bg-green-700" %>
-              <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center justify-center px-6 py-3 border-2 border-gray-600 rounded-lg text-base font-medium bg-gray-600 text-white hover:bg-gray-700" %>
-            </div>
+            <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-red-500 bg-red-50 rounded-lg text-base font-medium text-red-700">未回答</span>
           <% end %>
         </div>
       </div>
