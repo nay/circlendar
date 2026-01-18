@@ -8,4 +8,16 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true
+
+  def confirmed?
+    confirmed_at.present?
+  end
+
+  def generate_confirmation_token!
+    update!(confirmation_token: SecureRandom.urlsafe_base64(32))
+  end
+
+  def confirm!
+    update!(confirmed_at: Time.current, confirmation_token: nil)
+  end
 end

@@ -22,12 +22,15 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <%= member.user.email_address %>
+              <% unless member.user.confirmed? %>
+                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">仮登録</span>
+              <% end %>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <%= member.organization_name.presence || "-" %>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <%= member.formatted_rank %>
+              <%= member.formatted_rank || "-" %>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <% if member.user.admin? %>

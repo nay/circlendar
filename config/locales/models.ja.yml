@@ -6,7 +6,11 @@ ja:
       announcement_template: "お知らせテンプレート"
       venue: "会場"
       member: "メンバー"
+      user: "ユーザー"
     attributes:
+      user:
+        email_address: "メールアドレス"
+        password: "パスワード"
       announcement:
         event_ids: "練習会"
         subject: "件名"
