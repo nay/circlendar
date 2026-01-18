@@ -4,7 +4,7 @@ RSpec.describe AnnouncementTemplate, type: :model do
   describe "#valid?" do
     let(:template) { AnnouncementTemplate.new(subject:, body:) }
     let(:subject) { "練習会のお知らせ" }
-    let(:body) { "{{日付}} {{会場}}" }
+    let(:body) { "{{日付}} {{会場名}}" }
 
     context "有効な埋め込み情報がある場合" do
       it "検証が通る" do
@@ -13,7 +13,7 @@ RSpec.describe AnnouncementTemplate, type: :model do
     end
 
     context "すべての埋め込み情報を使用した場合" do
-      let(:body) { "{{日付}} {{会場}} {{住所}} {{アクセス}} {{開始時刻}} {{終了時刻}} {{備考}}" }
+      let(:body) { "{{日付}} {{会場名}} {{会場住所}} {{会場アクセス}} {{開始時刻}} {{終了時刻}} {{備考}}" }
 
       it "検証が通る" do
         expect(template).to be_valid
