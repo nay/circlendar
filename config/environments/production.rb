@@ -59,6 +59,9 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
 
+  # Set host for URL generation in models
+  Rails.application.routes.default_url_options[:host] = ENV.fetch("APP_HOST", "example.com")
+
   # Resend SMTP settings
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
