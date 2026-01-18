@@ -42,6 +42,11 @@ class Admin::MembersController < Admin::BaseController
   end
 
   def member_params
-    params.require(:member).permit(:name, :organization_name, :rank, :description, :receives_announcements, :disabled)
+    permitted = params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :disabled, :password, :password_confirmation)
+    if permitted[:password].blank?
+      permitted.delete(:password)
+      permitted.delete(:password_confirmation)
+    end
+    permitted
   end
 end
