@@ -25,7 +25,7 @@
       </div>
     <% end %>
 
-    <%= form_with url: signup_path, class: "mt-8 space-y-6" do |form| %>
+    <%= form_with url: signup_path(token: params[:token]), class: "mt-8 space-y-6" do |form| %>
       <div class="space-y-4">
         <div>
           <div class="mb-2">

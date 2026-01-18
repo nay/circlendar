@@ -30,4 +30,31 @@
       <%= form.submit "更新", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
     </div>
   <% end %>
+
+  <hr class="my-8 border-gray-200">
+
+  <div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">サインアップトークン</label>
+        <% if @setting.signup_token.present? %>
+          <div class="flex items-center gap-4">
+            <code class="flex-1 px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm font-mono"><%= @setting.signup_token %></code>
+            <%= button_to "トークンを再発行", generate_signup_token_admin_setting_path, method: :post, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500", data: { turbo_confirm: "トークンを再発行すると、古いサインアップURLは無効になります。よろしいですか？" } %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 flex items-center gap-2">
+            サインアップURL: <code id="signup-url" class="px-1 py-0.5 bg-gray-100 rounded text-xs"><%= signup_url(token: @setting.signup_token) %></code>
+            <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('signup-url').textContent).then(() => { this.textContent = 'コピーしました'; setTimeout(() => { this.innerHTML = '<svg class=\'w-5 h-5\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\'></path></svg>'; }, 2000); })" class="text-gray-500 hover:text-gray-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </p>
+        <% else %>
+          <div class="flex items-center gap-4">
+            <span class="text-gray-500 text-sm">未発行</span>
+            <%= button_to "トークンを発行", generate_signup_token_admin_setting_path, method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

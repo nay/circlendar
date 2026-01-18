@@ -1,5 +1,6 @@
 class RegistrationsController < ApplicationController
   allow_unauthenticated_access only: %i[new create confirmation_sent]
+  before_action :verify_signup_token, only: %i[new create]
 
   layout "authentication"
 
@@ -28,6 +29,13 @@ class RegistrationsController < ApplicationController
   end
 
   private
+
+  def verify_signup_token
+    setting = Setting.instance
+    unless setting.signup_token.present? && params[:token] == setting.signup_token
+      raise ActionController::RoutingError, "Not Found"
+    end
+  end
 
   def user_params
     params.require(:user).permit(:email_address, :password, :password_confirmation, :receives_announcements)

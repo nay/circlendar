@@ -13,6 +13,12 @@ class Admin::SettingsController < Admin::BaseController
     end
   end
 
+  def generate_signup_token
+    @setting = Setting.instance
+    @setting.generate_signup_token!
+    redirect_to edit_admin_setting_path, notice: "サインアップトークンを発行しました"
+  end
+
   private
 
   def setting_params

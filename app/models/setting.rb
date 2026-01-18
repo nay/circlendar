@@ -5,4 +5,8 @@ class Setting < ApplicationRecord
   end
 
   validates :circle_name, presence: true
+
+  def generate_signup_token!
+    update!(signup_token: SecureRandom.urlsafe_base64(15))
+  end
 end

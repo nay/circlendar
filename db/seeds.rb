@@ -7,7 +7,11 @@
 # ========================================
 # グローバル設定
 # ========================================
-Setting.first_or_create!(circle_name: 'サンプルかるた会')
+setting = Setting.first_or_create!(circle_name: 'サンプルかるた会')
+if setting.signup_token.blank?
+  setting.generate_signup_token!
+  puts "Signup token generated: #{setting.signup_token}"
+end
 
 # ========================================
 # 最初の管理者（管理者が一人もいない場合のみ作成）

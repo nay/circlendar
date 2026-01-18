@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  get "signup", to: "registrations#new"
-  post "signup", to: "registrations#create"
+  get "signup/:token", to: "registrations#new", as: :signup
+  post "signup/:token", to: "registrations#create"
   get "signup/sent", to: "registrations#confirmation_sent", as: :confirmation_sent
 
   get "confirm", to: "confirmations#show"
@@ -49,6 +49,8 @@ Rails.application.routes.draw do
 
     resources :members, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
 
-    resource :setting, only: [ :edit, :update ]
+    resource :setting, only: [ :edit, :update ] do
+      post :generate_signup_token, on: :member
+    end
   end
 end
