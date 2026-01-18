@@ -1,0 +1,46 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← #{Venue.model_name.human}一覧に戻る", admin_venues_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= Venue.model_name.human %>詳細</h1>
+    <div class="flex gap-2">
+      <%= link_to "編集", edit_admin_venue_path(@venue), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= button_to "削除", admin_venue_path(@venue), method: :delete, data: { turbo_confirm: "この#{Venue.model_name.human}を削除しますか？" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <%= @venue.name %>
+      </h3>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <% if @venue.url.present? %>
+          <div class="bg-white px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:url) %></dt>
+            <dd class="text-sm text-gray-900 break-all">
+              <%= link_to @venue.url, @venue.url, target: "_blank", rel: "noopener noreferrer", class: "text-blue-600 hover:text-blue-700" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if @venue.announcement_summary.present? %>
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:announcement_summary) %></dt>
+            <dd class="text-sm text-gray-900"><%= @venue.announcement_summary %></dd>
+          </div>
+        <% end %>
+
+        <% if @venue.announcement_detail.present? %>
+          <div class="bg-white px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:announcement_detail) %></dt>
+            <dd class="text-sm text-gray-900"><%= simple_format(@venue.announcement_detail, class: "break-all", sanitize: true) %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

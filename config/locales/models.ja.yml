@@ -4,6 +4,7 @@ ja:
       event: "練習会"
       announcement: "お知らせ"
       announcement_template: "お知らせテンプレート"
+      venue: "会場"
     attributes:
       announcement_template:
         subject: "件名"
@@ -13,3 +14,8 @@ ja:
           attending: "参加"
           not_attending: "欠席"
           undecided: "保留"
+      venue:
+        name: "施設名称"
+        url: "URL"
+        announcement_summary: "お知らせ用サマリー"
+        announcement_detail: "お知らせ用詳細"

@@ -144,3 +144,11 @@ ja:
       success: "お知らせテンプレートを更新しました"
     destroy:
       success: "お知らせテンプレートを削除しました"
+
+  venues:
+    create:
+      success: "%{model}を作成しました"
+    update:
+      success: "%{model}を更新しました"
+    destroy:
+      success: "%{model}を削除しました"

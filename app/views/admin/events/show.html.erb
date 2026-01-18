@@ -20,8 +20,8 @@
       <div class="border-t border-gray-200">
         <dl>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500">公開状態</dt>
-            <dd class="mt-1 text-sm">
+            <dt class="text-sm font-medium text-gray-500 mb-1">公開状態</dt>
+            <dd class="text-sm">
               <% if @event.published? %>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開中</span>
               <% else %>
@@ -31,25 +31,19 @@
           </div>
 
           <div class="bg-white px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500"><%= t('events.form.venue') %></dt>
-            <dd class="mt-1 text-sm text-gray-900">
-              <%= @event.venue.name %>
-            </dd>
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.venue') %></dt>
+            <dd class="text-sm text-gray-900"><%= @event.venue.name %></dd>
           </div>
 
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500">時間</dt>
-            <dd class="mt-1 text-sm text-gray-900">
-              <%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %>
-            </dd>
+            <dt class="text-sm font-medium text-gray-500 mb-1">時間</dt>
+            <dd class="text-sm text-gray-900"><%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %></dd>
           </div>
 
           <% if @event.notes.present? %>
             <div class="bg-white px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500"><%= t('events.form.notes') %></dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                <%= simple_format(@event.notes, {}, sanitize: false) %>
-              </dd>
+              <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.notes') %></dt>
+              <dd class="text-sm text-gray-900"><%= simple_format(@event.notes, {}, sanitize: false) %></dd>
             </div>
           <% end %>
         </dl>

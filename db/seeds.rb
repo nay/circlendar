@@ -77,30 +77,27 @@ end
 # 施設マスタ
 # ========================================
 venue1 = Venue.find_or_create_by!(name: '渋谷区民会館 3階和室') do |venue|
-  venue.address = '東京都渋谷区宇田川町1-1'
   venue.url = 'https://example.com/shibuya'
-  venue.access_info = 'JR渋谷駅より徒歩5分'
-  venue.notes = ''
+  venue.announcement_summary = '渋谷区民会館 3階和室（JR渋谷駅より徒歩5分）'
+  venue.announcement_detail = ''
 end
 
 venue2 = Venue.find_or_create_by!(name: '品川区スポーツセンター 体育室A') do |venue|
-  venue.address = '東京都品川区豊町2-1-17'
   venue.url = 'https://example.com/shinagawa'
-  venue.access_info = '東急大井町線戸越公園駅より徒歩3分'
-  venue.notes = ''
+  venue.announcement_summary = '品川区スポーツセンター 体育室A（東急大井町線戸越公園駅より徒歩3分）'
+  venue.announcement_detail = ''
 end
 
 venue3 = Venue.find_or_create_by!(name: '新宿文化センター 303号室') do |venue|
-  venue.address = '東京都新宿区新宿6-14-1'
   venue.url = 'https://example.com/shinjuku'
-  venue.access_info = '東京メトロ副都心線東新宿駅直結'
-  venue.notes = ''
+  venue.announcement_summary = '新宿文化センター 303号室（東京メトロ副都心線東新宿駅直結）'
+  venue.announcement_detail = ''
 end
 
 # ========================================
 # お知らせテンプレート
 # ========================================
-AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{日付}} {{会場}}') do |template|
+AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{日付}} {{会場名}}') do |template|
   template.body = <<~BODY
     お疲れ様です。
 
@@ -111,14 +108,8 @@ AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】
     {{日付}} {{開始時刻}}〜{{終了時刻}}
 
     ■ 場所
-    {{会場}}
-    {{住所}}
-
-    ■ アクセス
-    {{アクセス}}
-
-    ■ 備考
-    {{備考}}
+    {{会場名}}
+    {{会場URL}}
 
     よろしくお願いします。
   BODY

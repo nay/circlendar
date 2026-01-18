@@ -28,24 +28,22 @@
     <div class="border-t border-gray-200">
       <dl>
         <% if @announcement.event %>
-          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.event") %></dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.event") %></dt>
+            <dd class="text-sm text-gray-900">
               <%= link_to l(@announcement.event.date, format: :long), admin_event_path(@announcement.event), class: "text-blue-600 hover:text-blue-700" %>
             </dd>
           </div>
         <% end %>
 
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.to_address") %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @announcement.to_address %>
-          </dd>
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.to_address") %></dt>
+          <dd class="text-sm text-gray-900"><%= @announcement.to_address %></dd>
         </div>
 
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.bcc_addresses") %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.bcc_addresses") %></dt>
+          <dd class="text-sm text-gray-900">
             <% if @announcement.bcc_addresses.present? %>
               <%= @announcement.bcc_addresses.join(", ") %>
             <% else %>
@@ -54,11 +52,9 @@
           </dd>
         </div>
 
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:items-start">
-          <dt class="text-sm font-medium text-gray-500"><%= t("announcements.form.body") %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">
-            <%= simple_format(@announcement.body, {}, sanitize: true) %>
-          </dd>
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.body") %></dt>
+          <dd class="text-sm text-gray-900 whitespace-pre-wrap"><%= simple_format(@announcement.body, {}, sanitize: true) %></dd>
         </div>
       </dl>
     </div>
