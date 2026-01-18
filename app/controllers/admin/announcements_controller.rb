@@ -6,6 +6,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
+    @bcc_members = Member.joins(:user).where(users: { email_address: @announcement.bcc_addresses }).index_by(&:email_address)
   end
 
   def new

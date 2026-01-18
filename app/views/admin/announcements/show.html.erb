@@ -49,7 +49,17 @@
           <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:bcc_addresses) %></dt>
           <dd class="text-sm text-gray-900">
             <% if @announcement.bcc_addresses.present? %>
-              <%= @announcement.bcc_addresses.join(", ") %>
+              <ul class="list-disc list-inside">
+                <% @announcement.bcc_addresses.each do |email| %>
+                  <li>
+                    <% if (member = @bcc_members[email]) %>
+                      <%= link_to "#{member.name}（#{email}）", admin_member_path(member), class: "text-blue-600 hover:text-blue-700" %>
+                    <% else %>
+                      <%= email %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
             <% else %>
               <span class="text-gray-400">（なし）</span>
             <% end %>
