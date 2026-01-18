@@ -13,47 +13,50 @@
       "bg-red-50"
     end
   %>
-  <div class="px-4 py-4 sm:px-6 <%= bg_color %>">
-    <div class="flex items-center justify-between">
-      <div class="flex-1">
-        <p class="text-lg font-medium text-blue-600">
-          <%= l(event.date, format: :long) %>
-        </p>
-        <p class="mt-1 text-sm text-gray-600">
-          <%= event.venue.name %>
-        </p>
-        <p class="mt-1 text-sm text-gray-500">
-          <%= event.schedule %>
-        </p>
-        <% if attendance&.status == "attending" && attendance.arrival_time.present? %>
-          <p class="mt-1 text-sm text-green-600">
-            到着予定: <%= attendance.arrival_time.strftime('%H:%M') %>
+  <div class="relative <%= bg_color %>">
+    <%= link_to edit_event_attendance_path(event), class: "absolute inset-0 z-10" do %><% end %>
+    <div class="relative z-20 px-4 py-4 sm:px-6 pointer-events-none">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <p class="text-lg font-medium text-blue-600">
+            <%= l(event.date, format: :long) %>
           </p>
-        <% end %>
-        <% if attendance&.message.present? %>
           <p class="mt-1 text-sm text-gray-600">
-            <%= attendance.message %>
+            <%= event.venue.name %>
           </p>
-        <% end %>
-      </div>
-      <div class="flex items-center gap-2">
-        <% if attendance.present? %>
-          <!-- 回答済みの場合：ステータス表示 + 詳細ボタンのみ -->
-          <% case attendance.status %>
-          <% when "attending" %>
-            <span class="text-sm text-gray-700">回答済み（参加）</span>
-          <% when "not_attending" %>
-            <span class="text-sm text-gray-700">回答済み（欠席）</span>
-          <% when "undecided" %>
-            <span class="text-sm text-gray-700">回答済み（保留）</span>
+          <p class="mt-1 text-sm text-gray-500">
+            <%= event.schedule %>
+          </p>
+          <% if attendance&.status == "attending" && attendance.arrival_time.present? %>
+            <p class="mt-1 text-sm text-green-600">
+              到着予定: <%= attendance.arrival_time.strftime('%H:%M') %>
+            </p>
           <% end %>
-          <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
-        <% else %>
-          <!-- 未回答の場合：参加/欠席/詳細ボタン -->
-          <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700" %>
-          <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-gray-600 text-white hover:bg-gray-700" %>
-          <%= link_to "詳細", edit_event_attendance_path(event), class: "inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" %>
-        <% end %>
+          <% if attendance&.message.present? %>
+            <p class="mt-1 text-sm text-gray-600">
+              <%= attendance.message %>
+            </p>
+          <% end %>
+        </div>
+        <div class="flex-shrink-0 pointer-events-auto">
+          <% if attendance.present? %>
+            <!-- 回答済みの場合：ステータス表示 -->
+            <% case attendance.status %>
+            <% when "attending" %>
+              <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-green-500 bg-green-50 rounded-lg text-base font-medium text-green-700">参加</span>
+            <% when "not_attending" %>
+              <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-400 bg-gray-100 rounded-lg text-base font-medium text-gray-700">欠席</span>
+            <% when "undecided" %>
+              <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-yellow-500 bg-yellow-50 rounded-lg text-base font-medium text-yellow-700">保留</span>
+            <% end %>
+          <% else %>
+            <!-- 未回答の場合：参加/欠席ボタン -->
+            <div class="flex gap-2">
+              <%= button_to "参加", event_attendance_path(event), method: :patch, params: { attendance: { status: :attending } }, class: "inline-flex items-center justify-center px-6 py-3 border-2 border-green-600 rounded-lg text-base font-medium bg-green-600 text-white hover:bg-green-700" %>
+              <%= button_to "欠席", event_attendance_path(event), method: :patch, params: { attendance: { status: :not_attending } }, class: "inline-flex items-center justify-center px-6 py-3 border-2 border-gray-600 rounded-lg text-base font-medium bg-gray-600 text-white hover:bg-gray-700" %>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
