@@ -79,19 +79,31 @@ end
 venue1 = Venue.find_or_create_by!(name: '渋谷区民会館 3階和室') do |venue|
   venue.url = 'https://example.com/shibuya'
   venue.announcement_summary = '渋谷区民会館 3階和室（JR渋谷駅より徒歩5分）'
-  venue.announcement_detail = ''
+  venue.announcement_detail = <<~TEXT.strip
+    ☆渋谷区民会館 3階和室
+    JR渋谷駅ハチ公口より徒歩5分。
+    宇田川町方面へ進み、交番を右折してください。
+  TEXT
 end
 
 venue2 = Venue.find_or_create_by!(name: '品川区スポーツセンター 体育室A') do |venue|
   venue.url = 'https://example.com/shinagawa'
   venue.announcement_summary = '品川区スポーツセンター 体育室A（東急大井町線戸越公園駅より徒歩3分）'
-  venue.announcement_detail = ''
+  venue.announcement_detail = <<~TEXT.strip
+    ☆品川区スポーツセンター 体育室A
+    東急大井町線戸越公園駅より徒歩3分。
+    改札を出て左へ進み、商店街を抜けた先です。
+  TEXT
 end
 
 venue3 = Venue.find_or_create_by!(name: '新宿文化センター 303号室') do |venue|
   venue.url = 'https://example.com/shinjuku'
   venue.announcement_summary = '新宿文化センター 303号室（東京メトロ副都心線東新宿駅直結）'
-  venue.announcement_detail = ''
+  venue.announcement_detail = <<~TEXT.strip
+    ☆新宿文化センター 303号室
+    東京メトロ副都心線東新宿駅A3出口直結。
+    エレベーターで3階へお越しください。
+  TEXT
 end
 
 # ========================================

@@ -1,6 +1,7 @@
 class AnnouncementTemplate < ApplicationRecord
   PLACEHOLDERS = {
     "練習会サマリー" => "{{練習会サマリー}}",
+    "会場案内" => "{{会場案内}}",
     "日付" => "{{日付}}",
     "会場名" => "{{会場名}}",
     "会場URL" => "{{会場URL}}",
@@ -37,6 +38,12 @@ class AnnouncementTemplate < ApplicationRecord
       "#{date_str}　＠#{venue_summary}"
     end
     result.gsub!("{{練習会サマリー}}", summary_lines.join("\n"))
+
+    # 会場案内（ユニークな会場ごとにannouncement_detailを空行区切りで）
+    venue_details = events.map(&:venue).uniq.filter_map do |venue|
+      venue.announcement_detail.presence
+    end
+    result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
 
     # 単一イベント用プレースホルダー（最初のイベントを使用）
     event = events.first
