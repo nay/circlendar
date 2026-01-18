@@ -6,7 +6,8 @@ class AnnouncementTemplate < ApplicationRecord
   BODY_PLACEHOLDERS = {
     "練習会サマリー" => "{{練習会サマリー}}",
     "会場案内" => "{{会場案内}}",
-    "ダッシュボードURL" => "{{ダッシュボードURL}}"
+    "ダッシュボードURL" => "{{ダッシュボードURL}}",
+    "サインアップURL" => "{{サインアップURL}}"
   }.freeze
 
   ALL_PLACEHOLDERS = SUBJECT_PLACEHOLDERS.merge(BODY_PLACEHOLDERS).freeze
@@ -21,6 +22,10 @@ class AnnouncementTemplate < ApplicationRecord
 
   def has_placeholders?
     ALL_PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
+  end
+
+  def has_signup_url_placeholder?
+    body&.include?("{{サインアップURL}}")
   end
 
   def self.fill_placeholders(text, events)
@@ -57,6 +62,14 @@ class AnnouncementTemplate < ApplicationRecord
     # ダッシュボードURL
     dashboard_url = Rails.application.routes.url_helpers.dashboard_url
     result.gsub!("{{ダッシュボードURL}}", dashboard_url)
+
+    # サインアップURL
+    if result.include?("{{サインアップURL}}")
+      signup_token = Setting.instance.signup_token
+      raise "サインアップトークンが未発行です" if signup_token.blank?
+      signup_url = Rails.application.routes.url_helpers.signup_url(token: signup_token)
+      result.gsub!("{{サインアップURL}}", signup_url)
+    end
 
     result
   end
