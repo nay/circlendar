@@ -38,7 +38,7 @@
               </div>
             </div>
             <div class="flex items-center space-x-4">
-              <span class="text-sm text-gray-600"><%= current_member&.name || Current.user.email_address %></span>
+              <%= link_to (current_member&.name || Current.user.email_address), edit_profile_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
               <%= button_to "ログアウト", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-900" %>
             </div>
           </div>
