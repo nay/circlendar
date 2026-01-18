@@ -24,16 +24,6 @@
           <p class="mt-1 text-sm text-gray-500">
             <%= event.schedule %>
           </p>
-          <% if attendance&.status == "attending" && attendance.arrival_time.present? %>
-            <p class="mt-1 text-sm text-green-600">
-              到着予定: <%= attendance.arrival_time.strftime('%H:%M') %>
-            </p>
-          <% end %>
-          <% if attendance&.message.present? %>
-            <p class="mt-1 text-sm text-gray-600">
-              <%= attendance.message %>
-            </p>
-          <% end %>
         </div>
         <div class="flex-shrink-0">
           <% if attendance.present? %>
