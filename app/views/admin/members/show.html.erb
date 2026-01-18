@@ -5,6 +5,7 @@
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= Member.model_name.human %>詳細</h1>
     <div class="flex gap-2">
+      <%= link_to "編集", edit_admin_member_path(@member), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       <%= button_to "削除", admin_member_path(@member), method: :delete, data: { turbo_confirm: "この#{Member.model_name.human}を削除しますか？" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
     </div>
   </div>
@@ -14,7 +15,9 @@
       <h3 class="text-lg leading-6 font-medium text-gray-900">
         <%= @member.name %>
       </h3>
-      <% unless @member.user.confirmed? %>
+      <% if @member.disabled? %>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">無効</span>
+      <% elsif !@member.user.confirmed? %>
         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">仮登録</span>
       <% end %>
     </div>

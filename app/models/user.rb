@@ -9,8 +9,15 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
 
+  scope :active, -> { where(disabled_at: nil) }
+  scope :receives_announcements, -> { where(receives_announcements: true) }
+
   def confirmed?
     confirmed_at.present?
+  end
+
+  def disabled?
+    disabled_at.present?
   end
 
   def generate_confirmation_token!

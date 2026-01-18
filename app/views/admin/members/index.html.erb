@@ -21,8 +21,10 @@
               <%= link_to member.name, admin_member_path(member), class: "text-blue-600 hover:text-blue-700" %>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <%= member.user.email_address %>
-              <% unless member.user.confirmed? %>
+              <%= member.email_address %>
+              <% if member.disabled? %>
+                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">無効</span>
+              <% elsif !member.user.confirmed? %>
                 <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">仮登録</span>
               <% end %>
             </td>

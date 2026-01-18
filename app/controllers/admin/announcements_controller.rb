@@ -74,7 +74,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   def prepare_form_data
     @events = Event.upcoming.order(:date)
     @announcement_templates = AnnouncementTemplate.order(:subject)
-    @members = Member.includes(:user).where(users: { receives_announcements: true })
+    @members = Member.joins(:user).merge(User.active.receives_announcements)
   end
 
   def apply_template

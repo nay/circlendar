@@ -44,6 +44,6 @@ Rails.application.routes.draw do
 
     resources :venues
 
-    resources :members, only: [ :index, :show, :destroy ]
+    resources :members, only: [ :index, :show, :edit, :update, :destroy ]
   end
 end

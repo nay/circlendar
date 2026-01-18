@@ -2,7 +2,7 @@ class ConfirmationsController < ApplicationController
   allow_unauthenticated_access
 
   def show
-    user = User.find_by(confirmation_token: params[:token])
+    user = User.active.find_by(confirmation_token: params[:token])
 
     if user
       user.confirm!
