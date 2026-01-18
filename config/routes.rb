@@ -37,5 +37,7 @@ Rails.application.routes.draw do
     resources :announcement_templates
 
     resources :venues
+
+    resources :members, only: [ :index ]
   end
 end

@@ -11,4 +11,8 @@ class Player < ApplicationRecord
   }, default: :e
 
   validates :name, presence: true
+
+  def formatted_rank
+    unknown? ? "不明" : "#{rank.upcase}級"
+  end
 end

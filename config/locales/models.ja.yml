@@ -5,6 +5,7 @@ ja:
       announcement: "お知らせ"
       announcement_template: "お知らせテンプレート"
       venue: "会場"
+      member: "メンバー"
     attributes:
       announcement:
         event_ids: "練習会"
