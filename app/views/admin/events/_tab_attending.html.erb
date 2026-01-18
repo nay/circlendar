@@ -7,13 +7,17 @@
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div class="font-medium text-gray-900"><%= attendance.player.name %></div>
             <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
-              <span>到着: <%= attendance.arrival_time&.strftime('%H:%M') || '-' %></span>
-              <span>退出: <%= attendance.departure_time&.strftime('%H:%M') || '-' %></span>
+              <% if attendance.arrival_time.present? %>
+                <span>到着: <%= attendance.arrival_time.strftime('%H:%M') %></span>
+              <% end %>
+              <% if attendance.departure_time.present? %>
+                <span>退出: <%= attendance.departure_time.strftime('%H:%M') %></span>
+              <% end %>
               <span>アフター: <%= I18n.t("activerecord.attributes.attendance.after_parties.#{attendance.after_party}") %></span>
             </div>
           </div>
           <% if attendance.message.present? %>
-            <div class="mt-2 text-sm text-gray-500"><%= attendance.message %></div>
+            <div class="mt-2 text-sm text-gray-500 whitespace-pre-wrap"><%= attendance.message %></div>
           <% end %>
         </li>
       <% end %>
