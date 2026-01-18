@@ -8,6 +8,21 @@ class Admin::MembersController < Admin::BaseController
   def show
   end
 
+  def new
+    @member = Member.new
+  end
+
+  def create
+    @member = Member.new(member_params_for_create)
+    @member.user.confirmed_at = Time.current
+
+    if @member.save
+      redirect_to admin_member_path(@member), notice: "#{Member.model_name.human}を作成しました"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit
   end
 
@@ -16,6 +31,7 @@ class Admin::MembersController < Admin::BaseController
       redirect_to edit_admin_member_path(@member), alert: "自分自身は無効にできません"
       return
     end
+
 
     @member.assign_attributes(member_params)
 
@@ -42,11 +58,16 @@ class Admin::MembersController < Admin::BaseController
   end
 
   def member_params
-    permitted = params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :disabled, :password, :password_confirmation)
+    permitted = params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :disabled, :role, :password, :password_confirmation)
     if permitted[:password].blank?
       permitted.delete(:password)
       permitted.delete(:password_confirmation)
     end
+    permitted.delete(:role) if @member.user == Current.user
     permitted
+  end
+
+  def member_params_for_create
+    params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :role, :password, :password_confirmation)
   end
 end
