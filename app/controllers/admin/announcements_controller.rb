@@ -91,6 +91,11 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
+    if @announcement.template.has_signup_url_placeholder? && Setting.instance.signup_token.blank?
+      flash.now[:alert] = I18n.t("announcements.apply_template.signup_token_required")
+      return
+    end
+
     @announcement.apply_template
   end
 

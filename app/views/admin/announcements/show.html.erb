@@ -41,11 +41,16 @@
         <% end %>
 
         <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:body) %></dt>
+          <dd class="text-sm text-gray-900 whitespace-pre-wrap"><%= simple_format(@announcement.body, {}, sanitize: true) %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
           <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:to_address) %></dt>
           <dd class="text-sm text-gray-900"><%= @announcement.to_address %></dd>
         </div>
 
-        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+        <div class="bg-white px-4 py-5 sm:px-6">
           <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:bcc_addresses) %></dt>
           <dd class="text-sm text-gray-900">
             <% if @announcement.bcc_addresses.present? %>
@@ -64,11 +69,6 @@
               <span class="text-gray-400">（なし）</span>
             <% end %>
           </dd>
-        </div>
-
-        <div class="bg-white px-4 py-5 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:body) %></dt>
-          <dd class="text-sm text-gray-900 whitespace-pre-wrap"><%= simple_format(@announcement.body, {}, sanitize: true) %></dd>
         </div>
       </dl>
     </div>

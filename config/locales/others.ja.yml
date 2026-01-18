@@ -110,6 +110,7 @@ ja:
     apply_template:
       template_required: "テンプレートを選択してください"
       event_required: "このテンプレートを利用するには練習会を選択する必要があります"
+      signup_token_required: "このテンプレートを利用するにはサインアップトークンを発行する必要があります"
 
   announcement_templates:
     index:
