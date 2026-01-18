@@ -43,12 +43,12 @@ ja:
       attendance:
         statuses:
           attending: "参加"
-          not_attending: "欠席"
+          not_attending: "不参加"
           undecided: "保留"
         after_parties:
-          attending: "参加したい"
-          not_attending: "参加できない"
-          undecided: "未決定"
+          attending: "参加"
+          not_attending: "不参加"
+          undecided: "保留"
       event:
         date: "日付"
         schedule: "練習時間の案内"

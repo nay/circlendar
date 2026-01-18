@@ -35,9 +35,7 @@ class AnnouncementTemplate < ApplicationRecord
     result = text.dup
 
     # 練習会ヘッドライン（サブジェクト用）
-    dates_str = events.map(&:formatted_date_short).join("＆")
-    venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
-    result.gsub!("{{練習会ヘッドライン}}", "#{dates_str} #{venues_str}")
+    result.gsub!("{{練習会ヘッドライン}}", Event.headline(events))
 
     # 練習会サマリー（複数イベント対応）
     # 桁がバラバラな場合のみパディング
