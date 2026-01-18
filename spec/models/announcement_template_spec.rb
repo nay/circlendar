@@ -13,7 +13,7 @@ RSpec.describe AnnouncementTemplate, type: :model do
     end
 
     context "すべての埋め込み情報を使用した場合" do
-      let(:body) { "{{日付}} {{会場名}} {{会場住所}} {{会場アクセス}} {{開始時刻}} {{終了時刻}} {{備考}}" }
+      let(:body) { "{{日付}} {{会場名}} {{会場URL}} {{開始時刻}} {{終了時刻}}" }
 
       it "検証が通る" do
         expect(template).to be_valid

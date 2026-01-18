@@ -3,7 +3,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   before_action :set_event, only: %i[ new create show edit update ]
 
   def index
-    @announcements = Announcement.includes(:event, :sender).order(created_at: :desc)
+    @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
   end
 
   def show
@@ -11,7 +11,7 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def new
     @announcement = Announcement.new
-    @announcement.event = @event if @event
+    @announcement.events << @event if @event
     prepare_form_data
   end
 
@@ -84,7 +84,7 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
-    if @announcement.template.has_placeholders? && !@announcement.event
+    if @announcement.template.has_placeholders? && @announcement.events.empty?
       flash.now[:alert] = I18n.t("announcements.apply_template.event_required")
       return
     end
@@ -101,6 +101,6 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def announcement_params
-    params.require(:announcement).permit(:event_id, :announcement_template_id, :subject, :body, :to_address, bcc_addresses: [])
+    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, bcc_addresses: [], event_ids: [])
   end
 end

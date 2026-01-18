@@ -27,11 +27,13 @@
     </div>
     <div class="border-t border-gray-200">
       <dl>
-        <% if @announcement.event %>
+        <% if @announcement.events.any? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.event") %></dt>
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.events") %></dt>
             <dd class="text-sm text-gray-900">
-              <%= link_to l(@announcement.event.date, format: :long), admin_event_path(@announcement.event), class: "text-blue-600 hover:text-blue-700" %>
+              <% @announcement.events.each_with_index do |event, i| %>
+                <%= link_to l(event.date, format: :long), admin_event_path(event), class: "text-blue-600 hover:text-blue-700" %><%= "、" unless i == @announcement.events.size - 1 %>
+              <% end %>
             </dd>
           </div>
         <% end %>

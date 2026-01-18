@@ -96,7 +96,7 @@ ja:
     form:
       template: "テンプレート"
       template_prompt: "テンプレートを選択..."
-      event: "関連する練習会"
+      events: "関連する練習会"
       event_prompt: "（なし）"
       no_event: "練習会と関連付けない"
       no_templates: "テンプレートがありません"
