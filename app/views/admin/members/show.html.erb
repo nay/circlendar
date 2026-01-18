@@ -1,0 +1,55 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← #{Member.model_name.human}一覧に戻る", admin_members_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= Member.model_name.human %>詳細</h1>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <%= @member.name %>
+      </h3>
+      <% unless @member.user.confirmed? %>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">仮登録</span>
+      <% end %>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">メールアドレス</dt>
+          <dd class="text-sm text-gray-900"><%= @member.user.email_address %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">所属</dt>
+          <dd class="text-sm text-gray-900"><%= @member.organization_name.presence || "-" %></dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">級</dt>
+          <dd class="text-sm text-gray-900"><%= @member.formatted_rank || "-" %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">権限</dt>
+          <dd class="text-sm text-gray-900">
+            <% if @member.user.admin? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">管理者</span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">一般</span>
+            <% end %>
+          </dd>
+        </div>
+
+        <% if @member.description.present? %>
+          <div class="bg-white px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1">自己紹介</dt>
+            <dd class="text-sm text-gray-900"><%= simple_format(@member.description, sanitize: true) %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>
