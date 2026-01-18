@@ -18,7 +18,6 @@
     </div>
     <div class="border-t border-gray-200">
       <dl>
-        <%# brakeman:disable LinkToHref %>
         <% if @venue.url.present? && @venue.url.start_with?('http://', 'https://') %>
           <div class="bg-white px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:url) %></dt>
