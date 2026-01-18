@@ -5,7 +5,8 @@ class AnnouncementTemplate < ApplicationRecord
 
   BODY_PLACEHOLDERS = {
     "練習会サマリー" => "{{練習会サマリー}}",
-    "会場案内" => "{{会場案内}}"
+    "会場案内" => "{{会場案内}}",
+    "ダッシュボードURL" => "{{ダッシュボードURL}}"
   }.freeze
 
   ALL_PLACEHOLDERS = SUBJECT_PLACEHOLDERS.merge(BODY_PLACEHOLDERS).freeze
@@ -52,6 +53,10 @@ class AnnouncementTemplate < ApplicationRecord
       venue.announcement_detail.presence
     end
     result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
+
+    # ダッシュボードURL
+    dashboard_url = Rails.application.routes.url_helpers.dashboard_url
+    result.gsub!("{{ダッシュボードURL}}", dashboard_url)
 
     result
   end

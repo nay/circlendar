@@ -12,6 +12,25 @@ ja:
       user:
         email_address: "メールアドレス"
         password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        receives_announcements: "お知らせ受信"
+        role: "権限"
+        confirmed_at: "確認日時"
+        disabled_at: "無効日時"
+      player:
+        name: "お名前"
+        organization_name: "所属団体"
+        rank: "級"
+        description: "自己紹介"
+      member:
+        name: "お名前"
+        organization_name: "所属団体"
+        rank: "級"
+        description: "自己紹介"
+        email_address: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        receives_announcements: "お知らせ受信"
       announcement:
         event_ids: "練習会"
         subject: "件名"

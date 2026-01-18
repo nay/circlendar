@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
 
   private
     def after_authentication_url
+      session.delete(:return_to_after_authenticating) || default_after_authentication_url
+    end
+
+    def default_after_authentication_url
       if Current.user&.admin?
         admin_events_path
       else

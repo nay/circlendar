@@ -19,32 +19,7 @@
   </head>
 
   <body>
-    <% if Current.user %>
-      <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="container mx-auto px-5">
-          <div class="flex justify-between items-center h-16">
-            <div class="flex items-center space-x-8">
-              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %></h1>
-              <div class="flex space-x-4">
-                <%= link_to "ダッシュボード", dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50" %>
-                <% if Current.user.admin? %>
-                  <%= link_to Event.model_name.human, admin_events_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/events') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                  <%= link_to Announcement.model_name.human, admin_announcements_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/announcements') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                  <%= link_to "テンプレート", admin_announcement_templates_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/announcement_templates') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                  <%= link_to Venue.model_name.human, admin_venues_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/venues') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                  <%= link_to Member.model_name.human, admin_members_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/members') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                  <%= link_to Setting.model_name.human, edit_admin_setting_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/setting') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
-                <% end %>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <span class="text-sm text-gray-600"><%= current_member&.name || Current.user.email_address %></span>
-              <%= button_to "ログアウト", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-900" %>
-            </div>
-          </div>
-        </div>
-      </nav>
-    <% end %>
+    <%= render "layouts/navbar" %>
 
     <main class="container mx-auto mt-8 px-5">
       <% if flash[:notice] %>

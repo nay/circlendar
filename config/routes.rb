@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   # Dashboard for members
   get "dashboard", to: "dashboard#index"
 
+  # Profile
+  resource :profile, only: [ :edit, :update ]
+
   # Member attendances
   resources :events, only: [] do
     resource :attendance, only: [ :edit, :update ]
