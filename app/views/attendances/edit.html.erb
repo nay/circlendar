@@ -97,4 +97,20 @@
       <p class="text-gray-500 text-sm">まだ参加者はいません</p>
     <% end %>
   </div>
+
+  <!-- メッセージ一覧 -->
+  <% attendees_with_message = @attendees.select { |a| a.message.present? } %>
+  <% if attendees_with_message.any? %>
+    <div class="mt-8">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">メッセージ</h2>
+      <div class="space-y-4">
+        <% attendees_with_message.each do |attendance| %>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="font-medium text-gray-900 mb-1"><%= attendance.player.name %></div>
+            <div class="text-sm text-gray-600 whitespace-pre-wrap"><%= attendance.message %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>
