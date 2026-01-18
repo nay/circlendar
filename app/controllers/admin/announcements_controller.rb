@@ -10,6 +10,9 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def new
     @announcement = Announcement.new
+    if params[:event_id]
+      @announcement.event_ids = [params[:event_id]]
+    end
     prepare_form_data
   end
 
