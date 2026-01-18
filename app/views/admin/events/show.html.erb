@@ -27,10 +27,10 @@
       <dl>
         <div class="bg-gray-50 px-4 py-5 sm:px-6">
           <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.venue') %></dt>
-          <dd class="text-sm text-gray-900"><%= @event.venue.name %></dd>
+          <dd class="text-sm text-gray-900"><%= link_to @event.venue.name, admin_venue_path(@event.venue), class: "text-blue-600 hover:text-blue-700" %></dd>
         </div>
 
-        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+        <div class="bg-white px-4 py-5 sm:px-6">
           <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.schedule') %></dt>
           <dd class="text-sm text-gray-900"><%= @event.schedule %></dd>
         </div>
