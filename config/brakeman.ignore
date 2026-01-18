@@ -3,6 +3,14 @@
     {
       "fingerprint": "b2a7bb460e0c2d92c192635470b91a22b027b70a00f564986653d68ef7457996",
       "note": "URL is validated with start_with? check and model validation"
+    },
+    {
+      "fingerprint": "c703199e748f013b96ff300844771b641b1abb7d6adb01fd835f340d597d7654",
+      "note": "Admin-only controller, role assignment is intentional for member management"
+    },
+    {
+      "fingerprint": "1e273eb0dd8ba40a621401ee3bb6187a227311f9757c22a50a7cafbd23d807a1",
+      "note": "Admin-only controller, role assignment is intentional for member creation"
     }
   ],
   "updated": "2026-01-18",
