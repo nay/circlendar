@@ -18,8 +18,18 @@ class Event < ApplicationRecord
     date >= Date.today
   end
 
-  def display_name
-    "#{formatted_date_short} #{venue.short_name}"
+  def headline
+    Event.headline([ self ])
+  end
+
+  # 複数イベントのヘッドライン生成（お知らせ件名用）
+  def self.headline(events)
+    events = Array(events).compact.sort_by(&:date)
+    return "" if events.empty?
+
+    dates_str = events.map(&:formatted_date_short).join("＆")
+    venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
+    "#{dates_str} #{venues_str}"
   end
 
   def formatted_date_short
