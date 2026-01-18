@@ -15,7 +15,7 @@ ja:
           not_attending: "欠席"
           undecided: "保留"
       venue:
-        name: "施設名称"
+        name: "管理名"
         url: "URL"
         short_name: "お知らせ用略称"
         announcement_summary: "お知らせ用サマリー"
