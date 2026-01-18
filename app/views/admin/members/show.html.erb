@@ -46,8 +46,19 @@
           </dd>
         </div>
 
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">お知らせメール</dt>
+          <dd class="text-sm text-gray-900">
+            <% if @member.user.receives_announcements? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">受信する</span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">受信しない</span>
+            <% end %>
+          </dd>
+        </div>
+
         <% if @member.description.present? %>
-          <div class="bg-white px-4 py-5 sm:px-6">
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1">自己紹介</dt>
             <dd class="text-sm text-gray-900"><%= simple_format(@member.description, sanitize: true) %></dd>
           </div>

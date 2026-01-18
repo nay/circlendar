@@ -93,6 +93,13 @@
                 maxlength: 72,
                 class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
         </div>
+
+        <div class="flex items-center">
+          <%= form.check_box "user[receives_announcements]",
+                checked: @user.receives_announcements.nil? ? true : @user.receives_announcements,
+                class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label "user[receives_announcements]", "練習会のお知らせメールを受け取る", class: "ml-2 block text-sm text-gray-700" %>
+        </div>
       </div>
 
       <div>
