@@ -2,16 +2,14 @@
   <h1 class="text-3xl font-bold text-gray-900 mb-8">プロフィール編集</h1>
 
   <%= form_with model: @member, url: profile_path, method: :patch, class: "space-y-6" do |form| %>
-    <% if @member.errors.any? || @member.user.errors.any? %>
+    <% all_errors = (@member.errors.full_messages + @member.user.errors.full_messages).uniq %>
+    <% if all_errors.any? %>
       <div class="rounded-md bg-red-50 p-4">
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800"><%= t('errors.template.header') %></h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
-              <% @member.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-              <% @member.user.errors.full_messages.each do |message| %>
+              <% all_errors.each do |message| %>
                 <li><%= message %></li>
               <% end %>
             </ul>
