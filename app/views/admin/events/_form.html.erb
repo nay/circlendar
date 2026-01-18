@@ -20,20 +20,20 @@
 
   <div>
     <div class="mb-2">
-      <%= form.label :venue_id, t('events.form.venue'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
-    </div>
-    <%= form.collection_select :venue_id, @venues, :id, :name,
-          { prompt: t('helpers.select.prompt') },
-          { class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true } %>
-  </div>
-
-  <div>
-    <div class="mb-2">
       <%= form.label :date, t('events.form.date'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
     </div>
     <%= form.date_field :date,
           required: true,
           class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+  </div>
+
+  <div>
+    <div class="mb-2">
+      <%= form.label :venue_id, t('events.form.venue'), class: "text-sm font-medium text-gray-700" %><span class="text-red-500 ml-1">*</span>
+    </div>
+    <%= form.collection_select :venue_id, @venues, :id, :name,
+          { prompt: t('helpers.select.prompt') },
+          { class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm", required: true } %>
   </div>
 
   <div>

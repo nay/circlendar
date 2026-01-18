@@ -20,7 +20,12 @@ class Admin::EventsController < Admin::BaseController
   end
 
   def new
-    @event = Event.new
+    @event = if params[:source_event_id]
+      source = Event.find(params[:source_event_id])
+      Event.new(venue_id: source.venue_id, schedule: source.schedule, status: source.status)
+    else
+      Event.new
+    end
     @venues = Venue.all
   end
 
