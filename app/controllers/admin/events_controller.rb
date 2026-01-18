@@ -2,7 +2,15 @@ class Admin::EventsController < Admin::BaseController
   before_action :set_event, only: %i[ show edit update destroy ]
 
   def index
-    @events = Event.includes(:venue).order(date: :desc)
+    @current_tab = params[:tab] || "upcoming"
+    base_scope = Event.includes(:venue)
+
+    @events = case @current_tab
+    when "past"
+      base_scope.past.order(date: :desc)
+    else
+      base_scope.upcoming.order(date: :desc)
+    end
   end
 
   def show
