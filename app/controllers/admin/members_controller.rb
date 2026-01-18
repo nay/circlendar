@@ -17,6 +17,7 @@ class Admin::MembersController < Admin::BaseController
       return
     end
 
+
     @member.assign_attributes(member_params)
 
     if @member.save
@@ -42,11 +43,12 @@ class Admin::MembersController < Admin::BaseController
   end
 
   def member_params
-    permitted = params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :disabled, :password, :password_confirmation)
+    permitted = params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :disabled, :role, :password, :password_confirmation)
     if permitted[:password].blank?
       permitted.delete(:password)
       permitted.delete(:password_confirmation)
     end
+    permitted.delete(:role) if @member.user == Current.user
     permitted
   end
 end

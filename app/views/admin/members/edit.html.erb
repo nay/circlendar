@@ -66,13 +66,29 @@
 
         <hr class="border-gray-200">
 
+        <% is_self = @member.user == Current.user %>
+
+        <div>
+          <span class="block text-sm font-medium text-gray-700 mb-2">権限</span>
+          <div class="flex gap-6">
+            <label class="inline-flex items-center <%= 'opacity-50' if is_self %>">
+              <%= form.radio_button :role, "admin", disabled: is_self, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" %>
+              <span class="ml-2 text-sm text-gray-700">管理者</span>
+            </label>
+            <label class="inline-flex items-center <%= 'opacity-50' if is_self %>">
+              <%= form.radio_button :role, "member", disabled: is_self, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" %>
+              <span class="ml-2 text-sm text-gray-700">メンバー</span>
+            </label>
+          </div>
+        </div>
+
         <div class="flex items-center">
           <%= form.check_box :receives_announcements, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
           <%= form.label :receives_announcements, "お知らせメールを受信する", class: "ml-2 block text-sm text-gray-700" %>
         </div>
 
-        <div class="flex items-center">
-          <%= form.check_box :disabled, checked: @member.disabled?, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" %>
+        <div class="flex items-center <%= 'opacity-50' if is_self %>">
+          <%= form.check_box :disabled, checked: @member.disabled?, disabled: is_self, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" %>
           <%= form.label :disabled, "無効", class: "ml-2 block text-sm text-gray-700" %>
           <span class="ml-2 text-xs text-gray-500">（ログイン不可、お知らせメール送信対象外）</span>
         </div>
