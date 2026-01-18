@@ -3,6 +3,7 @@ class AttendancesController < ApplicationController
 
   def edit
     @attendance = @event.attendances.find_or_initialize_by(player: current_member)
+    @attendees = @event.attendances.attending.includes(:player)
   end
 
   def update
