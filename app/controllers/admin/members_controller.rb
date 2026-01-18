@@ -19,7 +19,7 @@ class Admin::MembersController < Admin::BaseController
 
     @member.assign_attributes(member_params)
 
-    if @member.save_with_user
+    if @member.save
       redirect_to admin_member_path(@member), notice: "#{Member.model_name.human}を更新しました"
     else
       render :edit, status: :unprocessable_entity
