@@ -136,7 +136,6 @@ event1 = Event.find_or_create_by!(
   date: 2.weeks.from_now.to_date
 ) do |event|
   event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
-  event.notes = '初心者の方も歓迎します'
   event.status = :published
 end
 
@@ -180,7 +179,6 @@ event2 = Event.find_or_create_by!(
   date: 1.month.from_now.to_date
 ) do |event|
   event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
-  event.notes = '昼食は各自ご持参ください'
   event.status = :draft
 end
 
@@ -192,9 +190,6 @@ event3 = Event.find_or_create_by!(
   date: 1.week.ago.to_date
 ) do |event|
   event.schedule = '１３：００ー１８：００　２本か３本'
-  event.notes = '2本目 15:20〜
-
-可能な方は札を持ってきてください！'
   event.status = :published
 end
 
@@ -219,7 +214,6 @@ event4 = Event.find_or_create_by!(
   date: 3.weeks.from_now.to_date
 ) do |event|
   event.schedule = '１３：００ー１８：００　２本か３本'
-  event.notes = '級位者向け練習会です'
   event.status = :published
 end
 

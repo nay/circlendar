@@ -10,74 +10,53 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div class="px-4 py-5 sm:px-6">
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+    <div class="px-4 py-5 sm:px-6">
+      <div class="flex items-center gap-2">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
-          <%= l(@event.date, format: :long) %>
+          <%= @event.display_name %>
         </h3>
-      </div>
-      <div class="border-t border-gray-200">
-        <dl>
-          <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1">公開状態</dt>
-            <dd class="text-sm">
-              <% if @event.published? %>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開中</span>
-              <% else %>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
-              <% end %>
-            </dd>
-          </div>
-
-          <div class="bg-white px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.venue') %></dt>
-            <dd class="text-sm text-gray-900"><%= @event.venue.name %></dd>
-          </div>
-
-          <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.schedule') %></dt>
-            <dd class="text-sm text-gray-900"><%= @event.schedule %></dd>
-          </div>
-
-          <% if @event.notes.present? %>
-            <div class="bg-white px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.notes') %></dt>
-              <dd class="text-sm text-gray-900"><%= simple_format(@event.notes, {}, sanitize: false) %></dd>
-            </div>
-          <% end %>
-        </dl>
-      </div>
-    </div>
-
-    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">お知らせ</h3>
-      </div>
-      <div class="border-t border-gray-200">
-        <% if @announcements.any? %>
-          <ul class="divide-y divide-gray-200 border-t border-gray-200">
-            <% @announcements.each do |announcement| %>
-              <li>
-                <%= link_to admin_announcement_path(announcement), class: "block px-4 py-3 hover:bg-gray-50" do %>
-                  <div class="flex items-center justify-between">
-                    <p class="text-sm font-medium text-blue-600 truncate"><%= announcement.subject %></p>
-                    <% if announcement.sent? %>
-                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">送信済み</span>
-                    <% else %>
-                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
-                    <% end %>
-                  </div>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
+        <% if @event.published? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開中</span>
         <% else %>
-          <p class="px-4 py-3 text-sm text-gray-500 border-t border-gray-200">お知らせはありません。</p>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
         <% end %>
       </div>
     </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.venue') %></dt>
+          <dd class="text-sm text-gray-900"><%= @event.venue.name %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.schedule') %></dt>
+          <dd class="text-sm text-gray-900"><%= @event.schedule %></dd>
+        </div>
+      </dl>
+    </div>
   </div>
 
-  <%= render 'attendances', attendances: @attendances %>
+  <% attending_count = @attendances.attending.count %>
+  <% not_attending_count = @attendances.where(status: [:not_attending, :undecided]).count %>
+  <div class="border-b border-gray-200 mb-4">
+    <nav class="-mb-px flex">
+      <%= link_to "お知らせ", admin_event_path(@event, tab: "announcements"),
+            class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'announcements' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+      <%= link_to "参加者(#{attending_count})", admin_event_path(@event, tab: "attending"),
+            class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'attending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+      <%= link_to "欠席・保留の回答者(#{not_attending_count})", admin_event_path(@event, tab: "not_attending"),
+            class: "w-48 py-2 text-center border-b-2 text-sm font-medium #{@current_tab == 'not_attending' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+    </nav>
+  </div>
+
+  <% case @current_tab %>
+  <% when "attending" %>
+    <%= render "tab_attending", attendances: @attendances %>
+  <% when "not_attending" %>
+    <%= render "tab_not_attending", attendances: @attendances %>
+  <% when "announcements" %>
+    <%= render "tab_announcements", announcements: @announcements %>
+  <% end %>
 </div>

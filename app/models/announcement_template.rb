@@ -29,7 +29,7 @@ class AnnouncementTemplate < ApplicationRecord
     result = text.dup
 
     # 練習会ヘッドライン（サブジェクト用）
-    dates_str = events.map { |e| format_date_short(e.date) }.join("＆")
+    dates_str = events.map(&:formatted_date_short).join("＆")
     venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
     result.gsub!("{{練習会ヘッドライン}}", "#{dates_str} #{venues_str}")
 
@@ -66,11 +66,6 @@ class AnnouncementTemplate < ApplicationRecord
     day = "　#{day}" if pad_day && date.day < 10
 
     "#{month}月#{day}日(#{wday})"
-  end
-
-  def self.format_date_short(date)
-    wday = %w[日 月 火 水 木 金 土][date.wday]
-    "#{date.month}/#{date.day} (#{wday})"
   end
 
   def self.display_width(str)

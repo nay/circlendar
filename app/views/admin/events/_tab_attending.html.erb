@@ -1,0 +1,41 @@
+<% attending = attendances.attending %>
+<div class="bg-white shadow sm:rounded-lg">
+  <% if attending.any? %>
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メンバー</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">到着時刻</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">退出時刻</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アフター</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">連絡内容</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% attending.each do |attendance| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <%= attendance.player.name %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= attendance.arrival_time&.strftime('%H:%M') || '-' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= attendance.departure_time&.strftime('%H:%M') || '-' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= attendance.after_party ? '○' : '-' %>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900">
+              <%= attendance.message.presence || '-' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-4 py-5 sm:p-6 text-center text-gray-500">
+      参加者はいません
+    </div>
+  <% end %>
+</div>

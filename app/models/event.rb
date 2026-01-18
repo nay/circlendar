@@ -17,4 +17,13 @@ class Event < ApplicationRecord
   def upcoming?
     date >= Date.today
   end
+
+  def display_name
+    "#{formatted_date_short} #{venue.short_name}"
+  end
+
+  def formatted_date_short
+    wday = %w[日 月 火 水 木 金 土][date.wday]
+    "#{date.month}/#{date.day} (#{wday})"
+  end
 end
