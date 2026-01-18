@@ -1,5 +1,6 @@
 class AnnouncementTemplate < ApplicationRecord
   PLACEHOLDERS = {
+    "練習会ヘッドライン" => "{{練習会ヘッドライン}}",
     "練習会サマリー" => "{{練習会サマリー}}",
     "会場案内" => "{{会場案内}}",
     "日付" => "{{日付}}",
@@ -22,10 +23,15 @@ class AnnouncementTemplate < ApplicationRecord
   end
 
   def self.fill_placeholders(text, events)
-    events = Array(events).compact
+    events = Array(events).compact.sort_by(&:date)
     return text if events.empty?
 
     result = text.dup
+
+    # 練習会ヘッドライン（サブジェクト用）
+    dates_str = events.map { |e| format_date_short(e.date) }.join("＆")
+    venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
+    result.gsub!("{{練習会ヘッドライン}}", "#{dates_str} #{venues_str}")
 
     # 練習会サマリー（複数イベント対応）
     # 桁がバラバラな場合のみパディング
@@ -65,6 +71,11 @@ class AnnouncementTemplate < ApplicationRecord
     day = "　#{day}" if pad_day && date.day < 10
 
     "#{month}月#{day}日(#{wday})"
+  end
+
+  def self.format_date_short(date)
+    wday = %w[日 月 火 水 木 金 土][date.wday]
+    "#{date.month}/#{date.day} (#{wday})"
   end
 
   private

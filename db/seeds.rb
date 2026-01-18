@@ -78,6 +78,7 @@ end
 # ========================================
 venue1 = Venue.find_or_create_by!(name: '渋谷区民会館 3階和室') do |venue|
   venue.url = 'https://example.com/shibuya'
+  venue.short_name = '渋谷区民会館'
   venue.announcement_summary = '渋谷区民会館 3階和室（JR渋谷駅より徒歩5分）'
   venue.announcement_detail = <<~TEXT.strip
     ☆渋谷区民会館 3階和室
@@ -88,6 +89,7 @@ end
 
 venue2 = Venue.find_or_create_by!(name: '品川区スポーツセンター 体育室A') do |venue|
   venue.url = 'https://example.com/shinagawa'
+  venue.short_name = '品川区スポーツセンター'
   venue.announcement_summary = '品川区スポーツセンター 体育室A（東急大井町線戸越公園駅より徒歩3分）'
   venue.announcement_detail = <<~TEXT.strip
     ☆品川区スポーツセンター 体育室A
@@ -98,6 +100,7 @@ end
 
 venue3 = Venue.find_or_create_by!(name: '新宿文化センター 303号室') do |venue|
   venue.url = 'https://example.com/shinjuku'
+  venue.short_name = '新宿文化センター'
   venue.announcement_summary = '新宿文化センター 303号室（東京メトロ副都心線東新宿駅直結）'
   venue.announcement_detail = <<~TEXT.strip
     ☆新宿文化センター 303号室

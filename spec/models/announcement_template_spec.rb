@@ -13,6 +13,7 @@ RSpec.describe AnnouncementTemplate, type: :model do
     end
 
     context "すべての埋め込み情報を使用した場合" do
+      let(:subject) { "{{練習会ヘッドライン}}" }
       let(:body) { "{{練習会サマリー}} {{会場案内}} {{日付}} {{会場名}} {{会場URL}} {{開始時刻}} {{終了時刻}}" }
 
       it "検証が通る" do

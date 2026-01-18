@@ -48,6 +48,6 @@ class Admin::VenuesController < Admin::BaseController
   end
 
   def venue_params
-    params.require(:venue).permit(:name, :url, :announcement_summary, :announcement_detail)
+    params.require(:venue).permit(:name, :url, :short_name, :announcement_summary, :announcement_detail)
   end
 end

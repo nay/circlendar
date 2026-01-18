@@ -27,15 +27,22 @@
           </div>
         <% end %>
 
-        <% if @venue.announcement_summary.present? %>
+        <% if @venue.short_name.present? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:short_name) %></dt>
+            <dd class="text-sm text-gray-900"><%= @venue.short_name %></dd>
+          </div>
+        <% end %>
+
+        <% if @venue.announcement_summary.present? %>
+          <div class="bg-white px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:announcement_summary) %></dt>
             <dd class="text-sm text-gray-900"><%= @venue.announcement_summary %></dd>
           </div>
         <% end %>
 
         <% if @venue.announcement_detail.present? %>
-          <div class="bg-white px-4 py-5 sm:px-6">
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:announcement_detail) %></dt>
             <dd class="text-sm text-gray-900"><%= simple_format(@venue.announcement_detail, class: "break-all", sanitize: true) %></dd>
           </div>
