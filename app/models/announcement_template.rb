@@ -39,7 +39,9 @@ class AnnouncementTemplate < ApplicationRecord
     summary_lines = events.map do |event|
       date_str = format_date_zenkaku(event.date, pad_month:, pad_day:)
       venue_summary = event.venue.announcement_summary.presence || event.venue.name
-      "#{date_str}　＠#{venue_summary}"
+      prefix = "#{date_str}　＠"
+      indent = "　" * (display_width(prefix) / 2)
+      "#{prefix}#{venue_summary}\n#{indent}#{event.schedule}"
     end
     result.gsub!("{{練習会サマリー}}", summary_lines.join("\n"))
 
@@ -72,6 +74,12 @@ class AnnouncementTemplate < ApplicationRecord
   def self.format_date_short(date)
     wday = %w[日 月 火 水 木 金 土][date.wday]
     "#{date.month}/#{date.day} (#{wday})"
+  end
+
+  def self.display_width(str)
+    str.each_char.sum do |char|
+      char.bytesize > 1 ? 2 : 1
+    end
   end
 
   private
