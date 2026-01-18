@@ -14,6 +14,10 @@ ja:
           attending: "参加"
           not_attending: "欠席"
           undecided: "保留"
+      event:
+        date: "日付"
+        schedule: "練習時間の案内"
+        notes: "備考"
       venue:
         name: "管理名"
         url: "URL"
