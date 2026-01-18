@@ -10,57 +10,83 @@
     </div>
   </div>
 
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">
-        <%= l(@event.date, format: :long) %>
-      </h3>
-    </div>
-    <div class="border-t border-gray-200">
-      <dl>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">公開状態</dt>
-          <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2 flex items-center gap-3">
-            <% if @event.published? %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開中</span>
-              <%= button_to "下書きに戻す", admin_event_path(@event), method: :patch, params: { event: { status: :draft } }, class: "inline-flex items-center px-3 py-1 text-xs font-medium rounded-md text-gray-700 bg-white border border-gray-300 hover:bg-gray-50" %>
-            <% else %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
-              <%= button_to "公開する", admin_event_path(@event), method: :patch, params: { event: { status: :published } }, class: "inline-flex items-center px-3 py-1 text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
-            <% end %>
-          </dd>
-        </div>
-
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500"><%= t('events.form.venue') %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @event.venue.name %>
-          </dd>
-        </div>
-
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500"><%= t('events.form.date') %></dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= l(@event.date, format: :long) %>
-          </dd>
-        </div>
-
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">時間</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %>
-          </dd>
-        </div>
-
-        <% if @event.notes.present? %>
-          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:items-start">
-            <dt class="text-sm font-medium text-gray-500"><%= t('events.form.notes') %></dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <%= simple_format(@event.notes, {}, sanitize: false) %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          <%= l(@event.date, format: :long) %>
+        </h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">公開状態</dt>
+            <dd class="mt-1 text-sm">
+              <% if @event.published? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">公開中</span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
+              <% end %>
             </dd>
           </div>
+
+          <div class="bg-white px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500"><%= t('events.form.venue') %></dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= @event.venue.name %>
+            </dd>
+          </div>
+
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">時間</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %>
+            </dd>
+          </div>
+
+          <% if @event.notes.present? %>
+            <div class="bg-white px-4 py-5 sm:px-6">
+              <dt class="text-sm font-medium text-gray-500"><%= t('events.form.notes') %></dt>
+              <dd class="mt-1 text-sm text-gray-900">
+                <%= simple_format(@event.notes, {}, sanitize: false) %>
+              </dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">お知らせ</h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <% if @event.upcoming? %>
+          <div class="px-4 py-3">
+            <%= link_to "新しいお知らせを作成", new_admin_announcement_path(event_id: @event.id), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
         <% end %>
-      </dl>
+        <% if @announcements.any? %>
+          <ul class="divide-y divide-gray-200 border-t border-gray-200">
+            <% @announcements.each do |announcement| %>
+              <li>
+                <%= link_to admin_announcement_path(announcement, event_id: @event.id), class: "block px-4 py-3 hover:bg-gray-50" do %>
+                  <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-blue-600 truncate"><%= announcement.subject %></p>
+                    <% if announcement.sent? %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">送信済み</span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">下書き</span>
+                    <% end %>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="px-4 py-3 text-sm text-gray-500 border-t border-gray-200">お知らせはありません。</p>
+        <% end %>
+      </div>
     </div>
   </div>
 

@@ -7,6 +7,7 @@ class Admin::EventsController < Admin::BaseController
 
   def show
     @attendances = @event.attendances.includes(:player).order("players.name")
+    @announcements = @event.announcements.order(created_at: :desc)
   end
 
   def new

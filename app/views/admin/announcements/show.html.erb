@@ -1,12 +1,10 @@
 <div class="w-full">
-  <div class="mb-4">
-    <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
-  </div>
+  <%= render "back_links" %>
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
     <div class="flex gap-2">
       <% unless @announcement.sent? %>
-        <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement, @event ? { event_id: @event.id } : {}), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         <%= button_to t("announcements.show.send_email"), send_email_admin_announcement_path(@announcement), method: :post, data: { turbo_confirm: t("announcements.show.confirm_send") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
       <% end %>
       <%= button_to t("announcements.show.delete"), admin_announcement_path(@announcement), method: :delete, data: { turbo_confirm: t("announcements.show.confirm_delete") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
