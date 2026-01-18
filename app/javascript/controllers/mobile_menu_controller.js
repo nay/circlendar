@@ -6,6 +6,12 @@ export default class extends Controller {
   connect() {
     this.handleKeydown = this.handleKeydown.bind(this)
     this.handleClickOutside = this.handleClickOutside.bind(this)
+
+    // ページがキャッシュから復元された場合、メニューが開いていればリスナーを再登録
+    if (!this.menuTarget.classList.contains("hidden")) {
+      document.addEventListener("keydown", this.handleKeydown)
+      document.addEventListener("click", this.handleClickOutside)
+    }
   }
 
   toggle() {

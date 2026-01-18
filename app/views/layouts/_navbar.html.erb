@@ -39,9 +39,19 @@
             <% end %>
           </div>
         </div>
-        <div class="flex items-center space-x-2 md:space-x-4">
-          <%= link_to (current_member&.name || Current.user.email_address), edit_profile_path, class: "text-sm text-gray-600 hover:text-gray-900 truncate max-w-[80px] md:max-w-none" %>
-          <%= button_to "ログアウト", session_path, method: :delete, data: { turbo_confirm: "ログアウトしますか？" }, class: "text-sm text-gray-600 hover:text-gray-900" %>
+        <div class="relative" data-controller="mobile-menu">
+          <button type="button" data-action="click->mobile-menu#toggle" class="flex items-center text-sm text-gray-600 hover:text-gray-900">
+            <span class="truncate max-w-[100px] md:max-w-none"><%= current_member&.name || Current.user.email_address %></span>
+            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div data-mobile-menu-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+            <div class="py-1">
+              <%= link_to "プロフィール", edit_profile_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+              <%= button_to "ログアウト", session_path, method: :delete, data: { turbo_confirm: "ログアウトしますか？" }, class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+            </div>
+          </div>
         </div>
       </div>
     </div>

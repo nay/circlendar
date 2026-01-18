@@ -2,9 +2,9 @@
   <div class="mb-4">
     <%= link_to "← #{AnnouncementTemplate.model_name.human}一覧に戻る", admin_announcement_templates_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
   </div>
-  <div class="flex justify-between items-center mb-8">
+  <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcement_templates.show.title") %></h1>
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <%= link_to t("announcement_templates.show.edit"), edit_admin_announcement_template_path(@announcement_template), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       <%= button_to t("announcement_templates.show.delete"), admin_announcement_template_path(@announcement_template), method: :delete, data: { turbo_confirm: t("announcement_templates.show.confirm_delete") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
     </div>
@@ -17,7 +17,7 @@
           <%= @announcement_template.subject %>
         </h3>
         <% if @announcement_template.default? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"><%= t("announcement_templates.index.default") %></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap flex-shrink-0"><%= t("announcement_templates.index.default") %></span>
         <% end %>
       </div>
     </div>

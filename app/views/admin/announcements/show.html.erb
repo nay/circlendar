@@ -1,8 +1,8 @@
 <div class="w-full">
   <%= render "back_links" %>
-  <div class="flex justify-between items-center mb-8">
+  <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
       <% unless @announcement.sent? %>
         <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         <%= button_to t("announcements.show.send_email"), send_email_admin_announcement_path(@announcement), method: :post, data: { turbo_confirm: t("announcements.show.confirm_send") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
@@ -18,10 +18,10 @@
       </h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">
         <% if @announcement.sent? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.already_sent") %></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.show.already_sent") %></span>
           <%= l(@announcement.sent_at, format: :long) %> に送信
         <% else %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.index.draft") %></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.draft") %></span>
         <% end %>
       </p>
     </div>
