@@ -8,6 +8,21 @@ class Admin::MembersController < Admin::BaseController
   def show
   end
 
+  def new
+    @member = Member.new
+  end
+
+  def create
+    @member = Member.new(member_params_for_create)
+    @member.user.confirmed_at = Time.current
+
+    if @member.save
+      redirect_to admin_member_path(@member), notice: "#{Member.model_name.human}を作成しました"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit
   end
 
@@ -50,5 +65,9 @@ class Admin::MembersController < Admin::BaseController
     end
     permitted.delete(:role) if @member.user == Current.user
     permitted
+  end
+
+  def member_params_for_create
+    params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :role, :password, :password_confirmation)
   end
 end
