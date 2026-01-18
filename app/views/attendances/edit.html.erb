@@ -2,7 +2,7 @@
   <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900">出席情報の登録</h1>
     <p class="mt-2 text-gray-600">
-      <%= l(@event.date, format: :long) %> <%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %>
+      <%= l(@event.date, format: :long) %> <%= @event.schedule %>
     </p>
     <p class="mt-1 text-gray-600">
       <%= @event.venue.name %>

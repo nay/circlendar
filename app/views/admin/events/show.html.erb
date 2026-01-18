@@ -36,8 +36,8 @@
           </div>
 
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1">時間</dt>
-            <dd class="text-sm text-gray-900"><%= @event.start_time.strftime('%H:%M') %> 〜 <%= @event.end_time.strftime('%H:%M') %></dd>
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t('events.form.schedule') %></dt>
+            <dd class="text-sm text-gray-900"><%= @event.schedule %></dd>
           </div>
 
           <% if @event.notes.present? %>

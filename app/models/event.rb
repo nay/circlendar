@@ -9,8 +9,7 @@ class Event < ApplicationRecord
   enum :status, { draft: "draft", published: "published" }, default: :draft
 
   validates :date, presence: true
-  validates :start_time, presence: true
-  validates :end_time, presence: true
+  validates :schedule, presence: true
 
   scope :upcoming, -> { where("date >= ?", Date.today) }
   scope :past, -> { where("date < ?", Date.today) }

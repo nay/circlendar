@@ -112,19 +112,16 @@ end
 # ========================================
 # お知らせテンプレート
 # ========================================
-AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{日付}} {{会場名}}') do |template|
+AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{練習会ヘッドライン}}') do |template|
   template.body = <<~BODY
     お疲れ様です。
 
     下記の日程で練習会を開催します。
     参加される方は、アプリより参加登録をお願いします。
 
-    ■ 日時
-    {{日付}} {{開始時刻}}〜{{終了時刻}}
+    {{練習会サマリー}}
 
-    ■ 場所
-    {{会場名}}
-    {{会場URL}}
+    {{会場案内}}
 
     よろしくお願いします。
   BODY
@@ -138,8 +135,7 @@ event1 = Event.find_or_create_by!(
   venue: venue1,
   date: 2.weeks.from_now.to_date
 ) do |event|
-  event.start_time = '13:00'
-  event.end_time = '17:00'
+  event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
   event.notes = '初心者の方も歓迎します'
   event.status = :published
 end
@@ -183,8 +179,7 @@ event2 = Event.find_or_create_by!(
   venue: venue2,
   date: 1.month.from_now.to_date
 ) do |event|
-  event.start_time = '10:00'
-  event.end_time = '16:00'
+  event.schedule = '１２：３０すぎ－１８：００前　ゆるゆると３試合'
   event.notes = '昼食は各自ご持参ください'
   event.status = :draft
 end
@@ -196,8 +191,7 @@ event3 = Event.find_or_create_by!(
   venue: venue3,
   date: 1.week.ago.to_date
 ) do |event|
-  event.start_time = '14:00'
-  event.end_time = '17:00'
+  event.schedule = '１３：００ー１８：００　２本か３本'
   event.notes = '2本目 15:20〜
 
 可能な方は札を持ってきてください！'
@@ -224,8 +218,7 @@ event4 = Event.find_or_create_by!(
   venue: venue3,
   date: 3.weeks.from_now.to_date
 ) do |event|
-  event.start_time = '13:00'
-  event.end_time = '17:30'
+  event.schedule = '１３：００ー１８：００　２本か３本'
   event.notes = '級位者向け練習会です'
   event.status = :published
 end

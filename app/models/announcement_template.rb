@@ -5,9 +5,7 @@ class AnnouncementTemplate < ApplicationRecord
     "会場案内" => "{{会場案内}}",
     "日付" => "{{日付}}",
     "会場名" => "{{会場名}}",
-    "会場URL" => "{{会場URL}}",
-    "開始時刻" => "{{開始時刻}}",
-    "終了時刻" => "{{終了時刻}}"
+    "会場URL" => "{{会場URL}}"
   }.freeze
 
   validates :subject, presence: true
@@ -56,8 +54,6 @@ class AnnouncementTemplate < ApplicationRecord
     result.gsub!("{{日付}}", I18n.l(event.date, format: :long))
     result.gsub!("{{会場名}}", event.venue.name)
     result.gsub!("{{会場URL}}", event.venue.url.to_s)
-    result.gsub!("{{開始時刻}}", event.start_time.strftime("%H:%M"))
-    result.gsub!("{{終了時刻}}", event.end_time.strftime("%H:%M"))
     result
   end
 
