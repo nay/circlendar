@@ -3,7 +3,10 @@ class AttendancesController < ApplicationController
 
   def edit
     @attendance = @event.attendances.find_or_initialize_by(player: current_member)
-    @attendees = @event.attendances.attending.includes(:player)
+    # 練習またはアフターに参加する人を取得
+    @attendees = @event.attendances
+                       .where("status = ? OR after_party = ?", "attending", "attending")
+                       .includes(:player)
   end
 
   def update
