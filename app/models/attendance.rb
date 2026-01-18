@@ -8,6 +8,12 @@ class Attendance < ApplicationRecord
     undecided: "undecided"
   }, default: :undecided
 
+  enum :after_party, {
+    attending: "attending",
+    not_attending: "not_attending",
+    undecided: "undecided"
+  }, default: :undecided, prefix: true
+
   validates :event, presence: true
   validates :player, presence: true
   validates :player_id, uniqueness: {

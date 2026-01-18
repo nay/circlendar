@@ -6,6 +6,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
+    @bcc_members = Member.joins(:user).where(users: { email_address: @announcement.bcc_addresses }).index_by(&:email_address)
   end
 
   def new
@@ -74,7 +75,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   def prepare_form_data
     @events = Event.upcoming.order(:date)
     @announcement_templates = AnnouncementTemplate.order(:subject)
-    @members = Member.includes(:user).where(users: { receives_announcements: true })
+    @members = Member.joins(:user).merge(User.active.receives_announcements)
   end
 
   def apply_template

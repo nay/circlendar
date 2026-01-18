@@ -1,0 +1,72 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← #{Member.model_name.human}一覧に戻る", admin_members_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900"><%= Member.model_name.human %>詳細</h1>
+    <div class="flex gap-2">
+      <%= link_to "編集", edit_admin_member_path(@member), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= button_to "削除", admin_member_path(@member), method: :delete, data: { turbo_confirm: "この#{Member.model_name.human}を削除しますか？" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        <%= @member.name %>
+      </h3>
+      <% if @member.disabled? %>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">無効</span>
+      <% elsif !@member.user.confirmed? %>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">仮登録</span>
+      <% end %>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">メールアドレス</dt>
+          <dd class="text-sm text-gray-900"><%= @member.user.email_address %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">所属</dt>
+          <dd class="text-sm text-gray-900"><%= @member.organization_name.presence || "-" %></dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">級</dt>
+          <dd class="text-sm text-gray-900"><%= @member.formatted_rank || "-" %></dd>
+        </div>
+
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">権限</dt>
+          <dd class="text-sm text-gray-900">
+            <% if @member.user.admin? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">管理者</span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">一般</span>
+            <% end %>
+          </dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">お知らせメール</dt>
+          <dd class="text-sm text-gray-900">
+            <% if @member.user.receives_announcements? %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">受信する</span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">受信しない</span>
+            <% end %>
+          </dd>
+        </div>
+
+        <% if @member.description.present? %>
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-1">自己紹介</dt>
+            <dd class="text-sm text-gray-900"><%= simple_format(@member.description, sanitize: true) %></dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="flex items-center justify-center bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 min-h-screen sm:min-h-0 sm:py-16">
+  <div class="max-w-md w-full space-y-6">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        確認メールを送信しました
+      </h2>
+    </div>
+
+    <div class="rounded-md bg-blue-50 p-4">
+      <div class="ml-3">
+        <p class="text-sm text-blue-700">
+          ご登録いただいたメールアドレスに確認メールを送信しました。
+          メール内のリンクをクリックして、登録を完了してください。
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <%= link_to "ログイン画面へ", new_session_path, class: "text-sm font-medium text-blue-600 hover:text-blue-500" %>
+    </div>
+  </div>
+</div>

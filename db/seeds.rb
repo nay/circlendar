@@ -17,6 +17,7 @@ admin1_user = User.find_or_create_by!(email_address: 'admin1@example.com') do |u
   user.password = 'password'
   user.role = :admin
   user.receives_announcements = true
+  user.confirmed_at = Time.current
 end
 
 admin1_member = Member.find_or_create_by!(user: admin1_user) do |member|
@@ -33,6 +34,7 @@ admin2_user = User.find_or_create_by!(email_address: 'admin2@example.com') do |u
   user.password = 'password'
   user.role = :admin
   user.receives_announcements = true
+  user.confirmed_at = Time.current
 end
 
 admin2_member = Member.find_or_create_by!(user: admin2_user) do |member|
@@ -49,6 +51,7 @@ member1_user = User.find_or_create_by!(email_address: 'member1@example.com') do 
   user.password = 'password'
   user.role = :member
   user.receives_announcements = true
+  user.confirmed_at = Time.current
 end
 
 player1 = Member.find_or_create_by!(user: member1_user) do |member|
@@ -65,6 +68,7 @@ member2_user = User.find_or_create_by!(email_address: 'member2@example.com') do 
   user.password = 'password'
   user.role = :member
   user.receives_announcements = false
+  user.confirmed_at = Time.current
 end
 
 player2 = Member.find_or_create_by!(user: member2_user) do |member|

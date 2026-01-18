@@ -5,7 +5,12 @@ ja:
       announcement: "お知らせ"
       announcement_template: "お知らせテンプレート"
       venue: "会場"
+      member: "メンバー"
+      user: "ユーザー"
     attributes:
+      user:
+        email_address: "メールアドレス"
+        password: "パスワード"
       announcement:
         event_ids: "練習会"
         subject: "件名"
@@ -20,6 +25,10 @@ ja:
           attending: "参加"
           not_attending: "欠席"
           undecided: "保留"
+        after_parties:
+          attending: "参加したい"
+          not_attending: "参加できない"
+          undecided: "未決定"
       event:
         date: "日付"
         schedule: "練習時間の案内"

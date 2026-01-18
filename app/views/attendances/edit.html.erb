@@ -40,13 +40,16 @@
 
       <!-- アフター -->
       <div>
-        <div class="flex items-start">
-          <div class="flex items-center h-5">
-            <%= form.check_box :after_party, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
-          </div>
-          <div class="ml-3">
-            <%= form.label :after_party, "アフターに参加", class: "text-sm font-medium text-gray-700" %>
-          </div>
+        <%= form.label :after_party, "アフター", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <div class="grid grid-cols-3 gap-3" data-controller="radio-buttons">
+          <% Attendance.after_parties.keys.each do |after_party| %>
+            <label class="flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer <%= @attendance.after_party == after_party ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white' %>" data-radio-buttons-target="option">
+              <%= form.radio_button :after_party, after_party, class: "sr-only", data: { action: "change->radio-buttons#select" } %>
+              <span class="text-sm font-medium text-gray-900">
+                <%= I18n.t("activerecord.attributes.attendance.after_parties.#{after_party}") %>
+              </span>
+            </label>
+          <% end %>
         </div>
       </div>
 
