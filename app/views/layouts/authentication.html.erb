@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Circlendar" %></title>
+    <title><%= content_for(:title) || Setting.instance.circle_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -20,5 +20,9 @@
 
   <body>
     <%= yield %>
+
+    <footer class="container mx-auto mt-16 mb-8 px-5 text-right text-sm text-gray-400">
+      Powered by Circlendar Version <%= Circlendar::VERSION %>
+    </footer>
   </body>
 </html>

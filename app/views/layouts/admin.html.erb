@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Circlendar" %></title>
+    <title><%= content_for(:title) || Setting.instance.circle_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -24,7 +24,7 @@
         <div class="container mx-auto px-5">
           <div class="flex justify-between items-center h-16">
             <div class="flex items-center space-x-8">
-              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %> - Circlendar</h1>
+              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %></h1>
               <div class="flex space-x-4">
                 <%= link_to "ダッシュボード", dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50" %>
                 <% if Current.user.admin? %>
@@ -33,6 +33,7 @@
                   <%= link_to "テンプレート", admin_announcement_templates_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/announcement_templates') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                   <%= link_to Venue.model_name.human, admin_venues_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/venues') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                   <%= link_to Member.model_name.human, admin_members_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/members') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
+                  <%= link_to Setting.model_name.human, edit_admin_setting_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/setting') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                 <% end %>
               </div>
             </div>
@@ -61,5 +62,9 @@
         <%= yield %>
       </div>
     </main>
+
+    <footer class="container mx-auto mt-16 mb-8 px-5 text-right text-sm text-gray-400">
+      Powered by Circlendar Version <%= Circlendar::VERSION %>
+    </footer>
   </body>
 </html>
