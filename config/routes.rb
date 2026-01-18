@@ -33,5 +33,7 @@ Rails.application.routes.draw do
         post :send_email
       end
     end
+
+    resources :announcement_templates
   end
 end

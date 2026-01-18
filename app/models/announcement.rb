@@ -1,5 +1,6 @@
 class Announcement < ApplicationRecord
   belongs_to :event, optional: true
+  belongs_to :template, class_name: "AnnouncementTemplate", foreign_key: "announcement_template_id", optional: true
   belongs_to :sender, class_name: "User", foreign_key: "sent_by", optional: true
 
   scope :sent, -> { where.not(sent_at: nil) }
@@ -10,5 +11,12 @@ class Announcement < ApplicationRecord
 
   def sent?
     sent_at.present?
+  end
+
+  def apply_template
+    return unless template
+
+    self.subject = AnnouncementTemplate.fill_placeholders(template.subject, event)
+    self.body = AnnouncementTemplate.fill_placeholders(template.body, event)
   end
 end

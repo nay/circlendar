@@ -100,8 +100,7 @@ end
 # ========================================
 # お知らせテンプレート
 # ========================================
-AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフォルト）') do |template|
-  template.subject = '【練習会のお知らせ】{{date}} {{venue}}'
+AnnouncementTemplate.find_or_create_by!(subject: '【練習会のお知らせ】{{日付}} {{会場}}') do |template|
   template.body = <<~BODY
     お疲れ様です。
 
@@ -109,21 +108,21 @@ AnnouncementTemplate.find_or_create_by!(name: '練習会のお知らせ（デフ
     参加される方は、アプリより参加登録をお願いします。
 
     ■ 日時
-    {{date}} {{start_time}}〜{{end_time}}
+    {{日付}} {{開始時刻}}〜{{終了時刻}}
 
     ■ 場所
-    {{venue}}
-    {{address}}
+    {{会場}}
+    {{住所}}
 
     ■ アクセス
-    {{access_info}}
+    {{アクセス}}
 
     ■ 備考
-    {{notes}}
+    {{備考}}
 
     よろしくお願いします。
   BODY
-  template.is_default = true
+  template.default = true
 end
 
 # ========================================

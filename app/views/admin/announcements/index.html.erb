@@ -4,12 +4,6 @@
     <%= link_to t("announcements.index.new_announcement"), new_admin_announcement_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
   </div>
 
-  <% if notice = flash[:notice] %>
-    <div class="rounded-md bg-green-50 p-4 mb-6">
-      <p class="text-sm font-medium text-green-800"><%= notice %></p>
-    </div>
-  <% end %>
-
   <% if @announcements.any? %>
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
       <ul class="divide-y divide-gray-200">
