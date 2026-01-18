@@ -17,7 +17,7 @@
           <%= @announcement_template.subject %>
         </h3>
         <% if @announcement_template.default? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"><%= t("announcement_templates.index.default") %></span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap flex-shrink-0"><%= t("announcement_templates.index.default") %></span>
         <% end %>
       </div>
     </div>
