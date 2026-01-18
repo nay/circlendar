@@ -6,6 +6,12 @@ ja:
       announcement_template: "お知らせテンプレート"
       venue: "会場"
     attributes:
+      announcement:
+        event_ids: "練習会"
+        subject: "件名"
+        body: "本文"
+        to_address: "To"
+        bcc_addresses: "BCC"
       announcement_template:
         subject: "件名"
         body: "本文"

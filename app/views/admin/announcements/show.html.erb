@@ -4,7 +4,7 @@
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
     <div class="flex gap-2">
       <% unless @announcement.sent? %>
-        <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement, @event ? { event_id: @event.id } : {}), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         <%= button_to t("announcements.show.send_email"), send_email_admin_announcement_path(@announcement), method: :post, data: { turbo_confirm: t("announcements.show.confirm_send") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
       <% end %>
       <%= button_to t("announcements.show.delete"), admin_announcement_path(@announcement), method: :delete, data: { turbo_confirm: t("announcements.show.confirm_delete") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
@@ -29,22 +29,24 @@
       <dl>
         <% if @announcement.events.any? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.events") %></dt>
+            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:event_ids) %></dt>
             <dd class="text-sm text-gray-900">
-              <% @announcement.events.each_with_index do |event, i| %>
-                <%= link_to l(event.date, format: :long), admin_event_path(event), class: "text-blue-600 hover:text-blue-700" %><%= "、" unless i == @announcement.events.size - 1 %>
-              <% end %>
+              <ul class="list-disc list-inside">
+                <% @announcement.events.each do |event| %>
+                  <li><%= link_to l(event.date, format: :long), admin_event_path(event), class: "text-blue-600 hover:text-blue-700" %></li>
+                <% end %>
+              </ul>
             </dd>
           </div>
         <% end %>
 
         <div class="bg-white px-4 py-5 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.to_address") %></dt>
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:to_address) %></dt>
           <dd class="text-sm text-gray-900"><%= @announcement.to_address %></dd>
         </div>
 
         <div class="bg-gray-50 px-4 py-5 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.bcc_addresses") %></dt>
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:bcc_addresses) %></dt>
           <dd class="text-sm text-gray-900">
             <% if @announcement.bcc_addresses.present? %>
               <%= @announcement.bcc_addresses.join(", ") %>
@@ -55,7 +57,7 @@
         </div>
 
         <div class="bg-white px-4 py-5 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.form.body") %></dt>
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:body) %></dt>
           <dd class="text-sm text-gray-900 whitespace-pre-wrap"><%= simple_format(@announcement.body, {}, sanitize: true) %></dd>
         </div>
       </dl>

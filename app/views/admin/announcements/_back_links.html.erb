@@ -1,8 +1,3 @@
-<div class="mb-4 flex gap-4">
-  <% if @event %>
-    <%= link_to "← #{l(@event.date, format: :long)}の練習会に戻る", admin_event_path(@event), class: "text-blue-600 hover:text-blue-700 text-sm" %>
-    <%= link_to "← お知らせ一覧へ", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
-  <% else %>
-    <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
-  <% end %>
+<div class="mb-4">
+  <%= link_to "← お知らせ一覧に戻る", admin_announcements_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
 </div>

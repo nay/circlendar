@@ -95,14 +95,7 @@ ja:
     form:
       template: "テンプレート"
       template_prompt: "テンプレートを選択..."
-      events: "関連する練習会"
-      event_prompt: "（なし）"
-      no_event: "練習会と関連付けない"
       no_templates: "テンプレートがありません"
-      subject: "件名"
-      body: "本文"
-      to_address: "To（送信元として表示）"
-      bcc_addresses: "BCC（受信者）"
       apply_template: "反映"
       confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
     create:

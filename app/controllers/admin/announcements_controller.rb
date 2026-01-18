@@ -1,6 +1,5 @@
 class Admin::AnnouncementsController < Admin::BaseController
   before_action :set_announcement, only: %i[ show edit update destroy send_email ]
-  before_action :set_event, only: %i[ new create show edit update ]
 
   def index
     @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
@@ -11,7 +10,6 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def new
     @announcement = Announcement.new
-    @announcement.events << @event if @event
     prepare_form_data
   end
 
@@ -24,7 +22,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     if @announcement.save
-      redirect_to admin_announcement_path(@announcement, @event ? { event_id: @event.id } : {}), notice: I18n.t("announcements.create.success")
+      redirect_to admin_announcement_path(@announcement), notice: I18n.t("announcements.create.success")
     else
       prepare_form_data
       render :new, status: :unprocessable_entity
@@ -44,7 +42,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     if @announcement.save
-      redirect_to admin_announcement_path(@announcement, @event ? { event_id: @event.id } : {}), notice: I18n.t("announcements.update.success")
+      redirect_to admin_announcement_path(@announcement), notice: I18n.t("announcements.update.success")
     else
       prepare_form_data
       render :edit, status: :unprocessable_entity
@@ -94,10 +92,6 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def set_announcement
     @announcement = Announcement.find(params[:id])
-  end
-
-  def set_event
-    @event = Event.find(params[:event_id]) if params[:event_id]
   end
 
   def announcement_params
