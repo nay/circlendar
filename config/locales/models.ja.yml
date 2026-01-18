@@ -7,6 +7,7 @@ ja:
       venue: "会場"
       member: "メンバー"
       user: "ユーザー"
+      setting: "サークル設定"
     attributes:
       user:
         email_address: "メールアドレス"
@@ -32,6 +33,8 @@ ja:
       event:
         date: "日付"
         schedule: "練習時間の案内"
+      setting:
+        circle_name: "サークル名"
       venue:
         name: "管理名"
         url: "URL"

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Circlendar" %></title>
+    <title><%= content_for(:title) || Setting.instance.circle_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -28,7 +28,7 @@
         <div class="container mx-auto px-5">
           <div class="flex justify-between items-center h-16">
             <div class="flex items-center space-x-8">
-              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %> - Circlendar</h1>
+              <h1 class="text-xl font-bold text-gray-900"><%= Setting.instance.circle_name %></h1>
               <div class="flex space-x-4">
                 <%= link_to "ダッシュボード", dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path == dashboard_path ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
                 <% if Current.user.admin? %>
