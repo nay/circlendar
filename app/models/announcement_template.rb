@@ -1,12 +1,14 @@
 class AnnouncementTemplate < ApplicationRecord
-  PLACEHOLDERS = {
-    "練習会ヘッドライン" => "{{練習会ヘッドライン}}",
-    "練習会サマリー" => "{{練習会サマリー}}",
-    "会場案内" => "{{会場案内}}",
-    "日付" => "{{日付}}",
-    "会場名" => "{{会場名}}",
-    "会場URL" => "{{会場URL}}"
+  SUBJECT_PLACEHOLDERS = {
+    "練習会ヘッドライン" => "{{練習会ヘッドライン}}"
   }.freeze
+
+  BODY_PLACEHOLDERS = {
+    "練習会サマリー" => "{{練習会サマリー}}",
+    "会場案内" => "{{会場案内}}"
+  }.freeze
+
+  ALL_PLACEHOLDERS = SUBJECT_PLACEHOLDERS.merge(BODY_PLACEHOLDERS).freeze
 
   validates :subject, presence: true
   validates :body, presence: true
@@ -17,7 +19,7 @@ class AnnouncementTemplate < ApplicationRecord
   scope :default_template, -> { find_by(default: true) }
 
   def has_placeholders?
-    PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
+    ALL_PLACEHOLDERS.values.any? { |placeholder| subject.include?(placeholder) || body.include?(placeholder) }
   end
 
   def self.fill_placeholders(text, events)
@@ -51,11 +53,6 @@ class AnnouncementTemplate < ApplicationRecord
     end
     result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
 
-    # 単一イベント用プレースホルダー（最初のイベントを使用）
-    event = events.first
-    result.gsub!("{{日付}}", I18n.l(event.date, format: :long))
-    result.gsub!("{{会場名}}", event.venue.name)
-    result.gsub!("{{会場URL}}", event.venue.url.to_s)
     result
   end
 
@@ -85,11 +82,11 @@ class AnnouncementTemplate < ApplicationRecord
   private
 
   def validate_placeholders
-    validate_placeholders_in(:subject, subject)
-    validate_placeholders_in(:body, body)
+    validate_placeholders_in(:subject, subject, SUBJECT_PLACEHOLDERS)
+    validate_placeholders_in(:body, body, BODY_PLACEHOLDERS)
   end
 
-  def validate_placeholders_in(attribute, text)
+  def validate_placeholders_in(attribute, text, allowed_placeholders)
     return if text.blank?
 
     if malformed?(text)
@@ -99,7 +96,7 @@ class AnnouncementTemplate < ApplicationRecord
 
     text.scan(/\{\{([^}]+)\}\}/).each do |match|
       name = match[0]
-      unless PLACEHOLDERS.key?(name)
+      unless allowed_placeholders.key?(name)
         errors.add(attribute, "の{{#{name}}}は無効な埋め込み情報です")
       end
     end
