@@ -58,4 +58,8 @@
   <% when "announcements" %>
     <%= render "tab_announcements", announcements: @announcements %>
   <% end %>
+
+  <div class="mt-8 text-center">
+    <%= link_to "参加登録画面へ", edit_event_attendance_path(@event), class: "inline-flex items-center px-8 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
 </div>
