@@ -16,7 +16,7 @@ class Admin::AnnouncementTemplatesController < Admin::BaseController
     @announcement_template = AnnouncementTemplate.new(announcement_template_params)
 
     if @announcement_template.save
-      redirect_to admin_announcement_templates_path, notice: t("announcement_templates.create.success")
+      redirect_to admin_announcement_templates_path, notice: t("messages.create.success", model: AnnouncementTemplate.model_name.human)
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class Admin::AnnouncementTemplatesController < Admin::BaseController
 
   def update
     if @announcement_template.update(announcement_template_params)
-      redirect_to admin_announcement_template_path(@announcement_template), notice: t("announcement_templates.update.success")
+      redirect_to admin_announcement_template_path(@announcement_template), notice: t("messages.update.success", model: AnnouncementTemplate.model_name.human)
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class Admin::AnnouncementTemplatesController < Admin::BaseController
 
   def destroy
     @announcement_template.destroy
-    redirect_to admin_announcement_templates_path, notice: t("announcement_templates.destroy.success")
+    redirect_to admin_announcement_templates_path, notice: t("messages.destroy.success", model: AnnouncementTemplate.model_name.human)
   end
 
   private

@@ -26,7 +26,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     if @announcement.save
-      redirect_to admin_announcement_path(@announcement), notice: I18n.t("announcements.create.success")
+      redirect_to admin_announcement_path(@announcement), notice: I18n.t("messages.create.success", model: Announcement.model_name.human)
     else
       prepare_form_data
       render :new, status: :unprocessable_entity
@@ -46,7 +46,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     if @announcement.save
-      redirect_to admin_announcement_path(@announcement), notice: I18n.t("announcements.update.success")
+      redirect_to admin_announcement_path(@announcement), notice: I18n.t("messages.update.success", model: Announcement.model_name.human)
     else
       prepare_form_data
       render :edit, status: :unprocessable_entity
@@ -55,7 +55,7 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def destroy
     @announcement.destroy
-    redirect_to admin_announcements_path, notice: I18n.t("announcements.destroy.success")
+    redirect_to admin_announcements_path, notice: I18n.t("messages.destroy.success", model: Announcement.model_name.human)
   end
 
   def send_email

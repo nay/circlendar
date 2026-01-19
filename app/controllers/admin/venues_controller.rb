@@ -16,7 +16,7 @@ class Admin::VenuesController < Admin::BaseController
     @venue = Venue.new(venue_params)
 
     if @venue.save
-      redirect_to [ :admin, @venue ], notice: I18n.t("venues.create.success", model: Venue.model_name.human)
+      redirect_to [ :admin, @venue ], notice: I18n.t("messages.create.success", model: Venue.model_name.human)
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class Admin::VenuesController < Admin::BaseController
 
   def update
     if @venue.update(venue_params)
-      redirect_to [ :admin, @venue ], notice: I18n.t("venues.update.success", model: Venue.model_name.human)
+      redirect_to [ :admin, @venue ], notice: I18n.t("messages.update.success", model: Venue.model_name.human)
     else
       render :edit, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class Admin::VenuesController < Admin::BaseController
 
   def destroy
     if @venue.destroy
-      redirect_to admin_venues_path, notice: I18n.t("venues.destroy.success", model: Venue.model_name.human)
+      redirect_to admin_venues_path, notice: I18n.t("messages.destroy.success", model: Venue.model_name.human)
     else
       redirect_to admin_venues_path, alert: @venue.errors.full_messages.join(", ")
     end

@@ -74,12 +74,6 @@ ja:
       date: "日付"
       schedule: "練習時間の案内"
       notes: "備考"
-    create:
-      success: "練習会を作成しました"
-    update:
-      success: "練習会を更新しました"
-    destroy:
-      success: "練習会を削除しました"
 
   announcements:
     index:
@@ -106,12 +100,6 @@ ja:
       no_templates: "テンプレートがありません"
       apply_template: "反映"
       confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
-    create:
-      success: "お知らせを作成しました"
-    update:
-      success: "お知らせを更新しました"
-    destroy:
-      success: "お知らせを削除しました"
     send_email:
       success: "メールを送信しました"
       already_sent: "このお知らせは既に送信済みです"
@@ -139,17 +127,3 @@ ja:
       subject: "件名"
       body: "本文"
       default: "デフォルトにする"
-    create:
-      success: "お知らせテンプレートを作成しました"
-    update:
-      success: "お知らせテンプレートを更新しました"
-    destroy:
-      success: "お知らせテンプレートを削除しました"
-
-  venues:
-    create:
-      success: "%{model}を作成しました"
-    update:
-      success: "%{model}を更新しました"
-    destroy:
-      success: "%{model}を削除しました"
