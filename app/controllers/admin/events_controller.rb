@@ -33,7 +33,7 @@ class Admin::EventsController < Admin::BaseController
     @event = Event.new(event_params)
 
     if @event.save
-      redirect_to [ :admin, @event ], notice: I18n.t("events.create.success")
+      redirect_to [ :admin, @event ], notice: I18n.t("messages.create.success", model: Event.model_name.human)
     else
       @venues = Venue.all
       render :new, status: :unprocessable_entity
@@ -46,7 +46,7 @@ class Admin::EventsController < Admin::BaseController
 
   def update
     if @event.update(event_params)
-      redirect_to [ :admin, @event ], notice: I18n.t("events.update.success")
+      redirect_to [ :admin, @event ], notice: I18n.t("messages.update.success", model: Event.model_name.human)
     else
       @venues = Venue.all
       render :edit, status: :unprocessable_entity
@@ -55,7 +55,7 @@ class Admin::EventsController < Admin::BaseController
 
   def destroy
     @event.destroy
-    redirect_to admin_events_path, notice: I18n.t("events.destroy.success")
+    redirect_to admin_events_path, notice: I18n.t("messages.destroy.success", model: Event.model_name.human)
   end
 
   private
