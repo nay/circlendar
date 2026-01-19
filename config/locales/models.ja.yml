@@ -8,6 +8,7 @@ ja:
       member: "メンバー"
       user: "ユーザー"
       setting: "サークル設定"
+      attendance: "参加登録"
     attributes:
       user:
         email_address: "メールアドレス"

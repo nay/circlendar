@@ -1,4 +1,12 @@
 ja:
+  messages:
+    create:
+      success: "%{model}を作成しました"
+    update:
+      success: "%{model}を更新しました"
+    destroy:
+      success: "%{model}を削除しました"
+
   errors:
     template:
       header: "エラーがあります。内容を修正してください"
