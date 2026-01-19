@@ -44,7 +44,7 @@
         <% if @venue.announcement_detail.present? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1"><%= Venue.human_attribute_name(:announcement_detail) %></dt>
-            <dd class="text-sm text-gray-900"><%= format_with_links(@venue.announcement_detail) %></dd>
+            <dd class="text-sm text-gray-900 break-words"><%= format_with_links(@venue.announcement_detail) %></dd>
           </div>
         <% end %>
       </dl>

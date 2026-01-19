@@ -12,7 +12,7 @@
   <%= form_with(model: @attendance, url: event_attendance_path(@event), method: :patch, class: "bg-white shadow sm:rounded-lg") do |form| %>
     <div class="px-4 py-5 sm:p-6 space-y-6">
       <% if @event.venue.announcement_detail.present? %>
-        <div class="text-sm text-gray-700"><%= format_with_links(@event.venue.announcement_detail) %></div>
+        <div class="text-sm text-gray-700 break-words"><%= format_with_links(@event.venue.announcement_detail) %></div>
       <% end %>
 
       <!-- ステータス -->
