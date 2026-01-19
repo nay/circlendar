@@ -37,8 +37,8 @@
     </div>
   </div>
 
-  <% attending_count = @attendances.attending.count %>
-  <% not_attending_count = @attendances.where(status: [:not_attending, :undecided]).count %>
+  <% attending_count = @attendances.select { |a| a.status == "attending" || a.after_party == "attending" }.count %>
+  <% not_attending_count = @attendances.select { |a| a.status != "attending" && a.after_party != "attending" }.count %>
   <div class="border-b border-gray-200 mb-4">
     <nav class="-mb-px flex">
       <%= link_to "お知らせ", admin_event_path(@event, tab: "announcements"),
