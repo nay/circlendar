@@ -3,6 +3,10 @@ class AttendancesController < ApplicationController
 
   def edit
     @attendance = @event.attendances.find_or_initialize_by(player: current_member)
+    # 練習またはアフターに参加する人を取得
+    @attendees = @event.attendances
+                       .where("status = ? OR after_party = ?", "attending", "attending")
+                       .includes(:player)
   end
 
   def update
@@ -23,6 +27,6 @@ class AttendancesController < ApplicationController
   end
 
   def attendance_params
-    params.require(:attendance).permit(:status, :arrival_time, :departure_time, :after_party, :message)
+    params.require(:attendance).permit(:status, :after_party, :message)
   end
 end

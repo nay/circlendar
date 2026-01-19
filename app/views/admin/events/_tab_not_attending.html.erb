@@ -1,21 +1,29 @@
-<% not_attending_or_undecided = attendances.where(status: [:not_attending, :undecided]) %>
+<% not_participating = attendances.select { |a| a.status != "attending" && a.after_party != "attending" } %>
 <div class="bg-white shadow sm:rounded-lg">
-  <% if not_attending_or_undecided.any? %>
+  <% if not_participating.any? %>
     <ul class="divide-y divide-gray-200">
-      <% not_attending_or_undecided.each do |attendance| %>
+      <% not_participating.each do |attendance| %>
         <li class="px-4 py-4 sm:px-6">
-          <div class="flex items-center gap-2">
-            <div class="font-medium text-gray-900"><%= attendance.player.name %></div>
-            <% case attendance.status %>
-            <% when "not_attending" %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 whitespace-nowrap flex-shrink-0">
-                不参加
-              </span>
-            <% when "undecided" %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0">
-                保留
-              </span>
-            <% end %>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div class="font-medium text-gray-900">
+              <%= link_to attendance.player.name, admin_member_path(attendance.player), class: "text-blue-600 hover:text-blue-700" %>
+            </div>
+            <%
+              status_color = case attendance.status
+                when "attending" then "text-green-600"
+                when "not_attending" then "text-gray-500"
+                when "undecided" then "text-yellow-600"
+              end
+              after_color = case attendance.after_party
+                when "attending" then "text-green-600"
+                when "not_attending" then "text-gray-500"
+                when "undecided" then "text-yellow-600"
+              end
+            %>
+            <div class="text-sm text-gray-600 flex gap-4">
+              <span class="inline-flex"><span class="w-12">練習:</span><span class="w-12 text-center font-medium <%= status_color %>"><%= I18n.t("activerecord.attributes.attendance.statuses.#{attendance.status}") %></span></span>
+              <span class="inline-flex"><span class="w-16">アフター:</span><span class="w-12 text-center font-medium <%= after_color %>"><%= I18n.t("activerecord.attributes.attendance.after_parties.#{attendance.after_party}") %></span></span>
+            </div>
           </div>
           <% if attendance.message.present? %>
             <div class="mt-2 text-sm text-gray-500 whitespace-pre-wrap"><%= attendance.message %></div>

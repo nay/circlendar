@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_18_140140) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_18_234347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,9 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_18_140140) do
 
   create_table "attendances", force: :cascade do |t|
     t.string "after_party", default: "undecided", null: false
-    t.time "arrival_time"
     t.datetime "created_at", null: false
-    t.time "departure_time"
     t.bigint "event_id", null: false
     t.text "message"
     t.bigint "player_id", null: false

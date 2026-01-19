@@ -37,8 +37,8 @@
     </div>
   </div>
 
-  <% attending_count = @attendances.attending.count %>
-  <% not_attending_count = @attendances.where(status: [:not_attending, :undecided]).count %>
+  <% attending_count = @attendances.select { |a| a.status == "attending" || a.after_party == "attending" }.count %>
+  <% not_attending_count = @attendances.select { |a| a.status != "attending" && a.after_party != "attending" }.count %>
   <div class="border-b border-gray-200 mb-4">
     <nav class="-mb-px flex">
       <%= link_to "お知らせ", admin_event_path(@event, tab: "announcements"),
@@ -58,4 +58,8 @@
   <% when "announcements" %>
     <%= render "tab_announcements", announcements: @announcements %>
   <% end %>
+
+  <div class="mt-8 text-center">
+    <%= link_to "参加登録画面へ", edit_event_attendance_path(@event), class: "inline-flex items-center px-8 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
 </div>

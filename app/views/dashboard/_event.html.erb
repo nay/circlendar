@@ -1,12 +1,12 @@
 <li>
   <%
+    is_after_only = attendance.present? && attendance.status != "attending" && attendance.after_party == "attending"
     bg_color = if attendance.present?
-      case attendance.status
-      when "attending"
+      if attendance.status == "attending" || is_after_only
         "bg-green-50"
-      when "not_attending"
+      elsif attendance.status == "not_attending"
         "bg-gray-50"
-      when "undecided"
+      else
         "bg-red-50"
       end
     else
@@ -24,25 +24,16 @@
           <p class="mt-1 text-sm text-gray-500">
             <%= event.schedule %>
           </p>
-          <% if attendance&.status == "attending" && attendance.arrival_time.present? %>
-            <p class="mt-1 text-sm text-green-600">
-              到着予定: <%= attendance.arrival_time.strftime('%H:%M') %>
-            </p>
-          <% end %>
-          <% if attendance&.message.present? %>
-            <p class="mt-1 text-sm text-gray-600">
-              <%= attendance.message %>
-            </p>
-          <% end %>
         </div>
         <div class="flex-shrink-0">
           <% if attendance.present? %>
-            <% case attendance.status %>
-            <% when "attending" %>
+            <% if attendance.status == "attending" %>
               <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-green-500 bg-green-50 rounded-lg text-base font-medium text-green-700">参加</span>
-            <% when "not_attending" %>
+            <% elsif is_after_only %>
+              <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-green-500 bg-green-50 rounded-lg text-base font-medium text-green-700">アフターのみ参加</span>
+            <% elsif attendance.status == "not_attending" %>
               <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-400 bg-gray-100 rounded-lg text-base font-medium text-gray-700">不参加</span>
-            <% when "undecided" %>
+            <% elsif attendance.status == "undecided" %>
               <span class="inline-flex items-center justify-center px-6 py-3 border-2 border-yellow-500 bg-yellow-50 rounded-lg text-base font-medium text-yellow-700">保留</span>
             <% end %>
           <% else %>
