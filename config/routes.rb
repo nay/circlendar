@@ -2,9 +2,9 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  get "signup/sent", to: "registrations#confirmation_sent", as: :confirmation_sent
   get "signup/:token", to: "registrations#new", as: :signup
   post "signup/:token", to: "registrations#create"
-  get "signup/sent", to: "registrations#confirmation_sent", as: :confirmation_sent
 
   get "confirm", to: "confirmations#show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
