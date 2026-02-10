@@ -13,6 +13,6 @@
       "note": "Admin-only controller, role assignment is intentional for member creation"
     }
   ],
-  "updated": "2026-01-18",
-  "brakeman_version": "7.1.2"
+  "updated": "2026-02-11",
+  "brakeman_version": "8.0.2"
 }
