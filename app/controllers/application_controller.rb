@@ -23,11 +23,7 @@ class ApplicationController < ActionController::Base
     end
 
     def default_after_authentication_url
-      if Current.user&.admin?
-        admin_events_path
-      else
-        dashboard_path
-      end
+      dashboard_path
     end
 
     def current_member

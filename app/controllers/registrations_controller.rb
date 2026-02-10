@@ -5,6 +5,11 @@ class RegistrationsController < ApplicationController
   layout "authentication"
 
   def new
+    if authenticated?
+      redirect_to after_authentication_url, allow_other_host: true
+      return
+    end
+
     @user = User.new
     @member = Member.new
   end
