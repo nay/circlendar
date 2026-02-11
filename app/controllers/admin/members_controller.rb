@@ -2,12 +2,13 @@ class Admin::MembersController < Admin::BaseController
   before_action :set_member, only: %i[show edit update destroy]
 
   def index
-    @members = Member.joins(:user)
-                     .order(
-                       Arel.sql("CASE users.role WHEN 'admin' THEN 0 ELSE 1 END"),
-                       Arel.sql("users.last_accessed_at DESC NULLS LAST"),
-                       Arel.sql("users.created_at DESC")
-                     )
+    collection = Member.joins(:user)
+                       .order(
+                         Arel.sql("CASE users.role WHEN 'admin' THEN 0 ELSE 1 END"),
+                         Arel.sql("users.last_accessed_at DESC NULLS LAST"),
+                         Arel.sql("users.created_at DESC")
+                       )
+    @pagy, @members = pagy(:offset, collection, limit: 10)
   end
 
   def show
