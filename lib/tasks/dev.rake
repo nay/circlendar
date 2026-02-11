@@ -10,7 +10,7 @@ namespace :dev do
     # 管理者太郎（admin1@example.com）
     # 管理者、A級、東京かるた会
     # ========================================
-    admin1_member = Member.joins(:user).merge(User.where(email_address: "admin1@example.com")).first || Member.create!(
+    admin1_member = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "admin1@example.com" }).first || Member.create!(
       email_address: "admin1@example.com",
       password: "circlendar",
       role: :admin,
@@ -25,7 +25,7 @@ namespace :dev do
     # 管理者花子（admin2@example.com）
     # 管理者、B級、横浜かるた会
     # ========================================
-    admin2_member = Member.joins(:user).merge(User.where(email_address: "admin2@example.com")).first || Member.create!(
+    admin2_member = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "admin2@example.com" }).first || Member.create!(
       email_address: "admin2@example.com",
       password: "circlendar",
       role: :admin,
@@ -40,7 +40,7 @@ namespace :dev do
     # 山田次郎（member1@example.com）
     # メンバー、C級、川崎かるた会
     # ========================================
-    player1 = Member.joins(:user).merge(User.where(email_address: "member1@example.com")).first || Member.create!(
+    player1 = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "member1@example.com" }).first || Member.create!(
       email_address: "member1@example.com",
       password: "circlendar",
       role: :member,
@@ -55,7 +55,7 @@ namespace :dev do
     # 佐藤三郎（member2@example.com）
     # メンバー、D級、千葉かるた会、お知らせ受信OFF
     # ========================================
-    player2 = Member.joins(:user).merge(User.where(email_address: "member2@example.com")).first || Member.create!(
+    player2 = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "member2@example.com" }).first || Member.create!(
       email_address: "member2@example.com",
       password: "circlendar",
       role: :member,
@@ -135,9 +135,9 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event1, player: admin1_member, status: :attending, arrival_time: "13:00", after_party: :attending)
-    Attendance.create!(event: event1, player: admin2_member, status: :attending, arrival_time: "13:00", after_party: :attending)
-    Attendance.create!(event: event1, player: player1, status: :attending, arrival_time: "13:30", departure_time: "16:00", after_party: :not_attending, message: "2本目から参加予定です")
+    Attendance.create!(event: event1, player: admin1_member, status: :attending, after_party: :attending)
+    Attendance.create!(event: event1, player: admin2_member, status: :attending, after_party: :attending)
+    Attendance.create!(event: event1, player: player1, status: :attending, after_party: :not_attending, message: "2本目から参加予定です")
     Attendance.create!(event: event1, player: player2, status: :undecided, message: "仕事の都合で未定です")
 
     # ========================================
@@ -160,8 +160,8 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event3, player: admin1_member, status: :attending, arrival_time: "14:00", after_party: :not_attending)
-    Attendance.create!(event: event3, player: player1, status: :attending, arrival_time: "15:00", after_party: :not_attending)
+    Attendance.create!(event: event3, player: admin1_member, status: :attending, after_party: :not_attending)
+    Attendance.create!(event: event3, player: player1, status: :attending, after_party: :not_attending)
 
     # ========================================
     # イベント4：3週間後の新宿文化センター（公開済み・未回答）
@@ -173,7 +173,7 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event4, player: admin2_member, status: :attending, arrival_time: "13:00", after_party: :not_attending)
+    Attendance.create!(event: event4, player: admin2_member, status: :attending, after_party: :not_attending)
     Attendance.create!(event: event4, player: player1, status: :not_attending, message: "用事があり参加できません")
 
     puts "Development seed data created successfully!"

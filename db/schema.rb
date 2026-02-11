@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_220210) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_11_232700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -97,12 +97,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_220210) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_mail_addresses", force: :cascade do |t|
+    t.string "address", null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["address"], name: "index_user_mail_addresses_on_address", unique: true
+    t.index ["confirmation_token"], name: "index_user_mail_addresses_on_confirmation_token", unique: true
+    t.index ["user_id"], name: "index_user_mail_addresses_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "created_at", null: false
     t.datetime "disabled_at"
-    t.string "email_address", null: false
+    t.string "email_address"
     t.datetime "last_accessed_at"
     t.string "password_digest", null: false
     t.boolean "receives_announcements", default: true
@@ -130,4 +142,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_220210) do
   add_foreign_key "events", "venues"
   add_foreign_key "players", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_mail_addresses", "users"
 end
