@@ -135,9 +135,9 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event1, player: admin1_member, status: :attending, arrival_time: "13:00", after_party: :attending)
-    Attendance.create!(event: event1, player: admin2_member, status: :attending, arrival_time: "13:00", after_party: :attending)
-    Attendance.create!(event: event1, player: player1, status: :attending, arrival_time: "13:30", departure_time: "16:00", after_party: :not_attending, message: "2本目から参加予定です")
+    Attendance.create!(event: event1, player: admin1_member, status: :attending, after_party: :attending)
+    Attendance.create!(event: event1, player: admin2_member, status: :attending, after_party: :attending)
+    Attendance.create!(event: event1, player: player1, status: :attending, after_party: :not_attending, message: "2本目から参加予定です")
     Attendance.create!(event: event1, player: player2, status: :undecided, message: "仕事の都合で未定です")
 
     # ========================================
@@ -160,8 +160,8 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event3, player: admin1_member, status: :attending, arrival_time: "14:00", after_party: :not_attending)
-    Attendance.create!(event: event3, player: player1, status: :attending, arrival_time: "15:00", after_party: :not_attending)
+    Attendance.create!(event: event3, player: admin1_member, status: :attending, after_party: :not_attending)
+    Attendance.create!(event: event3, player: player1, status: :attending, after_party: :not_attending)
 
     # ========================================
     # イベント4：3週間後の新宿文化センター（公開済み・未回答）
@@ -173,7 +173,7 @@ namespace :dev do
       status: :published
     )
 
-    Attendance.create!(event: event4, player: admin2_member, status: :attending, arrival_time: "13:00", after_party: :not_attending)
+    Attendance.create!(event: event4, player: admin2_member, status: :attending, after_party: :not_attending)
     Attendance.create!(event: event4, player: player1, status: :not_attending, message: "用事があり参加できません")
 
     puts "Development seed data created successfully!"
