@@ -5,6 +5,8 @@
   </div>
 
   <% if @members.any? %>
+    <%= render "shared/pagination", pagy: @pagy %>
+
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <ul class="divide-y divide-gray-200">
         <% @members.each do |member| %>
@@ -43,6 +45,8 @@
         <% end %>
       </ul>
     </div>
+
+    <%= render "shared/pagination", pagy: @pagy %>
   <% else %>
     <div class="text-center py-12">
       <p class="text-gray-500 text-lg"><%= Member.model_name.human %>がいません</p>
