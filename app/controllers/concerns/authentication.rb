@@ -23,6 +23,8 @@ module Authentication
 
     def resume_session
       Current.session ||= find_session_by_cookie
+      Current.session&.user&.update_column(:last_accessed_at, Time.current)
+      Current.session
     end
 
     def find_session_by_cookie

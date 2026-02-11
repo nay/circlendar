@@ -18,6 +18,7 @@ ja:
         role: "権限"
         confirmed_at: "確認日時"
         disabled_at: "無効日時"
+        last_accessed_at: "最終アクセス"
       player:
         name: "お名前"
         organization_name: "所属団体"

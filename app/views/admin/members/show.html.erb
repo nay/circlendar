@@ -60,12 +60,15 @@
           </dd>
         </div>
 
-        <% if @member.description.present? %>
-          <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1">自己紹介</dt>
-            <dd class="text-sm text-gray-900"><%= simple_format(@member.description, sanitize: true) %></dd>
-          </div>
-        <% end %>
+        <div class="bg-gray-50 px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1">自己紹介</dt>
+          <dd class="text-sm text-gray-900"><%= @member.description.present? ? simple_format(@member.description, sanitize: true) : "-" %></dd>
+        </div>
+
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-1"><%= User.human_attribute_name(:last_accessed_at) %></dt>
+          <dd class="text-sm text-gray-900"><%= @member.user.last_accessed_at ? l(@member.user.last_accessed_at, format: :long) : "-" %></dd>
+        </div>
       </dl>
     </div>
   </div>
