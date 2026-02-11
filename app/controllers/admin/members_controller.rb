@@ -2,7 +2,12 @@ class Admin::MembersController < Admin::BaseController
   before_action :set_member, only: %i[show edit update destroy]
 
   def index
-    @members = Member.includes(:user).order(:name)
+    @members = Member.joins(:user)
+                     .order(
+                       Arel.sql("CASE users.role WHEN 'admin' THEN 0 ELSE 1 END"),
+                       Arel.sql("users.last_accessed_at DESC NULLS LAST"),
+                       Arel.sql("users.created_at DESC")
+                     )
   end
 
   def show
