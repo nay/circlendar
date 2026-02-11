@@ -1,7 +1,7 @@
 class UserMailer < ApplicationMailer
-  def confirmation(user)
-    @user = user
-    @confirmation_url = confirm_url(token: user.confirmation_token)
-    mail subject: "【#{Setting.instance.circle_name}】メールアドレスの確認", to: user.email_address
+  def confirmation(mail_address)
+    @user = mail_address.user
+    @confirmation_url = confirm_url(token: mail_address.confirmation_token)
+    mail subject: "【#{Setting.instance.circle_name}】メールアドレスの確認", to: mail_address.address
   end
 end

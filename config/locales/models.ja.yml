@@ -9,6 +9,7 @@ ja:
       user: "ユーザー"
       setting: "サークル設定"
       attendance: "参加登録"
+      user_mail_address: "メールアドレス"
     attributes:
       user:
         email_address: "メールアドレス"
@@ -19,6 +20,8 @@ ja:
         confirmed_at: "確認日時"
         disabled_at: "無効日時"
         last_accessed_at: "最終アクセス"
+      user_mail_address:
+        address: "メールアドレス"
       player:
         name: "お名前"
         organization_name: "所属団体"

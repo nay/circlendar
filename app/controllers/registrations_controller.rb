@@ -21,8 +21,9 @@ class RegistrationsController < ApplicationController
     @member = @user.build_member(member_params)
 
     if @user.save
-      @user.generate_confirmation_token!
-      UserMailer.confirmation(@user).deliver_later
+      mail_address = @user.mail_addresses.first
+      mail_address.generate_confirmation_token!
+      UserMailer.confirmation(mail_address).deliver_later
       redirect_to confirmation_sent_path
     else
       @member.valid?
