@@ -9,6 +9,13 @@ class User < ApplicationRecord
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
+  scope :ordered, -> {
+    order(
+      Arel.sql("CASE users.role WHEN 'admin' THEN 0 ELSE 1 END"),
+      Arel.sql("users.last_accessed_at DESC NULLS LAST"),
+      Arel.sql("users.created_at DESC")
+    )
+  }
 
   before_validation :mark_blank_mail_addresses_for_destruction
   validate :validate_mail_addresses_count
