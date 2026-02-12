@@ -55,14 +55,16 @@
           <dd class="text-sm text-gray-900">
             <% if @announcement.bcc_addresses.present? %>
               <ul class="list-disc list-inside">
-                <% @announcement.bcc_addresses.each do |email| %>
+                <% @bcc_members.each do |member| %>
+                  <% member_bcc_emails = member.user.mail_addresses.select { |ma| @announcement.bcc_addresses.include?(ma.address) }.map(&:address) %>
                   <li>
-                    <% if (member = @bcc_members[email]) %>
-                      <%= link_to "#{member.name}（#{email}）", admin_member_path(member), class: "text-blue-600 hover:text-blue-700" %>
-                    <% else %>
-                      <%= email %>
-                    <% end %>
+                    <%= link_to member.name, admin_member_path(member), class: "text-blue-600 hover:text-blue-700" %>
+                    <span class="text-gray-500">（<%= member_bcc_emails.join(", ") %>）</span>
                   </li>
+                <% end %>
+                <% orphan_emails = @announcement.bcc_addresses - @bcc_members.flat_map { |m| m.user.mail_addresses.map(&:address) } %>
+                <% orphan_emails.each do |email| %>
+                  <li><%= email %></li>
                 <% end %>
               </ul>
             <% else %>

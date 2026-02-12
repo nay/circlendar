@@ -6,7 +6,15 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
-    @bcc_members = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: @announcement.bcc_addresses }).index_by(&:email_address)
+    @bcc_members = if @announcement.bcc_addresses.present?
+      ids = Member.joins(user: :mail_addresses)
+                  .where(user_mail_addresses: { address: @announcement.bcc_addresses })
+                  .distinct
+                  .pluck(:id)
+      Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
+    else
+      Member.none
+    end
   end
 
   def new
@@ -75,7 +83,13 @@ class Admin::AnnouncementsController < Admin::BaseController
   def prepare_form_data
     @events = Event.upcoming.order(:date)
     @announcement_templates = AnnouncementTemplate.order(:subject)
-    @members = Member.joins(:user).merge(User.active.receives_announcements)
+    @members = Member.joins(:user).merge(User.active.receives_announcements.ordered).includes(user: :mail_addresses)
+    @checked_user_ids = if @announcement.bcc_addresses.present?
+      bcc_set = @announcement.bcc_addresses.to_set
+      @members.select { |m| m.user.mail_addresses.any? { |ma| bcc_set.include?(ma.address) } }.map { |m| m.user.id }
+    else
+      @members.map { |m| m.user.id }
+    end
   end
 
   def apply_template
@@ -104,6 +118,6 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def announcement_params
-    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, bcc_addresses: [], event_ids: [])
+    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, bcc_user_ids: [], event_ids: [])
   end
 end

@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    mail_address = UserMailAddress.find_by(address: params[:email_address])
+    mail_address = UserMailAddress.confirmed.find_by(address: params[:email_address])
     user = mail_address&.user
 
     if user && !user.disabled? && user.authenticate(params[:password])

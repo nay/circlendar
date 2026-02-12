@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
 
   def profile_params
     permitted = params.require(:member).permit(
-      :name, :email_address, :organization_name, :rank, :description,
+      :name, :organization_name, :rank, :description,
       :receives_announcements, :password, :password_confirmation
     )
     if permitted[:password].blank?

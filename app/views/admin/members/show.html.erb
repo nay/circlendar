@@ -25,7 +25,20 @@
       <dl>
         <div class="bg-white px-4 py-5 sm:px-6">
           <dt class="text-sm font-medium text-gray-500 mb-1">メールアドレス</dt>
-          <dd class="text-sm text-gray-900"><%= @member.user.email_address %></dd>
+          <dd class="text-sm text-gray-900">
+            <ul class="space-y-1">
+              <% @member.user.mail_addresses.each do |ma| %>
+                <li>
+                  <%= ma.address %>
+                  <% if ma.confirmed? %>
+                    <span class="text-xs text-green-600">（確認済み）</span>
+                  <% else %>
+                    <span class="text-xs text-yellow-600">（未確認）</span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </dd>
         </div>
 
         <div class="bg-gray-50 px-4 py-5 sm:px-6">

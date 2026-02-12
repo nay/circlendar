@@ -5,7 +5,7 @@
       "note": "URL is validated with start_with? check and model validation"
     },
     {
-      "fingerprint": "c703199e748f013b96ff300844771b641b1abb7d6adb01fd835f340d597d7654",
+      "fingerprint": "a7c9a0100723721bcf44a3d918d0ebd2d15743db3ce633d30b5d3b590363f5d1",
       "note": "Admin-only controller, role assignment is intentional for member management"
     },
     {

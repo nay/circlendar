@@ -29,8 +29,37 @@
         </div>
 
         <div>
-          <%= form.label :email_address, "メールアドレス", class: "block text-sm font-medium text-gray-700 mb-2" %>
-          <%= form.email_field :email_address, autocomplete: "email", class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+          <span class="block text-sm font-medium text-gray-700 mb-2">メールアドレス</span>
+          <div class="space-y-2">
+            <% active_addresses = @member.user.mail_addresses.reject(&:marked_for_destruction?) %>
+            <% @member.user.mail_addresses.each.with_index do |ma, index| %>
+              <% if ma.marked_for_destruction? %>
+                <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
+                <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][_destroy]" value="1">
+              <% else %>
+                <div class="flex items-center gap-2">
+                  <% if ma.persisted? %>
+                    <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
+                  <% end %>
+                  <% if ma.persisted? && ma.confirmed? %>
+                    <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>">
+                    <span class="flex-1 text-sm text-gray-900 px-3 py-2"><%= ma.address %></span>
+                  <% else %>
+                    <input type="email" name="member[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>"
+                           class="appearance-none block flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                  <% end %>
+                  <% if active_addresses.size > 1 %>
+                    <button type="submit" name="remove_mail_address" value="<%= active_addresses.index(ma) %>"
+                            class="text-red-600 hover:text-red-700 text-sm whitespace-nowrap">削除</button>
+                  <% end %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+          <% if active_addresses.size < UserMailAddress::MAX_PER_USER %>
+            <button type="submit" name="add_mail_address" value="1"
+                    class="mt-2 text-blue-600 hover:text-blue-700 text-sm">+ メールアドレスを追加</button>
+          <% end %>
         </div>
 
         <div>
