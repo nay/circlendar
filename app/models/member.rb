@@ -9,6 +9,7 @@ class Member < Player
            :role, :role=,
            :confirmed_at, :confirmed_at=,
            :disabled?, :admin?,
+           :mail_addresses_attributes=,
            to: :user
 
   def user
