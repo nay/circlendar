@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
   has_many :mail_addresses, class_name: "UserMailAddress", dependent: :destroy, autosave: true
+  accepts_nested_attributes_for :mail_addresses, allow_destroy: true
   has_one :member, dependent: :destroy
 
   enum :role, { admin: "admin", member: "member" }
@@ -9,6 +10,7 @@ class User < ApplicationRecord
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
 
+  validate :validate_mail_addresses_count
   after_validation :promote_mail_address_errors
 
   # -- バーチャルアクセサ（mail_addresses.first への委譲） --
@@ -60,6 +62,12 @@ class User < ApplicationRecord
   end
 
   private
+
+  def validate_mail_addresses_count
+    if mail_addresses.reject(&:marked_for_destruction?).empty?
+      errors.add(:base, "メールアドレスは1件以上必要です")
+    end
+  end
 
   def promote_mail_address_errors
     mail_addresses.each do |ma|
