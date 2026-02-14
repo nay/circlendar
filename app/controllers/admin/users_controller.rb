@@ -1,4 +1,4 @@
-class Admin::MembersController < Admin::BaseController
+class Admin::UsersController < Admin::BaseController
   before_action :set_member, only: %i[show edit update destroy]
 
   def index
@@ -18,7 +18,7 @@ class Admin::MembersController < Admin::BaseController
     @member.user.confirmed_at = Time.current
 
     if @member.save
-      redirect_to admin_member_path(@member), notice: "#{Member.model_name.human}を作成しました"
+      redirect_to admin_user_path(@member), notice: "#{User.model_name.human}を作成しました"
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class Admin::MembersController < Admin::BaseController
 
   def update
     if @member.user == Current.user && member_params[:disabled] == "1"
-      redirect_to edit_admin_member_path(@member), alert: "自分自身は無効にできません"
+      redirect_to edit_admin_user_path(@member), alert: "自分自身は無効にできません"
       return
     end
 
@@ -52,7 +52,7 @@ class Admin::MembersController < Admin::BaseController
     @member.user.confirm_new_mail_addresses
 
     if @member.save
-      redirect_to admin_member_path(@member), notice: "#{Member.model_name.human}を更新しました"
+      redirect_to admin_user_path(@member), notice: "#{User.model_name.human}を更新しました"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -60,10 +60,10 @@ class Admin::MembersController < Admin::BaseController
 
   def destroy
     if @member.user == Current.user
-      redirect_to admin_member_path(@member), alert: "自分自身は削除できません"
+      redirect_to admin_user_path(@member), alert: "自分自身は削除できません"
     else
       @member.user.destroy
-      redirect_to admin_members_path, notice: "#{Member.model_name.human}を削除しました"
+      redirect_to admin_users_path, notice: "#{User.model_name.human}を削除しました"
     end
   end
 

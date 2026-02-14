@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
     resources :venues
 
-    resources :members, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
+    resources :users
 
     resource :setting, only: [ :edit, :update ] do
       post :generate_signup_token, on: :member

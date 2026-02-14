@@ -6,7 +6,7 @@
         <li class="px-4 py-4 sm:px-6">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div class="font-medium text-gray-900">
-              <%= link_to attendance.player.name, admin_member_path(attendance.player), class: "text-blue-600 hover:text-blue-700" %>
+              <%= link_to attendance.player.name, admin_user_path(attendance.player.user), class: "text-blue-600 hover:text-blue-700" %>
               <% if attendance.player.formatted_rank %>
                 <span class="ml-2 text-sm font-normal text-gray-500"><%= attendance.player.formatted_rank %></span>
               <% end %>

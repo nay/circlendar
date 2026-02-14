@@ -1,12 +1,12 @@
 <div class="w-full">
   <div class="mb-4">
-    <%= link_to "← #{Member.model_name.human}一覧に戻る", admin_members_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+    <%= link_to "← #{User.model_name.human}一覧に戻る", admin_users_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
   </div>
   <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 mb-8">
-    <h1 class="text-3xl font-bold text-gray-900"><%= Member.model_name.human %>詳細</h1>
+    <h1 class="text-3xl font-bold text-gray-900"><%= User.model_name.human %>詳細</h1>
     <div class="flex flex-wrap gap-2">
-      <%= link_to "編集", edit_admin_member_path(@member), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-      <%= button_to "削除", admin_member_path(@member), method: :delete, data: { turbo_confirm: "この#{Member.model_name.human}を削除しますか？" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+      <%= link_to "編集", edit_admin_user_path(@member), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= button_to "削除", admin_user_path(@member), method: :delete, data: { turbo_confirm: "この#{User.model_name.human}を削除しますか？" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
     </div>
   </div>
 
