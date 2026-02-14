@@ -4,15 +4,14 @@
   </div>
   <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= User.model_name.human %>を編集</h1>
 
-  <%= form_with model: @member, url: admin_user_path(@user), method: :patch, class: "space-y-6" do |form| %>
-    <% all_errors = (@member.errors.full_messages + @member.user.errors.full_messages).uniq %>
-    <% if all_errors.any? %>
+  <%= form_with model: @user, url: admin_user_path(@user), method: :patch, class: "space-y-6" do |form| %>
+    <% if @user.errors.any? %>
       <div class="rounded-md bg-red-50 p-4">
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800"><%= t('errors.template.header') %></h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
-              <% all_errors.each do |message| %>
+              <% @user.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
             </ul>
@@ -31,21 +30,21 @@
         <div>
           <span class="block text-sm font-medium text-gray-700 mb-2">メールアドレス</span>
           <div class="space-y-2">
-            <% active_addresses = @member.user.mail_addresses.reject(&:marked_for_destruction?) %>
-            <% @member.user.mail_addresses.each.with_index do |ma, index| %>
+            <% active_addresses = @user.mail_addresses.reject(&:marked_for_destruction?) %>
+            <% @user.mail_addresses.each.with_index do |ma, index| %>
               <% if ma.marked_for_destruction? %>
-                <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
-                <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][_destroy]" value="1">
+                <input type="hidden" name="user[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
+                <input type="hidden" name="user[mail_addresses_attributes][<%= index %>][_destroy]" value="1">
               <% else %>
                 <div class="flex items-center gap-2">
                   <% if ma.persisted? %>
-                    <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
+                    <input type="hidden" name="user[mail_addresses_attributes][<%= index %>][id]" value="<%= ma.id %>">
                   <% end %>
                   <% if ma.persisted? && ma.confirmed? %>
-                    <input type="hidden" name="member[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>">
+                    <input type="hidden" name="user[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>">
                     <span class="flex-1 text-sm text-gray-900 px-3 py-2"><%= ma.address %></span>
                   <% else %>
-                    <input type="email" name="member[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>"
+                    <input type="email" name="user[mail_addresses_attributes][<%= index %>][address]" value="<%= ma.address %>"
                            class="appearance-none block flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                   <% end %>
                   <% if active_addresses.size > 1 %>
@@ -70,7 +69,7 @@
         <div>
           <%= form.label :rank, "級", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :rank,
-                options_for_select([["級なし（初心者）", "unknown"], ["F級", "f"], ["E級", "e"], ["D級", "d"], ["C級", "c"], ["B級", "b"], ["A級", "a"]], @member.rank),
+                options_for_select([["級なし（初心者）", "unknown"], ["F級", "f"], ["E級", "e"], ["D級", "d"], ["C級", "c"], ["B級", "b"], ["A級", "a"]], @user.rank),
                 { include_blank: true },
                 class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
         </div>
@@ -93,7 +92,7 @@
 
         <hr class="border-gray-200">
 
-        <% is_self = @member.user == Current.user %>
+        <% is_self = @user == Current.user %>
 
         <div>
           <span class="block text-sm font-medium text-gray-700 mb-2">権限</span>
@@ -115,7 +114,7 @@
         </div>
 
         <div class="flex items-center <%= 'opacity-50' if is_self %>">
-          <%= form.check_box :disabled, checked: @member.disabled?, disabled: is_self, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" %>
+          <%= form.check_box :disabled, checked: @user.disabled?, disabled: is_self, class: "h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" %>
           <%= form.label :disabled, "無効", class: "ml-2 block text-sm text-gray-700" %>
           <span class="ml-2 text-xs text-gray-500">（ログイン不可、お知らせメール送信対象外）</span>
         </div>

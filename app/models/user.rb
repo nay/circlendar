@@ -61,6 +61,10 @@ class User < ApplicationRecord
     mail_addresses.any?(&:confirmed?)
   end
 
+  def disabled=(value)
+    self.disabled_at = (value == "1" || value == true) ? Time.current : nil
+  end
+
   def disabled?
     disabled_at.present?
   end

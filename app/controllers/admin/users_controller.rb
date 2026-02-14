@@ -1,6 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: %i[show]
-  before_action :set_member, only: %i[edit update destroy]
+  before_action :set_user, only: %i[show edit update destroy]
 
   def index
     collection = User.ordered.includes(:member)
@@ -32,12 +31,12 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def update
-    if @user == Current.user && member_params[:disabled] == "1"
+    if @user == Current.user && user_params[:disabled] == "1"
       redirect_to edit_admin_user_path(@user), alert: "自分自身は無効にできません"
       return
     end
 
-    @member.assign_attributes(member_params)
+    @user.assign_attributes(user_params)
 
     if params[:add_mail_address]
       @user.mail_addresses.build
@@ -55,7 +54,7 @@ class Admin::UsersController < Admin::BaseController
 
     @user.confirm_new_mail_addresses
 
-    if @member.save
+    if @user.save
       redirect_to admin_user_path(@user), notice: "#{User.model_name.human}を更新しました"
     else
       render :edit, status: :unprocessable_entity
@@ -77,13 +76,8 @@ class Admin::UsersController < Admin::BaseController
     @user = User.find(params[:id])
   end
 
-  def set_member
-    @user = User.find(params[:id])
-    @member = @user.member
-  end
-
-  def member_params
-    permitted = params.require(:member).permit(
+  def user_params
+    permitted = params.require(:user).permit(
       :name, :organization_name, :rank, :description, :receives_announcements,
       :disabled, :role, :password, :password_confirmation,
       mail_addresses_attributes: [ :id, :address, :_destroy ]
