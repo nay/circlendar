@@ -11,23 +11,42 @@ class RegistrationsController < ApplicationController
     end
 
     @user = User.new
-    @member = Member.new
+    @user.build_member
   end
 
   def create
-    @user = User.new(user_params)
-    @user.role = :member
+    existing_mail_address = UserMailAddress.find_by(address: user_params[:email_address])
 
-    @member = @user.build_member(member_params)
+    if existing_mail_address
+      existing_user = existing_mail_address.user
 
-    if @user.save
-      mail_address = @user.mail_addresses.first
-      mail_address.generate_confirmation_token!
-      UserMailer.confirmation(mail_address).deliver_later
-      redirect_to confirmation_sent_path
+      if existing_user.last_accessed_at.present?
+        redirect_to new_session_path(email_address: existing_mail_address.address),
+                    notice: "このメールアドレスはすでに登録されています。ログインしてください。"
+        return
+      end
+
+      @user = existing_user
+      @user.assign_attributes(user_params.except(:email_address))
+      @user.role = :member
+
+      if @user.save
+        existing_mail_address.update!(confirmed_at: nil)
+        send_confirmation_and_redirect(existing_mail_address) and return
+      else
+        render :new, status: :unprocessable_entity
+      end
     else
-      @member.valid?
-      render :new, status: :unprocessable_entity
+      @user = User.new
+      @user.build_member
+      @user.assign_attributes(user_params)
+      @user.role = :member
+
+      if @user.save
+        send_confirmation_and_redirect(@user.mail_addresses.first) and return
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
@@ -35,6 +54,12 @@ class RegistrationsController < ApplicationController
   end
 
   private
+
+  def send_confirmation_and_redirect(mail_address)
+    mail_address.generate_confirmation_token!
+    UserMailer.confirmation(mail_address).deliver_later
+    redirect_to confirmation_sent_path
+  end
 
   def verify_signup_token
     setting = Setting.instance
@@ -44,10 +69,7 @@ class RegistrationsController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email_address, :password, :password_confirmation, :receives_announcements)
-  end
-
-  def member_params
-    params.require(:member).permit(:name, :organization_name, :rank, :description)
+    params.require(:user).permit(:email_address, :password, :password_confirmation, :receives_announcements,
+                                 :name, :organization_name, :rank, :description)
   end
 end

@@ -32,6 +32,10 @@
 - ビューの文言は `t()` ヘルパーを使って翻訳する
   - 翻訳は `config/locales/ja.yml` に定義
 
+## RuboCop
+
+- ERBファイル（`.html.erb`）はRuboCopの対象外なので、引数に含めないこと
+
 ## 命名規則
 
 - booleanカラムは `is_xxx` のような接頭辞を使わない
