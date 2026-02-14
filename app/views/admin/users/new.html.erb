@@ -1,18 +1,17 @@
 <div class="w-full max-w-2xl mx-auto">
   <div class="mb-4">
-    <%= link_to "← #{Member.model_name.human}一覧に戻る", admin_members_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
+    <%= link_to "← #{User.model_name.human}一覧に戻る", admin_users_path, class: "text-blue-600 hover:text-blue-700 text-sm" %>
   </div>
-  <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= Member.model_name.human %>を作成</h1>
+  <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= User.model_name.human %>を作成</h1>
 
-  <%= form_with model: [:admin, @member], class: "space-y-6" do |form| %>
-    <% all_errors = (@member.errors.full_messages + @member.user.errors.full_messages).uniq %>
-    <% if all_errors.any? %>
+  <%= form_with model: @user, url: admin_users_path, class: "space-y-6" do |form| %>
+    <% if @user.errors.any? %>
       <div class="rounded-md bg-red-50 p-4">
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800"><%= t('errors.template.header') %></h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
-              <% all_errors.each do |message| %>
+              <% @user.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
             </ul>
@@ -41,7 +40,7 @@
         <div>
           <%= form.label :rank, "級", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :rank,
-                options_for_select([["級なし（初心者）", "unknown"], ["F級", "f"], ["E級", "e"], ["D級", "d"], ["C級", "c"], ["B級", "b"], ["A級", "a"]], @member.rank),
+                options_for_select([["級なし（初心者）", "unknown"], ["F級", "f"], ["E級", "e"], ["D級", "d"], ["C級", "c"], ["B級", "b"], ["A級", "a"]], @user.rank),
                 { include_blank: true },
                 class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
         </div>
@@ -85,7 +84,7 @@
     </div>
 
     <div class="flex justify-end gap-3">
-      <%= link_to "キャンセル", admin_members_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= link_to "キャンセル", admin_users_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       <%= form.submit "作成", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
     </div>
   <% end %>

@@ -58,7 +58,7 @@
                 <% @bcc_members.each do |member| %>
                   <% member_bcc_emails = member.user.mail_addresses.select { |ma| @announcement.bcc_addresses.include?(ma.address) }.map(&:address) %>
                   <li>
-                    <%= link_to member.name, admin_member_path(member), class: "text-blue-600 hover:text-blue-700" %>
+                    <%= link_to member.name, admin_user_path(member.user), class: "text-blue-600 hover:text-blue-700" %>
                     <span class="text-gray-500">（<%= member_bcc_emails.join(", ") %>）</span>
                   </li>
                 <% end %>

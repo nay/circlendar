@@ -5,9 +5,13 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   before_action :redirect_to_primary_host
 
-  helper_method :current_member
+  helper_method :current_user
 
   private
+
+    def current_user
+      Current.user
+    end
 
     def redirect_to_primary_host
       return unless request.get? || request.head?
@@ -25,9 +29,5 @@ class ApplicationController < ActionController::Base
 
     def default_after_authentication_url
       dashboard_path
-    end
-
-    def current_member
-      @current_member ||= Current.user&.member
     end
 end

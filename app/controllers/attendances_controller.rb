@@ -2,7 +2,7 @@ class AttendancesController < ApplicationController
   before_action :set_event
 
   def edit
-    @attendance = @event.attendances.find_or_initialize_by(player: current_member)
+    @attendance = @event.attendances.find_or_initialize_by(player: current_user.member)
     # 練習またはアフターに参加する人を取得
     @attendees = @event.attendances
                        .where("status = ? OR after_party = ?", "attending", "attending")
@@ -10,7 +10,7 @@ class AttendancesController < ApplicationController
   end
 
   def update
-    @attendance = @event.attendances.find_or_initialize_by(player: current_member)
+    @attendance = @event.attendances.find_or_initialize_by(player: current_user.member)
     @attendance.assign_attributes(attendance_params)
 
     if @attendance.save

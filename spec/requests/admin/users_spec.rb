@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Admin::Members", type: :request do
+RSpec.describe "Admin::Users", type: :request do
   let(:user) do
     User.create!(
       email_address: "admin@example.com",
@@ -18,9 +18,9 @@ RSpec.describe "Admin::Members", type: :request do
     post session_path, params: { email_address: user.email_address, password: "password123" }
   end
 
-  describe "GET /admin/members" do
+  describe "GET /admin/users" do
     it "200を返す" do
-      get admin_members_path
+      get admin_users_path
       expect(response).to have_http_status(:ok)
     end
   end

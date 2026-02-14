@@ -1,13 +1,13 @@
 class ProfilesController < ApplicationController
   def edit
-    @member = current_member
+    @user = current_user
   end
 
   def update
-    @member = current_member
-    @member.assign_attributes(profile_params)
+    @user = current_user
+    @user.assign_attributes(profile_params)
 
-    if @member.save
+    if @user.save
       redirect_to edit_profile_path, notice: "プロフィールを更新しました"
     else
       render :edit, status: :unprocessable_entity
@@ -17,7 +17,7 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    permitted = params.require(:member).permit(
+    permitted = params.require(:user).permit(
       :name, :organization_name, :rank, :description,
       :receives_announcements, :password, :password_confirmation
     )

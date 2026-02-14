@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
   def index
     # 自分の出席情報を先に取得してインデックス化（現在日以降すべて）
-    my_attendances = current_member.attendances
+    my_attendances = current_user.member.attendances
                                    .joins(:event)
                                    .where("events.date >= ?", Date.current)
                                    .index_by(&:event_id)
