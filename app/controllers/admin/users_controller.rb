@@ -31,7 +31,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def update
-    if @user == Current.user && user_params[:disabled] == "1"
+    if @user == current_user && user_params[:disabled] == "1"
       redirect_to edit_admin_user_path(@user), alert: "自分自身は無効にできません"
       return
     end
@@ -62,7 +62,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def destroy
-    if @user == Current.user
+    if @user == current_user
       redirect_to admin_user_path(@user), alert: "自分自身は削除できません"
     else
       @user.destroy
@@ -86,7 +86,7 @@ class Admin::UsersController < Admin::BaseController
       permitted.delete(:password)
       permitted.delete(:password_confirmation)
     end
-    permitted.delete(:role) if @user == Current.user
+    permitted.delete(:role) if @user == current_user
     permitted
   end
 

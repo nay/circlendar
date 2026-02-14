@@ -73,7 +73,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     AnnouncementMailer.notify(@announcement).deliver_now
-    @announcement.update!(sent_at: Time.current, sender: Current.user)
+    @announcement.update!(sent_at: Time.current, sender: current_user)
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
   end

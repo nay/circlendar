@@ -1,4 +1,4 @@
-<% if Current.user %>
+<% if current_user %>
   <nav class="bg-white shadow-sm border-b border-gray-200">
     <div class="container mx-auto px-5">
       <div class="flex justify-between items-center h-16">
@@ -7,7 +7,7 @@
             <%= Setting.instance.circle_name %>
           <% end %>
           <div class="flex items-center space-x-2 md:space-x-4">
-            <% if Current.user.admin? %>
+            <% if current_user.admin? %>
               <!-- デスクトップ: 個別リンク表示 -->
               <div class="hidden lg:flex lg:space-x-4">
                 <%= link_to Event.model_name.human, admin_events_path, class: "px-3 py-2 rounded-md text-sm font-medium #{request.path.start_with?('/admin/events') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}" %>
@@ -41,7 +41,7 @@
         </div>
         <div class="relative" data-controller="mobile-menu">
           <button type="button" data-action="click->mobile-menu#toggle" class="flex items-center text-sm text-gray-600 hover:text-gray-900">
-            <span class="truncate max-w-[100px] md:max-w-none"><%= current_member&.name || Current.user.email_address %></span>
+            <span class="truncate max-w-[100px] md:max-w-none"><%= current_user.name.presence || current_user.email_address %></span>
             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>

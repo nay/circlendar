@@ -1,10 +1,10 @@
 class ProfilesController < ApplicationController
   def edit
-    @user = Current.user
+    @user = current_user
   end
 
   def update
-    @user = Current.user
+    @user = current_user
     @user.assign_attributes(profile_params)
 
     if @user.save

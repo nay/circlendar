@@ -5,6 +5,6 @@ class Admin::BaseController < ApplicationController
   private
 
   def require_admin
-    raise ActiveRecord::RecordNotFound unless Current.user&.admin?
+    raise ActiveRecord::RecordNotFound unless current_user&.admin?
   end
 end

@@ -112,7 +112,7 @@
     </div>
   <% end %>
 
-  <% if Current.user.admin? %>
+  <% if current_user.admin? %>
     <div class="mt-8 text-center">
       <%= link_to "管理画面へ", admin_event_path(@event, tab: "attending"), class: "inline-flex items-center px-8 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
     </div>
