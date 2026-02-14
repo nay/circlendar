@@ -5,6 +5,9 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :mail_addresses, allow_destroy: true, reject_if: ->(attrs) { attrs[:address].blank? && attrs[:id].blank? }
   has_one :member, dependent: :destroy
 
+  delegate :name, :organization_name, :formatted_rank, :description,
+           to: :member, allow_nil: true
+
   enum :role, { admin: "admin", member: "member" }
 
   scope :active, -> { where(disabled_at: nil) }

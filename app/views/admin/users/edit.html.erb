@@ -1,10 +1,10 @@
 <div class="w-full max-w-2xl mx-auto">
   <div class="mb-4">
-    <%= link_to "← #{User.model_name.human}詳細に戻る", admin_user_path(@member), class: "text-blue-600 hover:text-blue-700 text-sm" %>
+    <%= link_to "← #{User.model_name.human}詳細に戻る", admin_user_path(@user), class: "text-blue-600 hover:text-blue-700 text-sm" %>
   </div>
   <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= User.model_name.human %>を編集</h1>
 
-  <%= form_with model: @member, url: admin_user_path(@member), method: :patch, class: "space-y-6" do |form| %>
+  <%= form_with model: @member, url: admin_user_path(@user), method: :patch, class: "space-y-6" do |form| %>
     <% all_errors = (@member.errors.full_messages + @member.user.errors.full_messages).uniq %>
     <% if all_errors.any? %>
       <div class="rounded-md bg-red-50 p-4">
@@ -123,7 +123,7 @@
     </div>
 
     <div class="flex justify-end gap-3">
-      <%= link_to "キャンセル", admin_user_path(@member), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= link_to "キャンセル", admin_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
       <%= form.submit "更新", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
     </div>
   <% end %>
