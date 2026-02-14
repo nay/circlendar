@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   before_validation :mark_blank_mail_addresses_for_destruction
   validate :validate_mail_addresses_count
-  after_validation :promote_mail_address_errors
+  after_validation :promote_association_errors
 
   # -- バーチャルアクセサ（mail_addresses.first への委譲） --
 
@@ -97,7 +97,7 @@ class User < ApplicationRecord
     end
   end
 
-  def promote_mail_address_errors
+  def promote_association_errors
     mail_addresses.each do |ma|
       next if ma.errors.empty?
 
@@ -110,8 +110,15 @@ class User < ApplicationRecord
       end
     end
 
+    if member&.errors&.any?
+      member.errors.each do |error|
+        errors.add(error.attribute, error.type, **error.options) unless errors.where(error.attribute, error.type).any?
+      end
+    end
+
     errors.attribute_names.each do |attr|
       errors.delete(attr) if attr.to_s.include?("mail_addresses")
     end
+    errors.delete(:member)
   end
 end
