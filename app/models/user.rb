@@ -99,11 +99,19 @@ class User < ApplicationRecord
 
   def promote_mail_address_errors
     mail_addresses.each do |ma|
-      next if ma.valid?
+      next if ma.errors.empty?
 
       ma.errors.where(:address).each do |error|
-        errors.add(:email_address, error.type, **error.options) unless errors.where(:email_address, error.type).any?
+        if error.type == :taken
+          errors.add(:base, "メールアドレス「#{ma.address}」はすでに存在します")
+        else
+          errors.add(:email_address, error.type, **error.options) unless errors.where(:email_address, error.type).any?
+        end
       end
+    end
+
+    errors.attribute_names.each do |attr|
+      errors.delete(attr) if attr.to_s.include?("mail_addresses")
     end
   end
 end

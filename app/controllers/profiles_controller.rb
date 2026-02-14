@@ -7,7 +7,7 @@ class ProfilesController < ApplicationController
     @member = current_member
     @member.assign_attributes(profile_params)
 
-    if @member.save
+    if @member.user.save
       redirect_to edit_profile_path, notice: "プロフィールを更新しました"
     else
       render :edit, status: :unprocessable_entity

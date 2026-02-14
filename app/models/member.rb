@@ -1,5 +1,5 @@
 class Member < Player
-  belongs_to :user, autosave: true
+  belongs_to :user
 
   validates :user, presence: true
 
