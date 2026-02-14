@@ -11,15 +11,18 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def new
-    @member = Member.new
+    @user = User.new
+    @user.build_member
   end
 
   def create
-    @member = Member.new(member_params_for_create)
-    @member.confirmed_at = Time.current
+    @user = User.new
+    @user.build_member
+    @user.assign_attributes(user_params_for_create)
+    @user.confirm_new_mail_addresses
 
-    if @member.save
-      redirect_to admin_user_path(@member.user), notice: "#{User.model_name.human}を作成しました"
+    if @user.save
+      redirect_to admin_user_path(@user), notice: "#{User.model_name.human}を作成しました"
     else
       render :new, status: :unprocessable_entity
     end
@@ -93,7 +96,7 @@ class Admin::UsersController < Admin::BaseController
     permitted
   end
 
-  def member_params_for_create
-    params.require(:member).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :role, :password, :password_confirmation)
+  def user_params_for_create
+    params.require(:user).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :role, :password, :password_confirmation)
   end
 end

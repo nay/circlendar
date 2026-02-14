@@ -3,9 +3,10 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :mail_addresses, class_name: "UserMailAddress", dependent: :destroy, autosave: true
   accepts_nested_attributes_for :mail_addresses, allow_destroy: true, reject_if: ->(attrs) { attrs[:address].blank? && attrs[:id].blank? }
-  has_one :member, dependent: :destroy
+  has_one :member, dependent: :destroy, autosave: true
 
-  delegate :name, :organization_name, :formatted_rank, :description,
+  delegate :name, :name=, :organization_name, :organization_name=,
+           :rank, :rank=, :description, :description=, :formatted_rank,
            to: :member, allow_nil: true
 
   enum :role, { admin: "admin", member: "member" }
