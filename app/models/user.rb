@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   validates :password, length: { maximum: 72 }, allow_blank: true
   validates :password, confirmation: true, allow_blank: true
-  validates :password, presence: true, unless: :provisional?
+  validates :password, presence: true, unless: -> { provisional? || persisted? }
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }

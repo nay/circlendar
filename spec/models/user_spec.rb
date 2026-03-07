@@ -105,5 +105,19 @@ RSpec.describe User, type: :model do
         it { is_expected.to be_valid }
       end
     end
+
+    context "既存ユーザーの場合" do
+      let(:user) do
+        u = User.new(password: "password123", role: "member",
+                     mail_addresses: [ UserMailAddress.new(address: "test@example.com", confirmed_at: Time.current) ])
+        u.build_member(name: "元の名前")
+        u.save!
+        u
+      end
+
+      it "パスワードを指定せずにsaveできる" do
+        expect(user.save).to be true
+      end
+    end
   end
 end
