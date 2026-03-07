@@ -31,6 +31,7 @@ class User < ApplicationRecord
   }
 
   before_validation :mark_blank_mail_addresses_for_destruction
+  before_validation :clear_password_digest_if_provisional
   validate :validate_mail_addresses_count
   after_validation :promote_association_errors
 
@@ -98,6 +99,17 @@ class User < ApplicationRecord
   end
 
   private
+
+  def clear_password_digest_if_provisional
+    return unless read_attribute(:provisional)
+    return if password_digest.blank?
+
+    raise "仮登録状態にできない状態です" unless last_accessed_at.nil? && confirmed?
+
+    self.password_digest = nil
+    self.password = nil
+    self.password_confirmation = nil
+  end
 
   def mark_blank_mail_addresses_for_destruction
     mail_addresses.each do |ma|

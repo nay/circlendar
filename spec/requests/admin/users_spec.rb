@@ -58,17 +58,15 @@ RSpec.describe "Admin::Users", type: :request do
         rank: "d",
         role: "member",
         receives_announcements: "1",
-        provisional: provisional,
         password: password,
         password_confirmation: password
       }
     end
 
-    context "仮登録の場合" do
-      let(:provisional) { "1" }
+    context "パスワードが空の場合" do
       let(:password) { "" }
 
-      it "パスワードなしでユーザーが作成される" do
+      it "仮登録としてユーザーが作成される" do
         expect {
           post admin_users_path, params: { user: params }
         }.to change(User, :count).by(1)
@@ -80,11 +78,10 @@ RSpec.describe "Admin::Users", type: :request do
       end
     end
 
-    context "通常登録の場合" do
-      let(:provisional) { "0" }
+    context "パスワードありの場合" do
       let(:password) { "password123" }
 
-      it "パスワードありでユーザーが作成される" do
+      it "通常のユーザーが作成される" do
         expect {
           post admin_users_path, params: { user: params }
         }.to change(User, :count).by(1)
@@ -92,6 +89,29 @@ RSpec.describe "Admin::Users", type: :request do
         created_user = User.last
         expect(created_user.password_digest).to be_present
         expect(created_user.provisional?).to be false
+      end
+    end
+  end
+
+  describe "PATCH /admin/users/:id" do
+    context "仮登録に戻す場合" do
+      let!(:target_user) do
+        u = User.create!(
+          email_address: "target@example.com",
+          password: "password123",
+          role: "member",
+          confirmed_at: Time.current
+        )
+        Member.create!(name: "対象ユーザー", user: u)
+        u
+      end
+
+      it "password_digestがNULLになる" do
+        patch admin_user_path(target_user), params: { user: { provisional: "1" } }
+
+        target_user.reload
+        expect(target_user.password_digest).to be_nil
+        expect(target_user.provisional?).to be true
       end
     end
   end
