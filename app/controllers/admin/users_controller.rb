@@ -83,10 +83,6 @@ class Admin::UsersController < Admin::BaseController
       :disabled, :role, :password, :password_confirmation, :provisional,
       mail_addresses_attributes: [ :id, :address, :_destroy ]
     )
-    if permitted[:password].blank?
-      permitted.delete(:password)
-      permitted.delete(:password_confirmation)
-    end
     permitted.delete(:role) if @user == current_user
     permitted
   end
