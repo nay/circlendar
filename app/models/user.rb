@@ -92,6 +92,17 @@ class User < ApplicationRecord
     mail_addresses.first&.confirm!
   end
 
+  def takeover_signup(mail_address)
+    transaction do
+      save!
+      mail_addresses.where.not(id: mail_address.id).destroy_all
+      mail_address.update!(confirmed_at: nil)
+    end
+    true
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
   def confirm_new_mail_addresses
     mail_addresses.each do |ma|
       ma.confirmed_at = Time.current if ma.new_record? && !ma.marked_for_destruction?

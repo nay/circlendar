@@ -37,13 +37,18 @@ RSpec.describe "Registrations", type: :request do
     end
 
     context "既存ユーザーが仮登録（管理者作成・パスワードなし）の場合" do
+      let(:other_mail_address_count) { 0 }
       let!(:existing_user) do
-        User.create!(
+        user = User.create!(
           email_address: "newuser@example.com",
           provisional: true,
           role: "member",
           confirmed_at: Time.current
         )
+        other_mail_address_count.times do |i|
+          user.mail_addresses.create!(address: "other#{i}@example.com", confirmed_at: Time.current)
+        end
+        user
       end
       let!(:existing_member) { Member.create!(name: "管理者が設定した名前", user: existing_user) }
 
@@ -60,6 +65,19 @@ RSpec.describe "Registrations", type: :request do
         expect(existing_user.member.organization_name).to eq "テスト団体"
         expect(existing_user.confirmed_at).to be_nil
         expect(existing_user.confirmation_token).to be_present
+      end
+
+      context "複数のメールアドレスがある場合" do
+        let(:other_mail_address_count) { 2 }
+
+        it "サインアップに使用したメールアドレス以外は削除される" do
+          expect {
+            post signup_path(token: signup_token), params: { user: user_params }
+          }.to change { existing_user.mail_addresses.count }.from(3).to(1)
+
+          existing_user.reload
+          expect(existing_user.mail_addresses.sole.address).to eq "newuser@example.com"
+        end
       end
     end
 
