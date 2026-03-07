@@ -3,6 +3,7 @@ class Admin::UsersController < Admin::BaseController
 
   def index
     collection = User.ordered.includes(:member)
+    collection = collection.having_email_like(params[:q]) if params[:q].present?
     @pagy, @users = pagy(:offset, collection, limit: 10)
   end
 

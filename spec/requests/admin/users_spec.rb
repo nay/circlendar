@@ -23,5 +23,29 @@ RSpec.describe "Admin::Users", type: :request do
       get admin_users_path
       expect(response).to have_http_status(:ok)
     end
+
+    context "メールアドレスで検索した場合" do
+      let!(:other_user) do
+        u = User.create!(
+          email_address: "other@example.com",
+          password: "password123",
+          role: "member",
+          confirmed_at: Time.current
+        )
+        Member.create!(name: "他のユーザー", user: u)
+        u
+      end
+
+      it "一致するユーザーが表示される" do
+        get admin_users_path, params: { q: "other" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("他のユーザー")
+      end
+
+      it "一致しないユーザーは表示されない" do
+        get admin_users_path, params: { q: "other" }
+        expect(response.body).not_to include("admin@example.com")
+      end
+    end
   end
 end

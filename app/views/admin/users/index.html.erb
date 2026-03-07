@@ -4,6 +4,16 @@
     <%= link_to "新しいユーザーを作成", new_admin_user_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
   </div>
 
+  <%= form_with url: admin_users_path, method: :get, class: "mb-6 px-4 sm:px-6" do |f| %>
+    <div class="flex gap-2">
+      <%= f.search_field :q, value: params[:q], placeholder: "メールアドレスで検索", class: "flex-1 pl-3 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" %>
+      <%= f.submit "検索", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
+      <% if params[:q].present? %>
+        <%= link_to "クリア", admin_users_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @users.any? %>
     <%= render "shared/pagination", pagy: @pagy %>
 
