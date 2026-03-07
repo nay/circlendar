@@ -7,7 +7,7 @@ class ConfirmationsController < ApplicationController
     if mail_address
       mail_address.confirm!
       start_new_session_for mail_address.user
-      redirect_to dashboard_path, notice: "メールアドレスの確認が完了しました"
+      redirect_to root_path, notice: "メールアドレスの確認が完了しました"
     else
       redirect_to new_session_path, alert: "確認リンクが無効です"
     end

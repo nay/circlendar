@@ -58,8 +58,8 @@ class AnnouncementTemplate < ApplicationRecord
     result.gsub!("{{会場案内}}", venue_details.join("\n\n"))
 
     # ダッシュボードURL
-    dashboard_url = Rails.application.routes.url_helpers.dashboard_url
-    result.gsub!("{{ダッシュボードURL}}", dashboard_url)
+    root_url = Rails.application.routes.url_helpers.root_url
+    result.gsub!("{{ダッシュボードURL}}", root_url)
 
     # サインアップURL
     if result.include?("{{サインアップURL}}")

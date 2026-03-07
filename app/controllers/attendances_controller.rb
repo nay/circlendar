@@ -14,7 +14,7 @@ class AttendancesController < ApplicationController
     @attendance.assign_attributes(attendance_params)
 
     if @attendance.save
-      redirect_to dashboard_path, notice: I18n.t("messages.update.success", model: Attendance.model_name.human)
+      redirect_to root_path, notice: I18n.t("messages.update.success", model: Attendance.model_name.human)
     else
       render :edit, status: :unprocessable_entity
     end
