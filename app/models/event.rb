@@ -27,9 +27,7 @@ class Event < ApplicationRecord
     events = Array(events).compact.sort_by(&:date)
     return "" if events.empty?
 
-    dates_str = events.map(&:formatted_date_short).join("＆")
-    venues_str = events.map(&:venue).uniq.map(&:short_name).join("・")
-    "#{dates_str} #{venues_str}"
+    events.map { |e| "#{e.formatted_date_short}#{e.venue.short_name}" }.join("、")
   end
 
   def formatted_date_short
