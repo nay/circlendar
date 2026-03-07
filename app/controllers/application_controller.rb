@@ -28,6 +28,6 @@ class ApplicationController < ActionController::Base
     end
 
     def default_after_authentication_url
-      dashboard_path
+      root_path
     end
 end
