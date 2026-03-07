@@ -13,6 +13,9 @@ class User < ApplicationRecord
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
+  scope :having_email_like, ->(query) {
+    where(id: UserMailAddress.where("address LIKE ?", "%#{sanitize_sql_like(query)}%").select(:user_id))
+  }
   scope :ordered, -> {
     order(
       Arel.sql("CASE users.role WHEN 'admin' THEN 0 ELSE 1 END"),
