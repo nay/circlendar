@@ -30,8 +30,7 @@ class RegistrationsController < ApplicationController
       @user.assign_attributes(user_params.except(:email_address))
       @user.role = :member
 
-      if @user.save
-        existing_mail_address.update!(confirmed_at: nil)
+      if @user.takeover_signup(existing_mail_address)
         send_confirmation_and_redirect(existing_mail_address) and return
       else
         render :new, status: :unprocessable_entity
