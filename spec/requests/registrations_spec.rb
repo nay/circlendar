@@ -36,11 +36,11 @@ RSpec.describe "Registrations", type: :request do
       end
     end
 
-    context "既存ユーザーが未ログイン（管理者作成のみ）の場合" do
+    context "既存ユーザーが仮登録（管理者作成・パスワードなし）の場合" do
       let!(:existing_user) do
         User.create!(
           email_address: "newuser@example.com",
-          password: "admin_set_password",
+          provisional: true,
           role: "member",
           confirmed_at: Time.current
         )

@@ -48,4 +48,51 @@ RSpec.describe "Admin::Users", type: :request do
       end
     end
   end
+
+  describe "POST /admin/users" do
+    let(:params) do
+      {
+        name: "新しいユーザー",
+        email_address: "new@example.com",
+        organization_name: "テスト団体",
+        rank: "d",
+        role: "member",
+        receives_announcements: "1",
+        provisional: provisional,
+        password: password,
+        password_confirmation: password
+      }
+    end
+
+    context "仮登録の場合" do
+      let(:provisional) { "1" }
+      let(:password) { "" }
+
+      it "パスワードなしでユーザーが作成される" do
+        expect {
+          post admin_users_path, params: { user: params }
+        }.to change(User, :count).by(1)
+
+        created_user = User.last
+        expect(created_user.password_digest).to be_nil
+        expect(created_user.provisional?).to be true
+        expect(created_user.confirmed?).to be true
+      end
+    end
+
+    context "通常登録の場合" do
+      let(:provisional) { "0" }
+      let(:password) { "password123" }
+
+      it "パスワードありでユーザーが作成される" do
+        expect {
+          post admin_users_path, params: { user: params }
+        }.to change(User, :count).by(1)
+
+        created_user = User.last
+        expect(created_user.password_digest).to be_present
+        expect(created_user.provisional?).to be false
+      end
+    end
+  end
 end

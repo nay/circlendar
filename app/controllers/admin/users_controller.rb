@@ -92,6 +92,13 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params_for_create
-    params.require(:user).permit(:name, :email_address, :organization_name, :rank, :description, :receives_announcements, :role, :password, :password_confirmation)
+    permitted = params.require(:user).permit(:name, :email_address, :organization_name, :rank, :description,
+                                            :receives_announcements, :role, :password, :password_confirmation,
+                                            :provisional)
+    if permitted[:provisional] == "1"
+      permitted.delete(:password)
+      permitted.delete(:password_confirmation)
+    end
+    permitted
   end
 end

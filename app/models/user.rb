@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_secure_password
+  has_secure_password validations: false
   has_many :sessions, dependent: :destroy
   has_many :mail_addresses, class_name: "UserMailAddress", dependent: :destroy, autosave: true
   accepts_nested_attributes_for :mail_addresses, allow_destroy: true, reject_if: ->(attrs) { attrs[:address].blank? && attrs[:id].blank? }
@@ -10,6 +10,12 @@ class User < ApplicationRecord
            to: :member, allow_nil: true
 
   enum :role, { admin: "admin", member: "member" }
+
+  attribute :provisional, :boolean
+
+  validates :password, length: { maximum: 72 }, allow_blank: true
+  validates :password, confirmation: true, allow_blank: true
+  validates :password, presence: true, unless: :provisional?
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
@@ -62,6 +68,11 @@ class User < ApplicationRecord
 
   def confirmed?
     mail_addresses.any?(&:confirmed?)
+  end
+
+  def provisional?
+    prov = read_attribute(:provisional)
+    prov.nil? ? password_digest.blank? : prov
   end
 
   def disabled=(value)
