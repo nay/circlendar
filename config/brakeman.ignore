@@ -5,8 +5,8 @@
       "note": "URL is validated with start_with? check and model validation"
     },
     {
-      "fingerprint": "295ba1c59578d3c47573da48768c7d6bf7ee12ce2342501cddc4218095801187",
-      "note": "Admin-only controller, role assignment is intentional for user management"
+      "fingerprint": "7d864c14974f4e9e266f0e7551c3524ed41a55599269b1c5ff7f6a32f1e58f07",
+      "note": "Admin-only controller, role/provisional assignment is intentional for user management"
     },
     {
       "fingerprint": "9a6a4ed2aa9994973503553051494dfaa1cad3966f5e8cb75ebeb60ee8f13c1c",

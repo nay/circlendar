@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_secure_password
+  has_secure_password validations: false
   has_many :sessions, dependent: :destroy
   has_many :mail_addresses, class_name: "UserMailAddress", dependent: :destroy, autosave: true
   accepts_nested_attributes_for :mail_addresses, allow_destroy: true, reject_if: ->(attrs) { attrs[:address].blank? && attrs[:id].blank? }
@@ -10,6 +10,12 @@ class User < ApplicationRecord
            to: :member, allow_nil: true
 
   enum :role, { admin: "admin", member: "member" }
+
+  attribute :provisional, :boolean
+
+  validates :password, length: { maximum: 72 }, allow_blank: true
+  validates :password, confirmation: true, allow_blank: true
+  validates :password, presence: true, unless: :provisional?
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
@@ -25,6 +31,7 @@ class User < ApplicationRecord
   }
 
   before_validation :mark_blank_mail_addresses_for_destruction
+  before_validation :clear_password_digest_if_provisional
   validate :validate_mail_addresses_count
   after_validation :promote_association_errors
 
@@ -64,6 +71,11 @@ class User < ApplicationRecord
     mail_addresses.any?(&:confirmed?)
   end
 
+  def provisional?
+    prov = read_attribute(:provisional)
+    prov.nil? ? password_digest.blank? : prov
+  end
+
   def disabled=(value)
     self.disabled_at = (value == "1" || value == true) ? Time.current : nil
   end
@@ -87,6 +99,17 @@ class User < ApplicationRecord
   end
 
   private
+
+  def clear_password_digest_if_provisional
+    return unless read_attribute(:provisional)
+    return if password_digest.blank?
+
+    raise "仮登録状態にできない状態です" unless last_accessed_at.nil? && confirmed?
+
+    self.password_digest = nil
+    self.password = nil
+    self.password_confirmation = nil
+  end
 
   def mark_blank_mail_addresses_for_destruction
     mail_addresses.each do |ma|

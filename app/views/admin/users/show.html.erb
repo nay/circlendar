@@ -21,8 +21,10 @@
       </h3>
       <% if @user.disabled? %>
         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0">無効</span>
-      <% elsif !@user.confirmed? %>
+      <% elsif @user.provisional? %>
         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0">仮登録</span>
+      <% elsif !@user.confirmed? %>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 whitespace-nowrap flex-shrink-0">確認待ち</span>
       <% end %>
     </div>
     <div class="border-t border-gray-200">
