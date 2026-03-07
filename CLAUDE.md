@@ -37,6 +37,12 @@
 
 - ERBファイル（`.html.erb`）はRuboCopの対象外なので、引数に含めないこと
 
+## Brakeman
+
+- `config/brakeman.ignore` で警告を抑制している
+- `permit` の引数を変更すると fingerprint が変わり、既存の ignore エントリが obsolete になる
+- CIで Mass Assignment 警告が出た場合は、新しい fingerprint で ignore を更新すること
+
 ## 命名規則
 
 - booleanカラムは `is_xxx` のような接頭辞を使わない
