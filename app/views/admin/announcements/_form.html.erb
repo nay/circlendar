@@ -55,12 +55,20 @@
     <p class="mt-1 text-sm text-gray-500">送信元として表示されるメールアドレス（通常は管理者のアドレス）</p>
   </div>
 
-  <div>
-    <label class="block text-sm font-medium text-gray-700 mb-2"><%= Announcement.human_attribute_name(:bcc_addresses) %></label>
+  <div data-controller="checkbox-group">
+    <div class="flex items-center justify-between mb-2">
+      <label class="block text-sm font-medium text-gray-700"><%= Announcement.human_attribute_name(:bcc_addresses) %></label>
+      <% if @members.present? %>
+        <div class="flex gap-2">
+          <button type="button" data-action="checkbox-group#selectAll" class="text-xs text-blue-600 hover:text-blue-800 underline">全選択</button>
+          <button type="button" data-action="checkbox-group#deselectAll" class="text-xs text-blue-600 hover:text-blue-800 underline">全解除</button>
+        </div>
+      <% end %>
+    </div>
     <div class="space-y-2 max-h-60 overflow-y-auto border border-gray-300 rounded-md p-3">
       <% @members.each do |member| %>
         <label class="flex items-start">
-          <%= check_box_tag "announcement[bcc_user_ids][]", member.user.id, @checked_user_ids.include?(member.user.id), class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-0.5" %>
+          <%= check_box_tag "announcement[bcc_user_ids][]", member.user.id, @checked_user_ids.include?(member.user.id), class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-0.5", data: { checkbox_group_target: "checkbox" } %>
           <span class="ml-2 text-sm text-gray-700">
             <%= member.name %>
             <span class="text-gray-500">(<%= member.user.mail_addresses.map(&:address).join(", ") %>)</span>
