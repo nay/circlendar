@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe AnnouncementDelivery, type: :model do
   let(:announcement) do
-    Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", bcc_addresses: [ "a@example.com" ])
+    Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", recipient_addresses: [ "a@example.com" ])
   end
 
   def create_delivery(addresses:, **attrs)

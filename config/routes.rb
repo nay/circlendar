@@ -38,6 +38,8 @@ Rails.application.routes.draw do
       end
     end
 
+    post "announcement_deliveries/process_queue", to: "announcement_deliveries#process_queue"
+
     resources :announcement_templates
 
     resources :venues

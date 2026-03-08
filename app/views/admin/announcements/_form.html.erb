@@ -57,7 +57,7 @@
 
   <div data-controller="checkbox-group">
     <div class="flex items-center justify-between mb-2">
-      <label class="block text-sm font-medium text-gray-700"><%= Announcement.human_attribute_name(:bcc_addresses) %></label>
+      <label class="block text-sm font-medium text-gray-700"><%= Announcement.human_attribute_name(:recipient_addresses) %></label>
       <% if @members.present? %>
         <div class="flex gap-2">
           <button type="button" data-action="checkbox-group#selectAll" class="text-xs text-blue-600 hover:text-blue-800 underline">全選択</button>
@@ -68,7 +68,7 @@
     <div class="space-y-2 max-h-60 overflow-y-auto border border-gray-300 rounded-md p-3">
       <% @members.each do |member| %>
         <label class="flex items-start">
-          <%= check_box_tag "announcement[bcc_user_ids][]", member.user.id, @checked_user_ids.include?(member.user.id), class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-0.5", data: { checkbox_group_target: "checkbox" } %>
+          <%= check_box_tag "announcement[recipient_user_ids][]", member.user.id, @checked_user_ids.include?(member.user.id), class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-0.5", data: { checkbox_group_target: "checkbox" } %>
           <span class="ml-2 text-sm text-gray-700">
             <%= member.name %>
             <span class="text-gray-500">(<%= member.user.mail_addresses.map(&:address).join(", ") %>)</span>
@@ -79,7 +79,7 @@
         <p class="text-sm text-gray-500">お知らせ受信を希望しているメンバーがいません</p>
       <% end %>
     </div>
-    <p class="mt-1 text-sm text-gray-500">チェックしたメンバーにBCCでメールが送信されます</p>
+    <p class="mt-1 text-sm text-gray-500">チェックしたメンバーにメールが送信されます</p>
   </div>
 
   <div class="flex justify-end gap-3">
