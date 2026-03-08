@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :announcements do
       member do
         post :send_email
+        get :deliveries
       end
     end
 

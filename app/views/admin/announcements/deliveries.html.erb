@@ -1,0 +1,69 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← #{t('announcements.show.title')}", admin_announcement_path(@announcement), class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+
+  <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= t("announcements.deliveries.title") %></h1>
+
+  <% if @deliveries.empty? %>
+    <p class="text-gray-500"><%= t("announcements.deliveries.no_deliveries") %></p>
+  <% else %>
+    <div class="space-y-4">
+      <% @deliveries.each do |delivery| %>
+        <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+          <div class="px-4 py-4 sm:px-6 border-b border-gray-200 flex items-center gap-2">
+            <span class="text-sm font-medium text-gray-500">ID: <%= delivery.id %></span>
+            <% case delivery.status %>
+            <% when "requested" %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
+            <% when "pending" %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.show.status_pending") %></span>
+            <% when "failed" %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
+            <% end %>
+          </div>
+          <dl class="divide-y divide-gray-200 text-sm">
+            <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+              <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:addresses) %></dt>
+              <dd class="col-span-2 text-gray-900"><%= delivery.addresses.join(", ") %></dd>
+            </div>
+            <% if delivery.failed_addresses.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:failed_addresses) %></dt>
+                <dd class="col-span-2 text-red-600"><%= delivery.failed_addresses.join(", ") %></dd>
+              </div>
+            <% end %>
+            <% if delivery.resend_ids.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:resend_ids) %></dt>
+                <dd class="col-span-2 text-gray-900 break-all"><%= delivery.resend_ids.join(", ") %></dd>
+              </div>
+            <% end %>
+            <% if delivery.requested_at.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:requested_at) %></dt>
+                <dd class="col-span-2 text-gray-900"><%= l(delivery.requested_at, format: :long) %></dd>
+              </div>
+            <% end %>
+            <% if delivery.next_run_at.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:next_run_at) %></dt>
+                <dd class="col-span-2 text-gray-900"><%= l(delivery.next_run_at, format: :long) %></dd>
+              </div>
+            <% end %>
+            <% if delivery.error_message.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:error_message) %></dt>
+                <dd class="col-span-2 text-red-600"><%= delivery.error_message %></dd>
+              </div>
+            <% end %>
+            <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+              <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:created_at) %></dt>
+              <dd class="col-span-2 text-gray-900"><%= l(delivery.created_at, format: :long) %></dd>
+            </div>
+          </dl>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

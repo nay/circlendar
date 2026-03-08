@@ -132,6 +132,12 @@
             </dd>
           </div>
         <% end %>
+
+        <% if @announcement.deliveries.any? %>
+          <div class="bg-gray-50 px-4 py-5 sm:px-6 text-right">
+            <%= link_to t("announcements.deliveries.show_details"), deliveries_admin_announcement_path(@announcement), class: "text-sm text-blue-600 hover:text-blue-700" %>
+          </div>
+        <% end %>
       </dl>
     </div>
   </div>

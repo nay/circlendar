@@ -106,6 +106,10 @@ ja:
       no_templates: "テンプレートがありません"
       apply_template: "反映"
       confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
+    deliveries:
+      title: "送信履歴詳細"
+      show_details: "送信履歴詳細を見る"
+      no_deliveries: "送信履歴はありません"
     send_email:
       success: "メールの送信を開始しました"
       already_sent: "このお知らせは既に送信済みです"

@@ -62,6 +62,14 @@ ja:
         announcement_batch_size: "お知らせ配信バッチサイズ"
         announcement_daily_quota_threshold: "日次クォータしきい値"
         announcement_retry_interval_hours: "配信リトライ間隔（時間）"
+      announcement_delivery:
+        addresses: "送信先アドレス"
+        failed_addresses: "失敗アドレス"
+        resend_ids: "Resend ID"
+        requested_at: "送信依頼日時"
+        next_run_at: "次回実行日時"
+        error_message: "エラーメッセージ"
+        created_at: "作成日時"
       venue:
         name: "管理名"
         url: "URL"

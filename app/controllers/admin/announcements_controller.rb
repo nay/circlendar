@@ -1,5 +1,5 @@
 class Admin::AnnouncementsController < Admin::BaseController
-  before_action :set_announcement, only: %i[ show edit update destroy send_email ]
+  before_action :set_announcement, only: %i[ show edit update destroy send_email deliveries ]
 
   def index
     @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
@@ -77,6 +77,10 @@ class Admin::AnnouncementsController < Admin::BaseController
   def destroy
     @announcement.destroy
     redirect_to admin_announcements_path, notice: I18n.t("messages.destroy.success", model: Announcement.model_name.human)
+  end
+
+  def deliveries
+    @deliveries = @announcement.deliveries.order(id: :desc)
   end
 
   def send_email
