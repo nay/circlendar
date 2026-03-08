@@ -86,6 +86,8 @@ ja:
       no_announcements: "お知らせはありません"
       sent: "送信済み"
       draft: "下書き"
+      today_mail_summary: "本日のメール送信数"
+      other_mail: "その他"
     show:
       title: "お知らせ詳細"
       edit: "編集"

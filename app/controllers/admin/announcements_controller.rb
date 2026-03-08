@@ -3,6 +3,12 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def index
     @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
+    today_deliveries = MailDelivery::Base.requested.on_date(Time.current).where(scheduled_at: nil)
+    @today_mail_counts = {
+      total: today_deliveries.count,
+      announcement: today_deliveries.where(type: "MailDelivery::Announcement").count,
+      transactional: today_deliveries.where(type: "MailDelivery::Transactional").count
+    }
   end
 
   def show

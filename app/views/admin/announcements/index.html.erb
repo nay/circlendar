@@ -4,6 +4,12 @@
     <%= link_to t("announcements.index.new_announcement"), new_admin_announcement_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
   </div>
 
+  <div class="mb-6 text-sm text-gray-600">
+    <%= t("announcements.index.today_mail_summary") %>:
+    <span class="font-medium"><%= @today_mail_counts[:total] %></span>
+    （<%= MailDelivery::Announcement.model_name.human %>: <span class="font-medium"><%= @today_mail_counts[:announcement] %></span> / <%= t("announcements.index.other_mail") %>: <span class="font-medium"><%= @today_mail_counts[:transactional] %></span>）
+  </div>
+
   <% if @announcements.any? %>
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
       <ul class="divide-y divide-gray-200">
