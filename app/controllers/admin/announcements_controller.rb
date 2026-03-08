@@ -83,6 +83,11 @@ class Admin::AnnouncementsController < Admin::BaseController
     @deliveries = @announcement.deliveries.order(id: :desc)
   end
 
+  def process_queue
+    AnnouncementDelivery.process_queue!
+    head :ok
+  end
+
   def send_email
     if @announcement.sent?
       redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.already_sent")

@@ -33,13 +33,14 @@ Rails.application.routes.draw do
     resources :events
 
     resources :announcements do
+      collection do
+        post :process_queue
+      end
       member do
         post :send_email
         get :deliveries
       end
     end
-
-    post "announcement_deliveries/process_queue", to: "announcement_deliveries#process_queue"
 
     resources :announcement_templates
 
