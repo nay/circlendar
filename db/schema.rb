@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_080116) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_114541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,9 +24,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_080116) do
 
   create_table "announcements", force: :cascade do |t|
     t.bigint "announcement_template_id"
-    t.text "bcc_addresses", default: [], array: true
     t.text "body"
     t.datetime "created_at", null: false
+    t.text "recipient_addresses", default: [], array: true
     t.datetime "sent_at"
     t.integer "sent_by"
     t.text "subject"

@@ -107,20 +107,20 @@
               <% end %>
             </dd>
           </div>
-        <% elsif @bcc_members %>
+        <% elsif @recipient_members %>
           <div class="bg-white px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-1"><%= t("announcements.show.recipients") %></dt>
             <dd class="text-sm text-gray-900">
-              <% if @announcement.bcc_addresses.present? %>
+              <% if @announcement.recipient_addresses.present? %>
                 <ul class="list-disc list-inside">
-                  <% @bcc_members.each do |member| %>
-                    <% member_bcc_emails = member.user.mail_addresses.select { |ma| @announcement.bcc_addresses.include?(ma.address) }.map(&:address) %>
+                  <% @recipient_members.each do |member| %>
+                    <% member_emails = member.user.mail_addresses.select { |ma| @announcement.recipient_addresses.include?(ma.address) }.map(&:address) %>
                     <li>
                       <%= link_to member.name, admin_user_path(member.user), class: "text-blue-600 hover:text-blue-700" %>
-                      <span class="text-gray-500">（<%= member_bcc_emails.join(", ") %>）</span>
+                      <span class="text-gray-500">（<%= member_emails.join(", ") %>）</span>
                     </li>
                   <% end %>
-                  <% orphan_emails = @announcement.bcc_addresses - @bcc_members.flat_map { |m| m.user.mail_addresses.map(&:address) } %>
+                  <% orphan_emails = @announcement.recipient_addresses - @recipient_members.flat_map { |m| m.user.mail_addresses.map(&:address) } %>
                   <% orphan_emails.each do |email| %>
                     <li><%= email %></li>
                   <% end %>

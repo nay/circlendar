@@ -44,7 +44,7 @@ ja:
         subject: "件名"
         body: "本文"
         to_address: "Reply-To"
-        bcc_addresses: "To"
+        recipient_addresses: "To"
       announcement_template:
         subject: "件名"
         body: "本文"
