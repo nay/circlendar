@@ -1,4 +1,4 @@
-class AnnouncementDelivery < MailDelivery
+class MailDelivery::Announcement < MailDelivery::Base
   belongs_to :announcement
 
   def request_send!(from:, subject:, body:, reply_to:)

@@ -10,7 +10,7 @@ class MailDeliveryObserver
     return unless kind
 
     Array(message.to).each do |address|
-      TransactionalMailDelivery.create!(
+      MailDelivery::Transactional.create!(
         address: address,
         kind: kind,
         status: :requested,

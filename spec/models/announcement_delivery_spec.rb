@@ -1,10 +1,10 @@
 require "rails_helper"
 
-RSpec.describe AnnouncementDelivery, type: :model do
+RSpec.describe MailDelivery::Announcement, type: :model do
   let(:announcement) { Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", bcc_addresses: [ "user@example.com" ]) }
 
   describe "#request_send!" do
-    let(:delivery) { AnnouncementDelivery.create!(announcement: announcement, address: "user@example.com") }
+    let(:delivery) { MailDelivery::Announcement.create!(announcement: announcement, address: "user@example.com") }
 
     it "FakeResendClient 経由で送信し status を requested にする" do
       delivery.request_send!(from: "test@example.com", subject: "テスト", body: "本文", reply_to: "admin@example.com")
@@ -16,7 +16,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
 
     context "scheduled_at が設定されている場合" do
       let(:delivery) do
-        AnnouncementDelivery.create!(
+        MailDelivery::Announcement.create!(
           announcement: announcement,
           address: "user@example.com",
           scheduled_at: 1.day.from_now.in_time_zone("Asia/Tokyo").change(hour: 9)
