@@ -6,18 +6,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
-    if @announcement.deliveries.any?
-      @deliveries = @announcement.deliveries.order(:id)
-      @delivery_counts = @announcement.deliveries.group(:status).count
-      all_addresses = @deliveries.flat_map(&:addresses).uniq
-      members = Member.joins(user: :mail_addresses)
-                      .where(user_mail_addresses: { address: all_addresses })
-                      .includes(user: :mail_addresses)
-      @member_by_address = {}
-      members.each do |member|
-        member.user.mail_addresses.each { |ma| @member_by_address[ma.address] = member }
-      end
-    else
+    unless @announcement.sent?
       @recipient_members = if @announcement.recipient_addresses.present?
         ids = Member.joins(user: :mail_addresses)
                     .where(user_mail_addresses: { address: @announcement.recipient_addresses })

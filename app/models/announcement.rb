@@ -27,6 +27,18 @@ class Announcement < ApplicationRecord
     self.body = AnnouncementTemplate.fill_placeholders(template.body, events)
   end
 
+  def address_deliveries
+    loaded = deliveries.order(:id).to_a
+    all_addresses = loaded.flat_map(&:addresses).uniq
+    member_by_address = build_member_by_address(all_addresses)
+
+    loaded.flat_map do |delivery|
+      delivery.addresses.map do |address|
+        AnnouncementAddressDelivery.new(delivery: delivery, address: address, member: member_by_address[address])
+      end
+    end
+  end
+
   def create_deliveries!
     ordered_addresses = UserMailAddress.where(address: recipient_addresses)
                                       .joins(:user).merge(User.ordered)
@@ -34,5 +46,18 @@ class Announcement < ApplicationRecord
     ordered_addresses += recipient_addresses - ordered_addresses
 
     deliveries.create!(addresses: ordered_addresses)
+  end
+
+  private
+
+  def build_member_by_address(addresses)
+    members = Member.joins(user: :mail_addresses)
+                    .where(user_mail_addresses: { address: addresses })
+                    .includes(user: :mail_addresses)
+    result = {}
+    members.each do |member|
+      member.user.mail_addresses.each { |ma| result[ma.address] = member }
+    end
+    result
   end
 end
