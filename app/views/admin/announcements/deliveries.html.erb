@@ -57,6 +57,12 @@
                 <dd class="col-span-2 text-red-600"><%= delivery.error_message %></dd>
               </div>
             <% end %>
+            <% if delivery.note.present? %>
+              <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
+                <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:note) %></dt>
+                <dd class="col-span-2 text-gray-900"><%= delivery.note %></dd>
+              </div>
+            <% end %>
             <div class="px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
               <dt class="font-medium text-gray-500"><%= AnnouncementDelivery.human_attribute_name(:created_at) %></dt>
               <dd class="col-span-2 text-gray-900"><%= l(delivery.created_at, format: :long) %></dd>

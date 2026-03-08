@@ -39,8 +39,10 @@ class AnnouncementDelivery < ApplicationRecord
   def process!
     setting = Setting.instance
 
-    if self.class.recent_sent_count >= setting.announcement_daily_quota_threshold
-      update!(next_run_at: setting.announcement_retry_interval_hours.hours.from_now)
+    recent = self.class.recent_sent_count
+    if recent >= setting.announcement_daily_quota_threshold
+      update!(next_run_at: setting.announcement_retry_interval_hours.hours.from_now,
+              note: "配信済数#{recent}件が#{Setting.human_attribute_name(:announcement_daily_quota_threshold)}（#{setting.announcement_daily_quota_threshold}件）以上のため待機")
       return
     end
 
@@ -56,7 +58,7 @@ class AnnouncementDelivery < ApplicationRecord
     response = self.class.client.send_batch(build_params(batch))
     complete_batch!(batch, response, remaining)
   rescue Resend::Error::RateLimitExceededError
-    update!(next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now)
+    update!(next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now, note: "バッチ送信で429レートリミット、待機")
   rescue StandardError
     retry_individually!(batch, remaining)
   end
@@ -76,9 +78,11 @@ class AnnouncementDelivery < ApplicationRecord
     if remaining.any?
       setting = Setting.instance
       next_run = quota >= setting.announcement_daily_quota_threshold ? setting.announcement_retry_interval_hours.hours.from_now : nil
+      message = "#{batch.size}件送信、残り#{remaining.size}件を分割して新規delivery作成"
+      message += "（直前のAPIレスポンスから得られた現在の実クォータ（#{quota}件）が#{Setting.human_attribute_name(:announcement_daily_quota_threshold)}（#{setting.announcement_daily_quota_threshold}件）以上のため待機）" if next_run
       transaction do
         AnnouncementDelivery.create!(announcement: announcement, addresses: remaining, next_run_at: next_run)
-        update!(addresses: batch, resend_ids: ids, status: :requested, requested_at: Time.current)
+        update!(addresses: batch, resend_ids: ids, status: :requested, requested_at: Time.current, note: message)
       end
     else
       update!(addresses: batch, resend_ids: ids, status: :requested, requested_at: Time.current)
@@ -97,27 +101,41 @@ class AnnouncementDelivery < ApplicationRecord
       sent_ids << response[:data].first[:id]
     rescue Resend::Error::RateLimitExceededError
       unsent = (batch - sent_addrs - new_failed) + remaining
-      save_progress!(sent_addrs, sent_ids, new_failed, unsent, next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now)
+      save_progress!(sent_addrs, sent_ids, new_failed, unsent,
+                     next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now,
+                     note: build_retry_note(sent_addrs, new_failed, unsent: unsent, rate_limited: true))
       return
     rescue StandardError
       new_failed << address
     end
 
-    save_progress!(sent_addrs, sent_ids, new_failed, remaining)
+    save_progress!(sent_addrs, sent_ids, new_failed, remaining,
+                   note: build_retry_note(sent_addrs, new_failed, unsent: remaining))
   end
 
-  def save_progress!(sent_addrs, sent_ids, new_failed, unsent, next_run_at: nil)
+  def save_progress!(sent_addrs, sent_ids, new_failed, unsent, next_run_at: nil, note: nil)
     if sent_addrs.any?
       transaction do
         if unsent.any?
           AnnouncementDelivery.create!(announcement: announcement, addresses: unsent, next_run_at: next_run_at)
         end
-        update!(addresses: sent_addrs, resend_ids: sent_ids, failed_addresses: new_failed, status: :requested, requested_at: Time.current)
+        update!(addresses: sent_addrs, resend_ids: sent_ids, failed_addresses: new_failed, status: :requested, requested_at: Time.current, note: note)
       end
     elsif unsent.any?
-      update!(failed_addresses: new_failed, next_run_at: next_run_at)
+      update!(failed_addresses: new_failed, next_run_at: next_run_at, note: note)
     else
-      update!(failed_addresses: new_failed, status: :failed, error_message: "all addresses failed")
+      update!(failed_addresses: new_failed, status: :failed, error_message: "all addresses failed", note: note)
     end
+  end
+
+  def build_retry_note(sent_addrs, new_failed, unsent: [], rate_limited: false)
+    newly_failed_count = new_failed.size - failed_addresses.size
+    message = "バッチ送信エラーのため個別送信にフォールバック、#{sent_addrs.size}件成功、#{newly_failed_count}件失敗"
+    if rate_limited
+      message += "、429レートリミットにより#{unsent.size}件を分割して新規delivery作成、待機"
+    elsif unsent.any?
+      message += "、残り#{unsent.size}件を分割して新規delivery作成"
+    end
+    message
   end
 end

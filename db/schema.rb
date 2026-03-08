@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_154906) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_225628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_154906) do
     t.text "error_message"
     t.text "failed_addresses", default: "[]", null: false
     t.datetime "next_run_at"
+    t.text "note"
     t.datetime "requested_at"
     t.text "resend_ids", default: "[]"
     t.string "status", default: "pending", null: false
