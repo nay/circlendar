@@ -55,21 +55,24 @@
           <dd class="text-sm text-gray-900"><%= @announcement.to_address %></dd>
         </div>
 
-        <% if @announcement.sent? %>
+        <% address_deliveries = @announcement.address_deliveries %>
+        <% if address_deliveries.any? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 mb-2"><%= Announcement.human_attribute_name(:recipient_addresses) %></dt>
             <dd>
               <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.recipient") %></th>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.status") %></th>
-                      <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.error") %></th>
-                    </tr>
-                  </thead>
+                  <% if @announcement.sent? %>
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.recipient") %></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.status") %></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.error") %></th>
+                      </tr>
+                    </thead>
+                  <% end %>
                   <tbody class="divide-y divide-gray-200">
-                    <% @announcement.address_deliveries.each do |ad| %>
+                    <% address_deliveries.each do |ad| %>
                       <tr>
                         <td class="px-3 py-2 text-gray-900">
                           <% if ad.member %>
@@ -79,49 +82,28 @@
                             <%= ad.address %>
                           <% end %>
                         </td>
-                        <td class="px-3 py-2">
-                          <% case ad.status %>
-                          <% when "requested" %>
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
-                            <span class="text-gray-500 text-xs ml-1"><%= l(ad.requested_at, format: :long) %></span>
-                          <% when "pending" %>
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.show.status_pending") %></span>
-                            <% if ad.next_run_at %>
-                              <span class="text-gray-500 text-xs ml-1"><%= l(ad.next_run_at, format: :long) %> 以降</span>
+                        <% if @announcement.sent? %>
+                          <td class="px-3 py-2">
+                            <% case ad.status %>
+                            <% when "requested" %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
+                              <span class="text-gray-500 text-xs ml-1"><%= l(ad.requested_at, format: :long) %></span>
+                            <% when "pending" %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.show.status_pending") %></span>
+                              <% if ad.next_run_at %>
+                                <span class="text-gray-500 text-xs ml-1"><%= l(ad.next_run_at, format: :long) %> 以降</span>
+                              <% end %>
+                            <% when "failed" %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
                             <% end %>
-                          <% when "failed" %>
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
-                          <% end %>
-                        </td>
-                        <td class="px-3 py-2 text-red-600 text-xs"><%= ad.error_message %></td>
+                          </td>
+                          <td class="px-3 py-2 text-red-600 text-xs"><%= ad.error_message %></td>
+                        <% end %>
                       </tr>
                     <% end %>
                   </tbody>
                 </table>
               </div>
-            </dd>
-          </div>
-        <% elsif @recipient_members %>
-          <div class="bg-gray-50 px-4 py-5 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 mb-1"><%= Announcement.human_attribute_name(:recipient_addresses) %></dt>
-            <dd class="text-sm text-gray-900">
-              <% if @announcement.recipient_addresses.present? %>
-                <ul class="list-disc list-inside">
-                  <% @recipient_members.each do |member| %>
-                    <% member_emails = member.user.mail_addresses.select { |ma| @announcement.recipient_addresses.include?(ma.address) }.map(&:address) %>
-                    <li>
-                      <%= link_to member.name, admin_user_path(member.user), class: "text-blue-600 hover:text-blue-700" %>
-                      <span class="text-gray-500">（<%= member_emails.join(", ") %>）</span>
-                    </li>
-                  <% end %>
-                  <% orphan_emails = @announcement.recipient_addresses - @recipient_members.flat_map { |m| m.user.mail_addresses.map(&:address) } %>
-                  <% orphan_emails.each do |email| %>
-                    <li><%= email %></li>
-                  <% end %>
-                </ul>
-              <% else %>
-                <span class="text-gray-400">（なし）</span>
-              <% end %>
             </dd>
           </div>
         <% end %>

@@ -6,17 +6,6 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
-    unless @announcement.sent?
-      @recipient_members = if @announcement.recipient_addresses.present?
-        ids = Member.joins(user: :mail_addresses)
-                    .where(user_mail_addresses: { address: @announcement.recipient_addresses })
-                    .distinct
-                    .pluck(:id)
-        Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
-      else
-        Member.none
-      end
-    end
   end
 
   def new

@@ -29,12 +29,20 @@ class Announcement < ApplicationRecord
 
   def address_deliveries
     loaded = deliveries.order(:id).to_a
-    all_addresses = loaded.flat_map(&:addresses).uniq
-    member_by_address = build_member_by_address(all_addresses)
 
-    loaded.flat_map do |delivery|
-      delivery.addresses.map do |address|
-        AnnouncementAddressDelivery.new(delivery: delivery, address: address, member: member_by_address[address])
+    if loaded.any?
+      all_addresses = loaded.flat_map(&:addresses).uniq
+      member_by_address = build_member_by_address(all_addresses)
+      loaded.flat_map do |delivery|
+        delivery.addresses.map do |address|
+          AnnouncementAddressDelivery.new(delivery: delivery, address: address, member: member_by_address[address])
+        end
+      end
+    else
+      addresses = recipient_addresses || []
+      member_by_address = build_member_by_address(addresses)
+      addresses.map do |address|
+        AnnouncementAddressDelivery.new(address: address, member: member_by_address[address])
       end
     end
   end
