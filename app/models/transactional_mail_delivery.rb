@@ -1,5 +1,5 @@
 class TransactionalMailDelivery < MailDelivery
-  KINDS = %w[confirmation password_reset].freeze
+  enum :kind, { confirmation: "confirmation", password_reset: "password_reset" }
 
-  validates :kind, presence: true, inclusion: { in: KINDS }
+  validates :kind, presence: true
 end
