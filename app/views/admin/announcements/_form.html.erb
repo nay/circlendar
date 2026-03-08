@@ -52,7 +52,7 @@
     <%= form.email_field :to_address,
           value: announcement.to_address.presence || current_user&.email_address,
           class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-    <p class="mt-1 text-sm text-gray-500">送信元として表示されるメールアドレス（通常は管理者のアドレス）</p>
+    <p class="mt-1 text-sm text-gray-500">受信者が返信した場合の宛先（通常は管理者のアドレス）</p>
   </div>
 
   <div data-controller="checkbox-group">
@@ -79,7 +79,7 @@
         <p class="text-sm text-gray-500">お知らせ受信を希望しているメンバーがいません</p>
       <% end %>
     </div>
-    <p class="mt-1 text-sm text-gray-500">チェックしたメンバーにBCCでメールが送信されます</p>
+    <p class="mt-1 text-sm text-gray-500">チェックしたメンバーに個別にメールが送信されます</p>
   </div>
 
   <div class="flex justify-end gap-3">
