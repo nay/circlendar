@@ -36,6 +36,7 @@ class AnnouncementDelivery < ApplicationRecord
       delivery = processable.order(:id).lock("FOR UPDATE SKIP LOCKED").first
       break unless delivery
       delivery.process!
+      sleep(0.5)
     end
   end
 
@@ -91,6 +92,7 @@ class AnnouncementDelivery < ApplicationRecord
     new_failed = failed_addresses.dup
 
     batch.each do |address|
+      sleep(0.5)
       response = self.class.client.send_batch(build_params([ address ]))
       sent_addrs << address
       sent_ids << response[:data].first[:id]
