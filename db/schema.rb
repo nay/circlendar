@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_075457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
   create_table "settings", force: :cascade do |t|
     t.string "circle_name"
     t.datetime "created_at", null: false
+    t.integer "daily_announcement_delivery_limit", default: 70, null: false
+    t.integer "daily_mail_delivery_limit", default: 100, null: false
     t.string "signup_token"
     t.datetime "updated_at", null: false
   end

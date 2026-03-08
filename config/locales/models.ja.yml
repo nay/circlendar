@@ -59,6 +59,8 @@ ja:
         schedule: "練習時間の案内"
       setting:
         circle_name: "サークル名"
+        daily_mail_delivery_limit: "日次メール配信上限"
+        daily_announcement_delivery_limit: "日次お知らせ配信上限"
       venue:
         name: "管理名"
         url: "URL"
