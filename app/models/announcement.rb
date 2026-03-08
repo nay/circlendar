@@ -31,7 +31,12 @@ class Announcement < ApplicationRecord
     daily_limit = Setting.instance.daily_announcement_delivery_limit
     now = Time.current
 
-    records = recipient_addresses.each_with_index.map do |address, i|
+    ordered_addresses = UserMailAddress.where(address: recipient_addresses)
+                                      .joins(:user).merge(User.ordered)
+                                      .pluck(:address)
+    ordered_addresses += recipient_addresses - ordered_addresses
+
+    records = ordered_addresses.each_with_index.map do |address, i|
       day_offset = i / daily_limit
       scheduled = if day_offset.zero?
         nil

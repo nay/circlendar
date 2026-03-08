@@ -7,9 +7,16 @@ class Admin::AnnouncementsController < Admin::BaseController
 
   def show
     if @announcement.deliveries.any?
-      @deliveries_by_date = @announcement.deliveries.order(:scheduled_at, :address)
-                                         .group_by { |d| d.scheduled_at&.in_time_zone("Asia/Tokyo")&.to_date }
+      @deliveries = @announcement.deliveries.order(:id)
       @delivery_counts = @announcement.deliveries.group(:status).count
+      addresses = @deliveries.map(&:address).uniq
+      members = Member.joins(user: :mail_addresses)
+                      .where(user_mail_addresses: { address: addresses })
+                      .includes(user: :mail_addresses)
+      @member_by_address = {}
+      members.each do |member|
+        member.user.mail_addresses.each { |ma| @member_by_address[ma.address] = member }
+      end
     else
       @recipient_members = if @announcement.recipient_addresses.present?
         ids = Member.joins(user: :mail_addresses)
