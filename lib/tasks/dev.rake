@@ -6,64 +6,52 @@ namespace :dev do
     # ========================================
     Setting.first_or_create!(circle_name: "サンプルかるた会")
 
+    # ヘルパー: メールアドレスで既存Memberを検索、なければUser+Memberを作成
+    find_or_create_member = ->(email:, password:, role:, receives_announcements:, name:, organization_name:, rank:) {
+      existing = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: email }).first
+      return existing if existing
+
+      user = User.new(email_address: email, password: password, role: role, receives_announcements: receives_announcements)
+      user.build_member(name: name, organization_name: organization_name, rank: rank)
+      user.confirm_new_mail_addresses
+      user.save!
+      user.member
+    }
+
     # ========================================
     # 管理者太郎（admin1@example.com）
     # 管理者、A級、東京かるた会
     # ========================================
-    admin1_member = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "admin1@example.com" }).first || Member.create!(
-      email_address: "admin1@example.com",
-      password: "circlendar",
-      role: :admin,
-      receives_announcements: true,
-      confirmed_at: Time.current,
-      name: "管理者太郎",
-      organization_name: "東京かるた会",
-      rank: :a
+    admin1_member = find_or_create_member.call(
+      email: "admin1@example.com", password: "circlendar", role: :admin,
+      receives_announcements: true, name: "管理者太郎", organization_name: "東京かるた会", rank: :a
     )
 
     # ========================================
     # 管理者花子（admin2@example.com）
     # 管理者、B級、横浜かるた会
     # ========================================
-    admin2_member = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "admin2@example.com" }).first || Member.create!(
-      email_address: "admin2@example.com",
-      password: "circlendar",
-      role: :admin,
-      receives_announcements: true,
-      confirmed_at: Time.current,
-      name: "管理者花子",
-      organization_name: "横浜かるた会",
-      rank: :b
+    admin2_member = find_or_create_member.call(
+      email: "admin2@example.com", password: "circlendar", role: :admin,
+      receives_announcements: true, name: "管理者花子", organization_name: "横浜かるた会", rank: :b
     )
 
     # ========================================
     # 山田次郎（member1@example.com）
     # メンバー、C級、川崎かるた会
     # ========================================
-    player1 = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "member1@example.com" }).first || Member.create!(
-      email_address: "member1@example.com",
-      password: "circlendar",
-      role: :member,
-      receives_announcements: true,
-      confirmed_at: Time.current,
-      name: "山田次郎",
-      organization_name: "川崎かるた会",
-      rank: :c
+    player1 = find_or_create_member.call(
+      email: "member1@example.com", password: "circlendar", role: :member,
+      receives_announcements: true, name: "山田次郎", organization_name: "川崎かるた会", rank: :c
     )
 
     # ========================================
     # 佐藤三郎（member2@example.com）
     # メンバー、D級、千葉かるた会、お知らせ受信OFF
     # ========================================
-    player2 = Member.joins(user: :mail_addresses).where(user_mail_addresses: { address: "member2@example.com" }).first || Member.create!(
-      email_address: "member2@example.com",
-      password: "circlendar",
-      role: :member,
-      receives_announcements: false,
-      confirmed_at: Time.current,
-      name: "佐藤三郎",
-      organization_name: "千葉かるた会",
-      rank: :d
+    player2 = find_or_create_member.call(
+      email: "member2@example.com", password: "circlendar", role: :member,
+      receives_announcements: false, name: "佐藤三郎", organization_name: "千葉かるた会", rank: :d
     )
 
     # ========================================

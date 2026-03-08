@@ -88,8 +88,12 @@
                               <% case delivery.status %>
                               <% when "requested" %>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
+                                <span class="text-gray-500 text-xs ml-1"><%= l(delivery.requested_at, format: :long) %></span>
                               <% when "pending" %>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.show.status_pending") %></span>
+                                <% if delivery.next_run_at %>
+                                  <span class="text-gray-500 text-xs ml-1"><%= l(delivery.next_run_at, format: :long) %> 以降</span>
+                                <% end %>
                               <% when "failed" %>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
                               <% end %>

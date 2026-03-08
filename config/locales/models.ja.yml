@@ -59,6 +59,9 @@ ja:
         schedule: "練習時間の案内"
       setting:
         circle_name: "サークル名"
+        announcement_batch_size: "お知らせ配信バッチサイズ"
+        announcement_daily_quota_threshold: "日次クォータしきい値"
+        announcement_retry_interval_hours: "配信リトライ間隔（時間）"
       venue:
         name: "管理名"
         url: "URL"

@@ -1,8 +1,4 @@
 class AnnouncementDelivery < ApplicationRecord
-  QUOTA_THRESHOLD = 70
-  BATCH_SIZE = 10
-  RETRY_INTERVAL = 2.hours
-
   belongs_to :announcement
 
   enum :status, { pending: "pending", requested: "requested", failed: "failed" }
@@ -41,14 +37,16 @@ class AnnouncementDelivery < ApplicationRecord
   end
 
   def process!
-    if self.class.recent_sent_count >= QUOTA_THRESHOLD
-      update!(next_run_at: RETRY_INTERVAL.from_now)
+    setting = Setting.instance
+
+    if self.class.recent_sent_count >= setting.announcement_daily_quota_threshold
+      update!(next_run_at: setting.announcement_retry_interval_hours.hours.from_now)
       return
     end
 
     sendable = addresses - failed_addresses
-    batch = sendable.first(BATCH_SIZE)
-    remaining = sendable.drop(BATCH_SIZE)
+    batch = sendable.first(setting.announcement_batch_size)
+    remaining = sendable.drop(setting.announcement_batch_size)
 
     if batch.empty?
       update!(status: :failed, error_message: "all addresses failed")
@@ -58,7 +56,7 @@ class AnnouncementDelivery < ApplicationRecord
     response = self.class.client.send_batch(build_params(batch))
     complete_batch!(batch, response, remaining)
   rescue Resend::Error::RateLimitExceededError
-    update!(next_run_at: RETRY_INTERVAL.from_now)
+    update!(next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now)
   rescue StandardError
     retry_individually!(batch, remaining)
   end
@@ -76,7 +74,8 @@ class AnnouncementDelivery < ApplicationRecord
     quota = response[:headers]&.dig("x-resend-daily-quota").to_i
 
     if remaining.any?
-      next_run = quota >= QUOTA_THRESHOLD ? RETRY_INTERVAL.from_now : nil
+      setting = Setting.instance
+      next_run = quota >= setting.announcement_daily_quota_threshold ? setting.announcement_retry_interval_hours.hours.from_now : nil
       transaction do
         AnnouncementDelivery.create!(announcement: announcement, addresses: remaining, next_run_at: next_run)
         update!(addresses: batch, resend_ids: ids, status: :requested, requested_at: Time.current)
@@ -98,7 +97,7 @@ class AnnouncementDelivery < ApplicationRecord
       sent_ids << response[:data].first[:id]
     rescue Resend::Error::RateLimitExceededError
       unsent = (batch - sent_addrs - new_failed) + remaining
-      save_progress!(sent_addrs, sent_ids, new_failed, unsent, next_run_at: RETRY_INTERVAL.from_now)
+      save_progress!(sent_addrs, sent_ids, new_failed, unsent, next_run_at: Setting.instance.announcement_retry_interval_hours.hours.from_now)
       return
     rescue StandardError
       new_failed << address
