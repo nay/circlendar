@@ -43,8 +43,8 @@ ja:
         event_ids: "練習会"
         subject: "件名"
         body: "本文"
-        to_address: "返信先"
-        bcc_addresses: "送信先"
+        to_address: "Reply-To"
+        bcc_addresses: "To"
       announcement_template:
         subject: "件名"
         body: "本文"
