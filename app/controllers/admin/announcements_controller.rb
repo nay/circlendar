@@ -6,14 +6,20 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def show
-    @bcc_members = if @announcement.bcc_addresses.present?
-      ids = Member.joins(user: :mail_addresses)
-                  .where(user_mail_addresses: { address: @announcement.bcc_addresses })
-                  .distinct
-                  .pluck(:id)
-      Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
+    if @announcement.deliveries.any?
+      @deliveries_by_date = @announcement.deliveries.order(:scheduled_at, :address)
+                                         .group_by { |d| d.scheduled_at&.in_time_zone("Asia/Tokyo")&.to_date }
+      @delivery_counts = @announcement.deliveries.group(:status).count
     else
-      Member.none
+      @bcc_members = if @announcement.bcc_addresses.present?
+        ids = Member.joins(user: :mail_addresses)
+                    .where(user_mail_addresses: { address: @announcement.bcc_addresses })
+                    .distinct
+                    .pluck(:id)
+        Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
+      else
+        Member.none
+      end
     end
   end
 
