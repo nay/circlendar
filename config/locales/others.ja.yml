@@ -30,7 +30,7 @@ ja:
         update: "下書きを更新"
 
   settings:
-    daily_mail_delivery_limit_hint: "Resendプランの日次送信上限に合わせて設定してください"
+    daily_mail_delivery_limit_hint: "Resendプランの1日あたり送信可能数に合わせて設定してください"
     daily_announcement_delivery_limit_hint: "残りの枠がサインアップ・パスワードリセット等のメール用バッファになります"
 
   sessions:
