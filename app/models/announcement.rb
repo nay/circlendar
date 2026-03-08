@@ -1,6 +1,7 @@
 class Announcement < ApplicationRecord
   has_many :event_announcements, dependent: :destroy
   has_many :events, through: :event_announcements
+  has_many :deliveries, class_name: "AnnouncementDelivery", dependent: :nullify
 
   belongs_to :template, class_name: "AnnouncementTemplate", foreign_key: "announcement_template_id", optional: true
   belongs_to :sender, class_name: "User", foreign_key: "sent_by", optional: true

@@ -10,6 +10,9 @@ ja:
       setting: "サークル設定"
       attendance: "参加登録"
       user_mail_address: "メールアドレス"
+      mail_delivery: "メール配信"
+      announcement_delivery: "お知らせ配信"
+      transactional_mail_delivery: "トランザクションメール配信"
     attributes:
       user:
         email_address: "メールアドレス"

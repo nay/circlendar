@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_075457) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_080116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_075457) do
     t.datetime "updated_at", null: false
     t.bigint "venue_id", null: false
     t.index ["venue_id"], name: "index_events_on_venue_id"
+  end
+
+  create_table "mail_deliveries", force: :cascade do |t|
+    t.string "address", null: false
+    t.bigint "announcement_id"
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.string "kind"
+    t.datetime "requested_at"
+    t.string "resend_id"
+    t.datetime "scheduled_at"
+    t.string "status", default: "pending", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id"], name: "index_mail_deliveries_on_announcement_id"
+    t.index ["requested_at"], name: "index_mail_deliveries_on_requested_at"
+    t.index ["status"], name: "index_mail_deliveries_on_status"
   end
 
   create_table "players", force: :cascade do |t|
@@ -142,6 +159,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_075457) do
   add_foreign_key "event_announcements", "announcements"
   add_foreign_key "event_announcements", "events"
   add_foreign_key "events", "venues"
+  add_foreign_key "mail_deliveries", "announcements", on_delete: :nullify
   add_foreign_key "players", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_mail_addresses", "users"
