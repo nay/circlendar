@@ -12,8 +12,8 @@ class Announcement < ApplicationRecord
   validates :subject, presence: true
   validates :body, presence: true
 
-  def bcc_user_ids=(user_ids)
-    self.bcc_addresses = UserMailAddress.where(user_id: user_ids).pluck(:address)
+  def recipient_user_ids=(user_ids)
+    self.recipient_addresses = UserMailAddress.where(user_id: user_ids).pluck(:address)
   end
 
   def sent?
@@ -31,7 +31,7 @@ class Announcement < ApplicationRecord
     daily_limit = Setting.instance.daily_announcement_delivery_limit
     now = Time.current
 
-    records = bcc_addresses.each_with_index.map do |address, i|
+    records = recipient_addresses.each_with_index.map do |address, i|
       day_offset = i / daily_limit
       scheduled = if day_offset.zero?
         nil
@@ -55,10 +55,25 @@ class Announcement < ApplicationRecord
 
   def process_deliveries!
     from = "#{Setting.instance.circle_name} <#{ENV.fetch('MAILER_FROM', 'noreply@example.com')}>"
+    client = Rails.application.config.resend_client_class.constantize
+    pending = deliveries.pending.order(:id)
+    immediate = pending.where(scheduled_at: nil).to_a
+    scheduled = pending.where.not(scheduled_at: nil).to_a
 
-    deliveries.pending.find_each do |delivery|
-      delivery.request_send!(from: from, subject: subject, body: body, reply_to: to_address)
+    # 当日分: Batch API
+    if immediate.any?
+      params_array = immediate.map { |d| { from: from, to: [ d.address ], subject: subject, text: body, reply_to: to_address } }
+      response = client.send_batch(params_array)
+      now = Time.current
+      immediate.zip(response[:data]).each do |delivery, result|
+        delivery.update!(status: :requested, requested_at: now, resend_id: result[:id])
+      end
+    end
+
+    # 予約分: 個別送信（batch後のレートリミット対策で sleep から開始）
+    scheduled.each do |delivery|
       sleep(0.5)
+      delivery.request_send!(from: from, subject: subject, body: body, reply_to: to_address)
     end
   end
 end

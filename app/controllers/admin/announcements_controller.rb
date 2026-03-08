@@ -11,9 +11,9 @@ class Admin::AnnouncementsController < Admin::BaseController
                                          .group_by { |d| d.scheduled_at&.in_time_zone("Asia/Tokyo")&.to_date }
       @delivery_counts = @announcement.deliveries.group(:status).count
     else
-      @bcc_members = if @announcement.bcc_addresses.present?
+      @recipient_members = if @announcement.recipient_addresses.present?
         ids = Member.joins(user: :mail_addresses)
-                    .where(user_mail_addresses: { address: @announcement.bcc_addresses })
+                    .where(user_mail_addresses: { address: @announcement.recipient_addresses })
                     .distinct
                     .pluck(:id)
         Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
@@ -80,12 +80,7 @@ class Admin::AnnouncementsController < Admin::BaseController
 
     @announcement.create_deliveries!
     @announcement.update!(sent_at: Time.current, sender: current_user)
-
-    Thread.new do
-      Rails.application.executor.wrap do
-        @announcement.process_deliveries!
-      end
-    end
+    @announcement.process_deliveries!
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
   end
@@ -94,12 +89,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     @announcement.deliveries.failed.update_all(
       status: "pending", error_message: nil, requested_at: nil, resend_id: nil
     )
-
-    Thread.new do
-      Rails.application.executor.wrap do
-        @announcement.process_deliveries!
-      end
-    end
+    @announcement.process_deliveries!
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.retry_started")
   end
@@ -111,8 +101,8 @@ class Admin::AnnouncementsController < Admin::BaseController
     @announcement_templates = AnnouncementTemplate.order(:subject)
     @members = Member.joins(:user).merge(User.active.receives_announcements.ordered).includes(user: :mail_addresses)
     @checked_user_ids = if @announcement.persisted?
-      bcc_set = @announcement.bcc_addresses.to_set
-      @members.select { |m| m.user.mail_addresses.any? { |ma| bcc_set.include?(ma.address) } }.map { |m| m.user.id }
+      recipient_set = @announcement.recipient_addresses.to_set
+      @members.select { |m| m.user.mail_addresses.any? { |ma| recipient_set.include?(ma.address) } }.map { |m| m.user.id }
     else
       @members.map { |m| m.user.id }
     end
@@ -144,6 +134,6 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def announcement_params
-    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, bcc_user_ids: [], event_ids: [])
+    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, recipient_user_ids: [], event_ids: [])
   end
 end

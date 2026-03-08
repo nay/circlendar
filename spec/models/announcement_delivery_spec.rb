@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe MailDelivery::Announcement, type: :model do
-  let(:announcement) { Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", bcc_addresses: [ "user@example.com" ]) }
+  let(:announcement) { Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", recipient_addresses: [ "user@example.com" ]) }
 
   describe "#request_send!" do
     let(:delivery) { MailDelivery::Announcement.create!(announcement: announcement, address: "user@example.com") }

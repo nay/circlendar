@@ -10,7 +10,7 @@ RSpec.describe Announcement, type: :model do
       subject: "テスト",
       body: "本文",
       to_address: "admin@example.com",
-      bcc_addresses: addresses
+      recipient_addresses: addresses
     )
   end
 
@@ -58,15 +58,35 @@ RSpec.describe Announcement, type: :model do
   end
 
   describe "#process_deliveries!" do
-    let(:addresses) { [ "a@example.com", "b@example.com" ] }
+    context "当日分のみの場合" do
+      let(:addresses) { [ "a@example.com", "b@example.com" ] }
 
-    it "pending な配信を全て送信する" do
-      announcement.create_deliveries!
-      announcement.process_deliveries!
+      it "Batch API で一括送信する" do
+        announcement.create_deliveries!
+        announcement.process_deliveries!
 
-      deliveries = announcement.deliveries.reload
-      expect(deliveries.map(&:status)).to all(eq("requested"))
-      expect(deliveries.map(&:resend_id)).to all(start_with("fake_"))
+        deliveries = announcement.deliveries.reload
+        expect(deliveries.map(&:status)).to all(eq("requested"))
+        expect(deliveries.map(&:resend_id)).to all(start_with("fake_"))
+      end
+    end
+
+    context "当日分と予約分が混在する場合" do
+      let(:addresses) { (1..5).map { |i| "user#{i}@example.com" } }
+
+      it "当日分は Batch API、予約分は個別送信する" do
+        announcement.create_deliveries!
+        announcement.process_deliveries!
+
+        deliveries = announcement.deliveries.reload.order(:id)
+        immediate = deliveries.select { |d| d.scheduled_at.nil? }
+        scheduled = deliveries.reject { |d| d.scheduled_at.nil? }
+
+        expect(immediate.map(&:status)).to all(eq("requested"))
+        expect(immediate.map(&:resend_id)).to all(start_with("fake_"))
+        expect(scheduled.map(&:status)).to all(eq("requested"))
+        expect(scheduled.map(&:resend_id)).to all(start_with("fake_"))
+      end
     end
   end
 end
