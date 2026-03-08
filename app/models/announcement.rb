@@ -26,4 +26,39 @@ class Announcement < ApplicationRecord
     self.subject = AnnouncementTemplate.fill_placeholders(template.subject, events)
     self.body = AnnouncementTemplate.fill_placeholders(template.body, events)
   end
+
+  def create_deliveries!
+    daily_limit = Setting.instance.daily_announcement_delivery_limit
+    now = Time.current
+
+    records = bcc_addresses.each_with_index.map do |address, i|
+      day_offset = i / daily_limit
+      scheduled = if day_offset.zero?
+        nil
+      else
+        (Date.tomorrow + (day_offset - 1).days).in_time_zone("Asia/Tokyo").change(hour: 9)
+      end
+
+      {
+        type: "AnnouncementDelivery",
+        announcement_id: id,
+        address: address,
+        status: "pending",
+        scheduled_at: scheduled,
+        created_at: now,
+        updated_at: now
+      }
+    end
+
+    AnnouncementDelivery.insert_all!(records) if records.any?
+  end
+
+  def process_deliveries!
+    from = "#{Setting.instance.circle_name} <#{ENV.fetch('MAILER_FROM', 'noreply@example.com')}>"
+
+    deliveries.pending.find_each do |delivery|
+      delivery.request_send!(from: from, subject: subject, body: body, reply_to: to_address)
+      sleep(0.5)
+    end
+  end
 end
