@@ -6,7 +6,8 @@ class AnnouncementMailer < ApplicationMailer
     mail(
       to: announcement.to_address,
       bcc: announcement.bcc_addresses,
-      subject: announcement.subject
+      subject: announcement.subject,
+      reply_to: announcement.to_address
     )
   end
 end
