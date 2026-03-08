@@ -85,6 +85,13 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
+    daily_limit = Setting.instance.daily_announcement_delivery_limit
+    already_sent = MailDelivery::Announcement.requested.on_date(Time.current).count
+    if already_sent >= daily_limit
+      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.show.daily_limit_reached")
+      return
+    end
+
     @announcement.create_deliveries!
     @announcement.update!(sent_at: Time.current, sender: current_user)
     @announcement.process_deliveries!

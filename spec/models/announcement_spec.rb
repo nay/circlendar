@@ -55,6 +55,26 @@ RSpec.describe Announcement, type: :model do
         expect(dates.size).to eq(3) # nil（即時）, 明日, 明後日
       end
     end
+
+    context "当日すでに一部送信済みの場合" do
+      let(:addresses) { (1..5).map { |i| "user#{i}@example.com" } }
+
+      it "残り枠分のみ即時になる" do
+        # 当日すでに2件送信済み → 残り枠1件
+        other = Announcement.create!(subject: "別", body: "別本文", to_address: "a@example.com", recipient_addresses: [ "x@example.com", "y@example.com" ])
+        other.create_deliveries!
+        other.process_deliveries!
+
+        announcement.create_deliveries!
+        deliveries = announcement.deliveries.reload.order(:id)
+
+        immediate = deliveries.select { |d| d.scheduled_at.nil? }
+        scheduled = deliveries.reject { |d| d.scheduled_at.nil? }
+
+        expect(immediate.size).to eq(1)
+        expect(scheduled.size).to eq(4)
+      end
+    end
   end
 
   describe "#process_deliveries!" do

@@ -94,6 +94,7 @@ ja:
       send_email: "メール送信"
       confirm_send: "メールを送信しますか？\n\nこの処理には数十秒程度かかります。"
       already_sent: "送信済み"
+      daily_limit_reached: "本日の送信枠が上限に達しています。明日以降に試してください。"
       retry_failed: "失敗を再送信"
       confirm_retry: "失敗した配信を再送信しますか？\n\nこの処理には数十秒程度かかります。"
       reply_to: "返信先"

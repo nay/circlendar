@@ -29,6 +29,8 @@ class Announcement < ApplicationRecord
 
   def create_deliveries!
     daily_limit = Setting.instance.daily_announcement_delivery_limit
+    already_sent = MailDelivery::Announcement.requested.on_date(Time.current).count
+    remaining_today = [ daily_limit - already_sent, 0 ].max
     now = Time.current
 
     ordered_addresses = UserMailAddress.where(address: recipient_addresses)
@@ -37,11 +39,11 @@ class Announcement < ApplicationRecord
     ordered_addresses += recipient_addresses - ordered_addresses
 
     records = ordered_addresses.each_with_index.map do |address, i|
-      day_offset = i / daily_limit
-      scheduled = if day_offset.zero?
+      scheduled = if i < remaining_today
         nil
       else
-        (Date.tomorrow + (day_offset - 1).days).in_time_zone("Asia/Tokyo").change(hour: 9)
+        day_offset = (i - remaining_today) / daily_limit
+        (Date.tomorrow + day_offset.days).in_time_zone("Asia/Tokyo").change(hour: 9)
       end
 
       {
