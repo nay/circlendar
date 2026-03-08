@@ -1,5 +1,5 @@
 class Admin::AnnouncementsController < Admin::BaseController
-  before_action :set_announcement, only: %i[ show edit update destroy send_email ]
+  before_action :set_announcement, only: %i[ show edit update destroy send_email retry_failed ]
 
   def index
     @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
@@ -72,10 +72,30 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
-    AnnouncementMailer.notify(@announcement).deliver_now
+    @announcement.create_deliveries!
     @announcement.update!(sent_at: Time.current, sender: current_user)
 
+    Thread.new do
+      Rails.application.executor.wrap do
+        @announcement.process_deliveries!
+      end
+    end
+
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
+  end
+
+  def retry_failed
+    @announcement.deliveries.failed.update_all(
+      status: "pending", error_message: nil, requested_at: nil, resend_id: nil
+    )
+
+    Thread.new do
+      Rails.application.executor.wrap do
+        @announcement.process_deliveries!
+      end
+    end
+
+    redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.retry_started")
   end
 
   private
