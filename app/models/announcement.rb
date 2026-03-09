@@ -32,22 +32,11 @@ class Announcement < ApplicationRecord
   end
 
   def address_deliveries
-    loaded = deliveries.order(:id).to_a
-
-    if loaded.any?
-      all_addresses = loaded.flat_map(&:addresses).uniq
-      member_by_address = build_member_by_address(all_addresses)
-      loaded.flat_map do |delivery|
-        delivery.addresses.map do |address|
-          AnnouncementAddressDelivery.new(delivery: delivery, address: address, member: member_by_address[address])
-        end
-      end
-    else
-      addresses = recipient_addresses || []
-      member_by_address = build_member_by_address(addresses)
-      addresses.map do |address|
-        AnnouncementAddressDelivery.new(address: address, member: member_by_address[address])
-      end
+    pairs = addresses_with_deliveries
+    all_addresses = pairs.map(&:first).uniq
+    member_by_address = build_member_by_address(all_addresses)
+    pairs.map do |address, delivery|
+      AnnouncementAddressDelivery.new(address: address, delivery: delivery, member: member_by_address[address])
     end
   end
 
@@ -61,6 +50,15 @@ class Announcement < ApplicationRecord
   end
 
   private
+
+  def addresses_with_deliveries
+    loaded = deliveries.order(:id).to_a
+    if loaded.any?
+      loaded.flat_map { |d| d.addresses.map { |a| [ a, d ] } }
+    else
+      (recipient_addresses || []).map { |a| [ a, nil ] }
+    end
+  end
 
   def build_member_by_address(addresses)
     members = Member.joins(user: :mail_addresses)
