@@ -34,7 +34,11 @@ class Announcement < ApplicationRecord
   def address_deliveries
     pairs = addresses_with_deliveries
     all_addresses = pairs.map(&:first).uniq
-    member_by_address = build_member_by_address(all_addresses)
+    member_by_address = Member.joins(user: :mail_addresses)
+                              .where(user_mail_addresses: { address: all_addresses })
+                              .includes(user: :mail_addresses)
+                              .flat_map { |m| m.user.mail_addresses.map { |ma| [ ma.address, m ] } }
+                              .to_h
     pairs.map do |address, delivery|
       AnnouncementAddressDelivery.new(address: address, delivery: delivery, member: member_by_address[address])
     end
@@ -58,16 +62,5 @@ class Announcement < ApplicationRecord
     else
       (recipient_addresses || []).map { |a| [ a, nil ] }
     end
-  end
-
-  def build_member_by_address(addresses)
-    members = Member.joins(user: :mail_addresses)
-                    .where(user_mail_addresses: { address: addresses })
-                    .includes(user: :mail_addresses)
-    result = {}
-    members.each do |member|
-      member.user.mail_addresses.each { |ma| result[ma.address] = member }
-    end
-    result
   end
 end
