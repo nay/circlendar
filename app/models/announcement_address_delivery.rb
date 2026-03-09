@@ -6,10 +6,13 @@ class AnnouncementAddressDelivery
     @member = member
     return unless delivery
 
-    failed = delivery.failed_addresses.include?(address)
-    @status = failed ? "failed" : delivery.status
+    @status = delivery.failed_addresses.include?(address) ? "failed" : delivery.status
     @requested_at = delivery.requested_at
     @next_run_at = delivery.next_run_at
-    @error_message = delivery.error_message if failed || delivery.failed?
+    @error_message = delivery.error_message if failed?
+  end
+
+  def failed?
+    status == "failed"
   end
 end
