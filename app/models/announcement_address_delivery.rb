@@ -4,12 +4,12 @@ class AnnouncementAddressDelivery
   def initialize(address:, member: nil, delivery: nil)
     @address = address
     @member = member
-    if delivery
-      failed = delivery.failed_addresses.include?(address)
-      @status = failed ? "failed" : delivery.status
-      @requested_at = delivery.requested_at
-      @next_run_at = delivery.next_run_at
-      @error_message = delivery.error_message if failed || delivery.failed?
-    end
+    return unless delivery
+
+    failed = delivery.failed_addresses.include?(address)
+    @status = failed ? "failed" : delivery.status
+    @requested_at = delivery.requested_at
+    @next_run_at = delivery.next_run_at
+    @error_message = delivery.error_message if failed || delivery.failed?
   end
 end
