@@ -12,6 +12,10 @@ class Announcement < ApplicationRecord
   validates :subject, presence: true
   validates :body, presence: true
 
+  def recipient_user_ids
+    UserMailAddress.where(address: recipient_addresses).pluck(:user_id).uniq
+  end
+
   def recipient_user_ids=(user_ids)
     self.recipient_addresses = UserMailAddress.where(user_id: user_ids).pluck(:address)
   end

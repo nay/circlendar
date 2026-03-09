@@ -86,8 +86,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     @announcement_templates = AnnouncementTemplate.order(:subject)
     @members = Member.joins(:user).merge(User.active.receives_announcements.ordered).includes(user: :mail_addresses)
     @checked_user_ids = if @announcement.persisted?
-      recipient_set = @announcement.recipient_addresses.to_set
-      @members.select { |m| m.user.mail_addresses.any? { |ma| recipient_set.include?(ma.address) } }.map { |m| m.user.id }
+      @announcement.recipient_user_ids
     else
       @members.map { |m| m.user.id }
     end
