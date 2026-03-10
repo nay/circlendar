@@ -70,7 +70,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
     end
 
     context "過去24時間の送信数がクォータしきい値以上の場合" do
-      it "送信せず next_run_at を設定する" do
+      it "QuotaExceededError を発生させて送信しない" do
         # 過去の送信済みレコードを作成（70件分）
         create_delivery(
           addresses: (1..70).map { |i| "sent#{i}@example.com" },
@@ -80,25 +80,23 @@ RSpec.describe AnnouncementDelivery, type: :model do
         )
 
         d = create_delivery(addresses: [ "new@example.com" ])
-        d.process!
+        expect { d.process! }.to raise_error(AnnouncementDelivery::QuotaExceededError)
 
         d.reload
         expect(d.status).to eq("pending")
-        expect(d.next_run_at).to be_present
       end
     end
 
     context "429 レートリミットの場合" do
-      it "next_run_at を設定して中断する" do
+      it "RateLimitExceededError を再送出する" do
         d = create_delivery(addresses: [ "a@example.com" ])
         allow(AnnouncementDelivery.client).to receive(:send_batch)
           .and_raise(Resend::Error::RateLimitExceededError.new("rate limited", 429))
 
-        d.process!
+        expect { d.process! }.to raise_error(Resend::Error::RateLimitExceededError)
 
         d.reload
         expect(d.status).to eq("pending")
-        expect(d.next_run_at).to be_present
       end
     end
 
@@ -130,7 +128,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
     end
 
     context "個別送信中に429が発生した場合" do
-      it "送信済み分を保存し、未送信分を新レコードに退避する" do
+      it "送信済み分を保存し、未送信分を新レコードに退避して例外を再送出する" do
         d = create_delivery(addresses: [ "a@example.com", "b@example.com", "c@example.com" ])
 
         call_count = 0
@@ -147,7 +145,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
           end
         end
 
-        d.process!
+        expect { d.process! }.to raise_error(Resend::Error::RateLimitExceededError)
 
         d.reload
         expect(d.status).to eq("requested")
@@ -156,7 +154,6 @@ RSpec.describe AnnouncementDelivery, type: :model do
 
         remaining = AnnouncementDelivery.where(announcement: announcement).pending.first
         expect(remaining.addresses).to eq([ "b@example.com", "c@example.com" ])
-        expect(remaining.next_run_at).to be_present
       end
     end
 
