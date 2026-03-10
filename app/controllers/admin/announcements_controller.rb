@@ -1,4 +1,7 @@
 class Admin::AnnouncementsController < Admin::BaseController
+  skip_forgery_protection only: :process_queue_api
+  skip_before_action :require_admin, only: :process_queue_api
+  before_action :authenticate_api_token!, only: :process_queue_api
   before_action :set_announcement, only: %i[ show edit update destroy send_email deliveries ]
 
   def index
@@ -62,10 +65,17 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def pending_deliveries
-    @deliveries = AnnouncementDelivery.pending.includes(:announcement).order(Arel.sql("next_run_at ASC NULLS FIRST"), :id)
+    pending = AnnouncementDelivery.pending.includes(:announcement)
+    @processable_deliveries = pending.where("next_run_at IS NULL OR next_run_at <= ?", Time.current).order(:id)
+    @waiting_deliveries = pending.where("next_run_at > ?", Time.current).order(:next_run_at, :id)
   end
 
   def process_queue
+    AnnouncementDelivery.process_queue!
+    redirect_to pending_deliveries_admin_announcements_path, notice: t("announcements.process_queue.success")
+  end
+
+  def process_queue_api
     AnnouncementDelivery.process_queue!
     head :ok
   end
@@ -115,6 +125,11 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     @announcement.apply_template
+  end
+
+  def authenticate_api_token!
+    token = request.headers["Authorization"]&.delete_prefix("Bearer ")
+    head :unauthorized unless token.present? && ActiveSupport::SecurityUtils.secure_compare(token, ENV.fetch("API_TOKEN"))
   end
 
   def set_announcement

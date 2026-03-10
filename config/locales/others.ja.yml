@@ -113,6 +113,14 @@ ja:
     pending_deliveries:
       title: "送信待ち一覧"
       no_deliveries: "送信待ちはありません"
+      processable: "リトライ可能な送信"
+      no_processable: "リトライ可能な送信はありません"
+      waiting: "実行日時が来るのを待っている送信"
+      no_waiting: "待機中の送信はありません"
+    process_queue:
+      button: "送信リトライ"
+      confirm: "送信リトライします。よろしいですか？"
+      success: "送信リトライが完了しました"
     send_email:
       success: "メールの送信を開始しました"
       already_sent: "このお知らせは既に送信済みです"

@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       collection do
         get :pending_deliveries
         post :process_queue
+        post :process_queue_api
       end
       member do
         post :send_email

@@ -5,13 +5,32 @@
 
   <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= t("announcements.pending_deliveries.title") %></h1>
 
-  <% if @deliveries.empty? %>
+  <% if @processable_deliveries.empty? && @waiting_deliveries.empty? %>
     <p class="text-gray-500"><%= t("announcements.pending_deliveries.no_deliveries") %></p>
   <% else %>
-    <div class="space-y-4">
-      <% @deliveries.each do |delivery| %>
-        <%= render "delivery_card", delivery: delivery, show_announcement: true %>
-      <% end %>
-    </div>
+    <h2 class="text-xl font-bold text-gray-900 mb-4"><%= t("announcements.pending_deliveries.processable") %></h2>
+    <% if @processable_deliveries.any? %>
+      <div class="text-center mb-4">
+        <%= button_to t("announcements.process_queue.button"), process_queue_admin_announcements_path, method: :post, data: { turbo_confirm: t("announcements.process_queue.confirm") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      </div>
+      <div class="space-y-4 mb-8">
+        <% @processable_deliveries.each do |delivery| %>
+          <%= render "delivery_card", delivery: delivery, show_announcement: true %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-gray-500 mb-8"><%= t("announcements.pending_deliveries.no_processable") %></p>
+    <% end %>
+
+    <h2 class="text-xl font-bold text-gray-900 mb-4"><%= t("announcements.pending_deliveries.waiting") %></h2>
+    <% if @waiting_deliveries.any? %>
+      <div class="space-y-4">
+        <% @waiting_deliveries.each do |delivery| %>
+          <%= render "delivery_card", delivery: delivery, show_announcement: true %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-gray-500"><%= t("announcements.pending_deliveries.no_waiting") %></p>
+    <% end %>
   <% end %>
 </div>
