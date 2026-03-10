@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
     resources :announcements do
       collection do
+        get :pending_deliveries
         post :process_queue
       end
       member do

@@ -110,6 +110,9 @@ ja:
       title: "送信履歴詳細"
       show_details: "送信履歴詳細を見る"
       no_deliveries: "送信履歴はありません"
+    pending_deliveries:
+      title: "送信待ち一覧"
+      no_deliveries: "送信待ちはありません"
     send_email:
       success: "メールの送信を開始しました"
       already_sent: "このお知らせは既に送信済みです"

@@ -61,6 +61,10 @@ class Admin::AnnouncementsController < Admin::BaseController
     @deliveries = @announcement.deliveries.order(id: :desc)
   end
 
+  def pending_deliveries
+    @deliveries = AnnouncementDelivery.pending.includes(:announcement).order(Arel.sql("next_run_at ASC NULLS FIRST"), :id)
+  end
+
   def process_queue
     AnnouncementDelivery.process_queue!
     head :ok
