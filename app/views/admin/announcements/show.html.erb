@@ -17,15 +17,7 @@
         <%= @announcement.subject %>
       </h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">
-        <% if @announcement.delivery_failed? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.error") %></span>
-        <% elsif @announcement.delivery_finished? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sent") %></span>
-        <% elsif @announcement.sending? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sending") %></span>
-        <% else %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.draft") %></span>
-        <% end %>
+        <%= render "status_badge", announcement: @announcement %>
       </p>
       <% if @announcement.delivery_started_at? %>
         <p class="mt-1 max-w-2xl text-sm text-gray-500">

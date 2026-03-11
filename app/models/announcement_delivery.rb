@@ -46,7 +46,7 @@ class AnnouncementDelivery < ApplicationRecord
     setting = Setting.instance
 
     recent = self.class.recent_sent_count
-      raise QuotaExceededError if recent >= setting.announcement_daily_quota_threshold
+    raise QuotaExceededError if recent >= setting.announcement_daily_quota_threshold
 
     sendable = addresses - failed_addresses
     batch = sendable.first(setting.announcement_batch_size)

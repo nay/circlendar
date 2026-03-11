@@ -29,7 +29,7 @@ class Announcement < ApplicationRecord
   end
 
   def delivery_failed?
-    delivery_finished_at.present? && deliveries.failed.exists?
+    delivery_finished_at.present? && deliveries.any?(&:failed?)
   end
 
   def apply_template

@@ -5,7 +5,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   before_action :set_announcement, only: %i[ show edit update destroy send_email deliveries ]
 
   def index
-    @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
+    @announcements = Announcement.includes(:events, :sender, :deliveries).order(created_at: :desc)
   end
 
   def show
@@ -91,8 +91,10 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
-    @announcement.create_deliveries!
-    @announcement.update!(delivery_started_at: Time.current, sender: current_user)
+    ActiveRecord::Base.transaction do
+      @announcement.create_deliveries!
+      @announcement.update!(delivery_started_at: Time.current, sender: current_user)
+    end
     AnnouncementDelivery.process_queue!
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
