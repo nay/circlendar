@@ -40,8 +40,10 @@ ja:
         event_ids: "練習会"
         subject: "件名"
         body: "本文"
-        to_address: "To"
-        bcc_addresses: "BCC"
+        to_address: "Reply-To"
+        recipient_addresses: "To"
+        delivery_started_at: "送信開始日時"
+        delivery_finished_at: "送信完了日時"
       announcement_template:
         subject: "件名"
         body: "本文"
@@ -59,6 +61,18 @@ ja:
         schedule: "練習時間の案内"
       setting:
         circle_name: "サークル名"
+        announcement_batch_size: "お知らせ配信バッチサイズ"
+        announcement_daily_quota_threshold: "1日あたりお知らせ配信数上限"
+        announcement_retry_interval_hours: "配信リトライ間隔（時間）"
+      announcement_delivery:
+        addresses: "送信先アドレス"
+        failed_addresses: "失敗アドレス"
+        resend_ids: "Resend ID"
+        requested_at: "送信依頼日時"
+        next_run_at: "次回実行日時"
+        error_message: "エラーメッセージ"
+        note: "メモ"
+        created_at: "作成日時"
       venue:
         name: "管理名"
         url: "URL"

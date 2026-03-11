@@ -16,7 +16,7 @@ class Admin::EventsController < Admin::BaseController
   def show
     @current_tab = params[:tab] || "announcements"
     @attendances = @event.attendances.includes(player: :user).order("players.name")
-    @announcements = @event.announcements.order(created_at: :desc)
+    @announcements = @event.announcements.includes(:deliveries).order(created_at: :desc)
   end
 
   def new

@@ -1,20 +1,14 @@
 class Admin::AnnouncementsController < Admin::BaseController
-  before_action :set_announcement, only: %i[ show edit update destroy send_email ]
+  skip_forgery_protection only: :process_queue_api
+  skip_before_action :require_admin, only: :process_queue_api
+  before_action :authenticate_api_token!, only: :process_queue_api
+  before_action :set_announcement, only: %i[ show edit update destroy send_email deliveries ]
 
   def index
-    @announcements = Announcement.includes(:events, :sender).order(created_at: :desc)
+    @announcements = Announcement.includes(:events, :sender, :deliveries).order(created_at: :desc)
   end
 
   def show
-    @bcc_members = if @announcement.bcc_addresses.present?
-      ids = Member.joins(user: :mail_addresses)
-                  .where(user_mail_addresses: { address: @announcement.bcc_addresses })
-                  .distinct
-                  .pluck(:id)
-      Member.where(id: ids).joins(:user).merge(User.ordered).includes(user: :mail_addresses)
-    else
-      Member.none
-    end
   end
 
   def new
@@ -66,14 +60,42 @@ class Admin::AnnouncementsController < Admin::BaseController
     redirect_to admin_announcements_path, notice: I18n.t("messages.destroy.success", model: Announcement.model_name.human)
   end
 
+  def deliveries
+    @deliveries = @announcement.deliveries.order(id: :desc)
+  end
+
+  def pending_deliveries
+    pending = AnnouncementDelivery.pending.includes(:announcement)
+    @processable_deliveries = pending.where("next_run_at IS NULL OR next_run_at <= ?", Time.current).order(:id)
+    @waiting_deliveries = pending.where("next_run_at > ?", Time.current).order(:next_run_at, :id)
+  end
+
+  def process_queue
+    AnnouncementDelivery.process_queue!
+    redirect_to pending_deliveries_admin_announcements_path, notice: t("announcements.process_queue.success")
+  end
+
+  def process_queue_api
+    AnnouncementDelivery.process_queue!
+    head :ok
+  end
+
   def send_email
-    if @announcement.sent?
-      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.already_sent")
+    if @announcement.delivery_started_at?
+      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.delivery_already_started")
       return
     end
 
-    AnnouncementMailer.notify(@announcement).deliver_now
-    @announcement.update!(sent_at: Time.current, sender: current_user)
+    if @announcement.recipient_addresses.blank?
+      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.no_recipients")
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      @announcement.create_deliveries!
+      @announcement.update!(delivery_started_at: Time.current, sender: current_user)
+    end
+    AnnouncementDelivery.process_queue!
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")
   end
@@ -85,8 +107,7 @@ class Admin::AnnouncementsController < Admin::BaseController
     @announcement_templates = AnnouncementTemplate.order(:subject)
     @members = Member.joins(:user).merge(User.active.receives_announcements.ordered).includes(user: :mail_addresses)
     @checked_user_ids = if @announcement.persisted?
-      bcc_set = @announcement.bcc_addresses.to_set
-      @members.select { |m| m.user.mail_addresses.any? { |ma| bcc_set.include?(ma.address) } }.map { |m| m.user.id }
+      @announcement.recipient_user_ids
     else
       @members.map { |m| m.user.id }
     end
@@ -113,11 +134,16 @@ class Admin::AnnouncementsController < Admin::BaseController
     @announcement.apply_template
   end
 
+  def authenticate_api_token!
+    token = request.headers["Authorization"]&.delete_prefix("Bearer ")
+    head :unauthorized unless token.present? && ActiveSupport::SecurityUtils.secure_compare(token, ENV.fetch("API_TOKEN"))
+  end
+
   def set_announcement
     @announcement = Announcement.find(params[:id])
   end
 
   def announcement_params
-    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, bcc_user_ids: [], event_ids: [])
+    params.require(:announcement).permit(:announcement_template_id, :subject, :body, :to_address, recipient_user_ids: [], event_ids: [])
   end
 end

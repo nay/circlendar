@@ -1,0 +1,9 @@
+<% if announcement.delivery_failed? %>
+  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 whitespace-nowrap flex-shrink-0">エラー</span>
+<% elsif announcement.delivery_finished? %>
+  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0">送信済み</span>
+<% elsif announcement.sending? %>
+  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0">送信中</span>
+<% else %>
+  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0">下書き</span>
+<% end %>

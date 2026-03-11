@@ -1,0 +1,17 @@
+<div class="w-full">
+  <div class="mb-4">
+    <%= link_to "← #{t('announcements.show.title')}", admin_announcement_path(@announcement), class: "text-blue-600 hover:text-blue-700 text-sm" %>
+  </div>
+
+  <h1 class="text-3xl font-bold text-gray-900 mb-8"><%= t("announcements.deliveries.title") %></h1>
+
+  <% if @deliveries.empty? %>
+    <p class="text-gray-500"><%= t("announcements.deliveries.no_deliveries") %></p>
+  <% else %>
+    <div class="space-y-4">
+      <% @deliveries.each do |delivery| %>
+        <%= render "delivery_card", delivery: delivery %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

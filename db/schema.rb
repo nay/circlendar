@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_235818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "announcement_deliveries", force: :cascade do |t|
+    t.text "addresses", default: "[]", null: false
+    t.bigint "announcement_id", null: false
+    t.datetime "created_at", null: false
+    t.text "error_message"
+    t.text "failed_addresses", default: "[]", null: false
+    t.datetime "next_run_at"
+    t.text "note"
+    t.datetime "requested_at"
+    t.text "resend_ids", default: "[]"
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id"], name: "index_announcement_deliveries_on_announcement_id"
+    t.index ["next_run_at"], name: "index_announcement_deliveries_on_next_run_at"
+    t.index ["status"], name: "index_announcement_deliveries_on_status"
+  end
 
   create_table "announcement_templates", force: :cascade do |t|
     t.text "body"
@@ -24,10 +41,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
 
   create_table "announcements", force: :cascade do |t|
     t.bigint "announcement_template_id"
-    t.text "bcc_addresses", default: [], array: true
     t.text "body"
     t.datetime "created_at", null: false
-    t.datetime "sent_at"
+    t.datetime "delivery_finished_at"
+    t.datetime "delivery_started_at"
+    t.text "recipient_addresses", default: [], array: true
     t.integer "sent_by"
     t.text "subject"
     t.string "to_address"
@@ -91,6 +109,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
   end
 
   create_table "settings", force: :cascade do |t|
+    t.integer "announcement_batch_size", default: 10, null: false
+    t.integer "announcement_daily_quota_threshold", default: 70, null: false
+    t.integer "announcement_retry_interval_hours", default: 2, null: false
     t.string "circle_name"
     t.datetime "created_at", null: false
     t.string "signup_token"
@@ -134,6 +155,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_07_021851) do
     t.string "url"
   end
 
+  add_foreign_key "announcement_deliveries", "announcements"
   add_foreign_key "announcements", "announcement_templates"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "players"

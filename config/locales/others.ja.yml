@@ -81,15 +81,24 @@ ja:
       new_announcement: "新しいお知らせを作成"
       no_announcements: "お知らせはありません"
       sent: "送信済み"
+      sending: "送信中"
       draft: "下書き"
+      error: "エラー"
     show:
       title: "お知らせ詳細"
       edit: "編集"
       delete: "削除"
       confirm_delete: "本当に削除しますか？"
       send_email: "メール送信"
-      confirm_send: "メールを送信しますか？"
+      confirm_send: "メールを送信しますか？\n\nこの処理には数十秒程度かかります。"
       already_sent: "送信済み"
+      total_count: "全 %{count} 件"
+      recipient: "送信先"
+      status: "ステータス"
+      error: "エラー詳細"
+      status_requested: "送信依頼済み"
+      status_pending: "送信待ち"
+      status_failed: "エラー"
     new:
       title: "新しいお知らせを作成"
     edit:
@@ -100,9 +109,25 @@ ja:
       no_templates: "テンプレートがありません"
       apply_template: "反映"
       confirm_apply_template: "現在の件名・本文が上書きされます。よろしいですか？"
+    deliveries:
+      title: "送信履歴詳細"
+      show_details: "送信履歴詳細を見る"
+      no_deliveries: "送信履歴はありません"
+    pending_deliveries:
+      title: "送信待ち一覧"
+      no_deliveries: "送信待ちはありません"
+      processable: "リトライ可能な送信"
+      no_processable: "リトライ可能な送信はありません"
+      waiting: "実行日時が来るのを待っている送信"
+      no_waiting: "待機中の送信はありません"
+    process_queue:
+      button: "送信リトライ"
+      confirm: "送信リトライします。よろしいですか？"
+      success: "送信リトライが完了しました"
     send_email:
-      success: "メールを送信しました"
-      already_sent: "このお知らせは既に送信済みです"
+      success: "メールの送信を開始しました"
+      no_recipients: "送信先が設定されていません"
+      delivery_already_started: "このお知らせは既に送信開始済みです"
     apply_template:
       template_required: "テンプレートを選択してください"
       event_required: "このテンプレートを利用するには練習会を選択する必要があります"

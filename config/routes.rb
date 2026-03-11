@@ -33,8 +33,14 @@ Rails.application.routes.draw do
     resources :events
 
     resources :announcements do
+      collection do
+        get :pending_deliveries
+        post :process_queue
+        post :process_queue_api
+      end
       member do
         post :send_email
+        get :deliveries
       end
     end
 

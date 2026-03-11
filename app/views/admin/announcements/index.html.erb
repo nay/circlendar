@@ -1,7 +1,10 @@
 <div class="w-full">
   <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.index.title") %></h1>
-    <%= link_to t("announcements.index.new_announcement"), new_admin_announcement_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to t("announcements.pending_deliveries.title"), pending_deliveries_admin_announcements_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      <%= link_to t("announcements.index.new_announcement"), new_admin_announcement_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
   </div>
 
   <% if @announcements.any? %>
@@ -17,11 +20,7 @@
                       <p class="text-lg font-medium text-blue-600">
                         <%= announcement.subject %>
                       </p>
-                      <% if announcement.sent? %>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sent") %></span>
-                      <% else %>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.draft") %></span>
-                      <% end %>
+                      <%= render "status_badge", announcement: announcement %>
                     </div>
                     <% if announcement.events.any? %>
                       <p class="mt-1 text-sm text-gray-600">
@@ -30,8 +29,8 @@
                     <% end %>
                     <p class="mt-1 text-sm text-gray-500">
                       作成日: <%= l(announcement.created_at.to_date) %>
-                      <% if announcement.sent? %>
-                        / 送信日: <%= l(announcement.sent_at.to_date) %>
+                      <% if announcement.delivery_started_at? %>
+                        / 送信開始: <%= l(announcement.delivery_started_at.to_date) %>
                       <% end %>
                     </p>
                   </div>
