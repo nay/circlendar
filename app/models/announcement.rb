@@ -64,7 +64,7 @@ class Announcement < ApplicationRecord
   private
 
   def addresses_with_deliveries
-    loaded = deliveries.order(:id).to_a
+    loaded = deliveries.sort_by(&:id)
     if loaded.any?
       loaded.flat_map { |d| d.addresses.map { |a| [ a, d ] } }
     else
