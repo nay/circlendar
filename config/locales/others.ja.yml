@@ -83,6 +83,7 @@ ja:
       sent: "送信済み"
       sending: "送信中"
       draft: "下書き"
+      error: "エラー"
     show:
       title: "お知らせ詳細"
       edit: "編集"
@@ -124,6 +125,7 @@ ja:
       success: "送信リトライが完了しました"
     send_email:
       success: "メールの送信を開始しました"
+      no_recipients: "送信先が設定されていません"
       delivery_already_started: "このお知らせは既に送信開始済みです"
     apply_template:
       template_required: "テンプレートを選択してください"

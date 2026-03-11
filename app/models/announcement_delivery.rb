@@ -53,7 +53,7 @@ class AnnouncementDelivery < ApplicationRecord
     remaining = sendable.drop(setting.announcement_batch_size)
 
     if batch.empty?
-      update!(status: :failed, error_message: "all addresses failed")
+      update!(status: :failed, error_message: "送信可能なアドレスがありません")
       return
     end
 
@@ -125,7 +125,7 @@ class AnnouncementDelivery < ApplicationRecord
     elsif unsent.any?
       update!(failed_addresses: new_failed, note: note)
     else
-      update!(failed_addresses: new_failed, status: :failed, error_message: "all addresses failed", note: note)
+      update!(failed_addresses: new_failed, status: :failed, error_message: "送信可能なアドレスがありません", note: note)
     end
   end
 

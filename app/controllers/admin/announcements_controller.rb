@@ -86,6 +86,11 @@ class Admin::AnnouncementsController < Admin::BaseController
       return
     end
 
+    if @announcement.recipient_addresses.blank?
+      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.no_recipients")
+      return
+    end
+
     @announcement.create_deliveries!
     @announcement.update!(delivery_started_at: Time.current, sender: current_user)
     AnnouncementDelivery.process_queue!

@@ -28,6 +28,10 @@ class Announcement < ApplicationRecord
     delivery_started_at.present? && delivery_finished_at.nil?
   end
 
+  def delivery_failed?
+    delivery_finished_at.present? && deliveries.failed.exists?
+  end
+
   def apply_template
     return unless template
 
