@@ -6,8 +6,8 @@ class Announcement < ApplicationRecord
   belongs_to :template, class_name: "AnnouncementTemplate", foreign_key: "announcement_template_id", optional: true
   belongs_to :sender, class_name: "User", foreign_key: "sent_by", optional: true
 
-  scope :sent, -> { where.not(sent_at: nil) }
-  scope :unsent, -> { where(sent_at: nil) }
+  scope :delivery_started, -> { where.not(delivery_started_at: nil) }
+  scope :delivery_not_started, -> { where(delivery_started_at: nil) }
 
   validates :subject, presence: true
   validates :body, presence: true
@@ -20,8 +20,12 @@ class Announcement < ApplicationRecord
     self.recipient_addresses = UserMailAddress.where(user_id: user_ids).pluck(:address)
   end
 
-  def sent?
-    sent_at.present?
+  def delivery_finished?
+    delivery_finished_at.present?
+  end
+
+  def sending?
+    delivery_started_at.present? && delivery_finished_at.nil?
   end
 
   def apply_template

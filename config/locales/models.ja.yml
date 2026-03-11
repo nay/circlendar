@@ -42,6 +42,8 @@ ja:
         body: "本文"
         to_address: "Reply-To"
         recipient_addresses: "To"
+        delivery_started_at: "送信開始日時"
+        delivery_finished_at: "送信完了日時"
       announcement_template:
         subject: "件名"
         body: "本文"

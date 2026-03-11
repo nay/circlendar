@@ -20,8 +20,10 @@
                       <p class="text-lg font-medium text-blue-600">
                         <%= announcement.subject %>
                       </p>
-                      <% if announcement.sent? %>
+                      <% if announcement.delivery_finished? %>
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sent") %></span>
+                      <% elsif announcement.sending? %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sending") %></span>
                       <% else %>
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.draft") %></span>
                       <% end %>
@@ -33,8 +35,8 @@
                     <% end %>
                     <p class="mt-1 text-sm text-gray-500">
                       作成日: <%= l(announcement.created_at.to_date) %>
-                      <% if announcement.sent? %>
-                        / 送信日: <%= l(announcement.sent_at.to_date) %>
+                      <% if announcement.delivery_started_at? %>
+                        / 送信開始: <%= l(announcement.delivery_started_at.to_date) %>
                       <% end %>
                     </p>
                   </div>

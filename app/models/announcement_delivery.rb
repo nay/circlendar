@@ -7,6 +7,8 @@ class AnnouncementDelivery < ApplicationRecord
 
   validates :status, presence: true
 
+  after_save :finish_announcement_delivery
+
   serialize :addresses, coder: JSON
   serialize :failed_addresses, coder: JSON
   serialize :resend_ids, coder: JSON
@@ -44,7 +46,7 @@ class AnnouncementDelivery < ApplicationRecord
     setting = Setting.instance
 
     recent = self.class.recent_sent_count
-    raise QuotaExceededError if recent >= setting.announcement_daily_quota_threshold
+      raise QuotaExceededError if recent >= setting.announcement_daily_quota_threshold
 
     sendable = addresses - failed_addresses
     batch = sendable.first(setting.announcement_batch_size)
@@ -125,6 +127,15 @@ class AnnouncementDelivery < ApplicationRecord
     else
       update!(failed_addresses: new_failed, status: :failed, error_message: "all addresses failed", note: note)
     end
+  end
+
+  def finish_announcement_delivery
+    return if pending?
+    return unless announcement.delivery_started_at?
+    return if announcement.delivery_finished_at?
+    return if announcement.deliveries.pending.exists?
+
+    announcement.update!(delivery_finished_at: Time.current)
   end
 
   def build_retry_note(sent_addrs, new_failed, unsent: [], rate_limited: false)

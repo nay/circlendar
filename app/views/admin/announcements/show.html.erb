@@ -3,7 +3,7 @@
   <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4 mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><%= t("announcements.show.title") %></h1>
     <div class="flex flex-wrap gap-2">
-      <% unless @announcement.sent? %>
+      <% unless @announcement.delivery_started_at? %>
         <%= link_to t("announcements.show.edit"), edit_admin_announcement_path(@announcement), class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         <%= button_to t("announcements.show.send_email"), send_email_admin_announcement_path(@announcement), method: :post, data: { turbo_confirm: t("announcements.show.confirm_send") }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
       <% end %>
@@ -17,13 +17,22 @@
         <%= @announcement.subject %>
       </h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">
-        <% if @announcement.sent? %>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.show.already_sent") %></span>
-          <%= l(@announcement.sent_at, format: :long) %> に送信
+        <% if @announcement.delivery_finished? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sent") %></span>
+        <% elsif @announcement.sending? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.sending") %></span>
         <% else %>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 whitespace-nowrap flex-shrink-0"><%= t("announcements.index.draft") %></span>
         <% end %>
       </p>
+      <% if @announcement.delivery_started_at? %>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          <%= Announcement.human_attribute_name(:delivery_started_at) %>: <%= l(@announcement.delivery_started_at, format: :long) %>
+          <% if @announcement.delivery_finished_at? %>
+            / <%= Announcement.human_attribute_name(:delivery_finished_at) %>: <%= l(@announcement.delivery_finished_at, format: :long) %>
+          <% end %>
+        </p>
+      <% end %>
     </div>
     <div class="border-t border-gray-200">
       <dl>
@@ -62,7 +71,7 @@
             <dd>
               <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
-                  <% if @announcement.sent? %>
+                  <% if @announcement.delivery_started_at? %>
                     <thead class="bg-gray-50">
                       <tr>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.recipient") %></th>
@@ -82,7 +91,7 @@
                             <%= ad.address %>
                           <% end %>
                         </td>
-                        <% if @announcement.sent? %>
+                        <% if @announcement.delivery_started_at? %>
                           <td class="px-3 py-2">
                             <% case ad.status %>
                             <% when "requested" %>
@@ -108,7 +117,7 @@
           </div>
         <% end %>
 
-        <% if @announcement.sent? %>
+        <% if @announcement.delivery_started_at? %>
           <div class="bg-gray-50 px-4 py-5 sm:px-6 text-right">
             <%= link_to t("announcements.deliveries.show_details"), deliveries_admin_announcement_path(@announcement), class: "text-sm text-blue-600 hover:text-blue-700" %>
           </div>

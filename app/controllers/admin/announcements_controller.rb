@@ -81,13 +81,13 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def send_email
-    if @announcement.sent?
-      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.already_sent")
+    if @announcement.delivery_started_at?
+      redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.delivery_already_started")
       return
     end
 
     @announcement.create_deliveries!
-    @announcement.update!(sent_at: Time.current, sender: current_user)
+    @announcement.update!(delivery_started_at: Time.current, sender: current_user)
     AnnouncementDelivery.process_queue!
 
     redirect_to [ :admin, @announcement ], notice: I18n.t("announcements.send_email.success")

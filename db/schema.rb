@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_225628) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_235818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,8 +43,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_225628) do
     t.bigint "announcement_template_id"
     t.text "body"
     t.datetime "created_at", null: false
+    t.datetime "delivery_finished_at"
+    t.datetime "delivery_started_at"
     t.text "recipient_addresses", default: [], array: true
-    t.datetime "sent_at"
     t.integer "sent_by"
     t.text "subject"
     t.string "to_address"
