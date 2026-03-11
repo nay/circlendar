@@ -92,6 +92,7 @@ ja:
       send_email: "メール送信"
       confirm_send: "メールを送信しますか？\n\nこの処理には数十秒程度かかります。"
       already_sent: "送信済み"
+      total_count: "全 %{count} 件"
       recipient: "送信先"
       status: "ステータス"
       error: "エラー詳細"
