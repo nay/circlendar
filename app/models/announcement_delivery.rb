@@ -61,8 +61,8 @@ class AnnouncementDelivery < ApplicationRecord
     complete_batch!(batch, response, remaining)
   rescue QuotaExceededError, Resend::Error::RateLimitExceededError
     raise
-  rescue StandardError
-    retry_individually!(batch, remaining)
+  rescue StandardError => e
+    retry_individually!(batch, remaining, batch_error: e)
   end
 
   private
@@ -91,7 +91,7 @@ class AnnouncementDelivery < ApplicationRecord
     end
   end
 
-  def retry_individually!(batch, remaining)
+  def retry_individually!(batch, remaining, batch_error: nil)
     sent_addrs = []
     sent_ids = []
     new_failed = failed_addresses.dup
@@ -104,14 +104,14 @@ class AnnouncementDelivery < ApplicationRecord
     rescue Resend::Error::RateLimitExceededError
       unsent = (batch - sent_addrs - new_failed) + remaining
       save_progress!(sent_addrs, sent_ids, new_failed, unsent,
-                     note: build_retry_note(sent_addrs, new_failed, unsent: unsent, rate_limited: true))
+                     note: build_retry_note(sent_addrs, new_failed, unsent: unsent, rate_limited: true, batch_error: batch_error))
       raise
     rescue StandardError
       new_failed << address
     end
 
     save_progress!(sent_addrs, sent_ids, new_failed, remaining,
-                   note: build_retry_note(sent_addrs, new_failed, unsent: remaining))
+                   note: build_retry_note(sent_addrs, new_failed, unsent: remaining, batch_error: batch_error))
   end
 
   def save_progress!(sent_addrs, sent_ids, new_failed, unsent, note: nil)
@@ -138,9 +138,10 @@ class AnnouncementDelivery < ApplicationRecord
     announcement.update!(delivery_finished_at: Time.current)
   end
 
-  def build_retry_note(sent_addrs, new_failed, unsent: [], rate_limited: false)
+  def build_retry_note(sent_addrs, new_failed, unsent: [], rate_limited: false, batch_error: nil)
     newly_failed_count = new_failed.size - failed_addresses.size
-    message = "バッチ送信エラーのため個別送信にフォールバック、#{sent_addrs.size}件成功、#{newly_failed_count}件失敗"
+    error_detail = batch_error ? "（#{batch_error.class}: #{batch_error.message}）" : ""
+    message = "バッチ送信エラー#{error_detail}のため個別送信にフォールバック、#{sent_addrs.size}件成功、#{newly_failed_count}件失敗"
     if rate_limited
       message += "、429レートリミットにより#{unsent.size}件を分割して新規delivery作成"
     elsif unsent.any?
