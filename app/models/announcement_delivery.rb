@@ -2,6 +2,7 @@ class AnnouncementDelivery < ApplicationRecord
   class QuotaExceededError < StandardError; end
 
   belongs_to :announcement
+  has_many :results, class_name: "AnnouncementDeliveryResult", dependent: :destroy
 
   enum :status, { pending: "pending", requested: "requested", failed: "failed" }
 

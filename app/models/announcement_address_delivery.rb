@@ -1,9 +1,10 @@
 class AnnouncementAddressDelivery
-  attr_reader :address, :member, :status, :requested_at, :next_run_at, :error_message
+  attr_reader :address, :member, :status, :requested_at, :next_run_at, :error_message, :delivery_result
 
-  def initialize(address:, member: nil, delivery: nil)
+  def initialize(address:, member: nil, delivery: nil, delivery_result: nil)
     @address = address
     @member = member
+    @delivery_result = delivery_result
     return unless delivery
 
     @status = delivery.failed_addresses.include?(address) ? "failed" : delivery.status

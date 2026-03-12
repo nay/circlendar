@@ -70,6 +70,7 @@
                       <tr>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.recipient") %></th>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.status") %></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.delivery_result") %></th>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500"><%= t("announcements.show.error") %></th>
                       </tr>
                     </thead>
@@ -98,6 +99,20 @@
                               <% end %>
                             <% when "failed" %>
                               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
+                            <% end %>
+                          </td>
+                          <td class="px-3 py-2">
+                            <% if ad.delivery_result %>
+                              <% case ad.delivery_result.event %>
+                              <% when "delivered" %>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.result_delivered") %></span>
+                              <% when "bounced" %>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.result_bounced") %></span>
+                              <% when "complained" %>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.result_complained") %></span>
+                              <% when "delivery_delayed" %>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><%= t("announcements.show.result_delivery_delayed") %></span>
+                              <% end %>
                             <% end %>
                           </td>
                           <td class="px-3 py-2 text-red-600 text-xs"><%= ad.error_message %></td>

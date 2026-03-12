@@ -99,6 +99,11 @@ ja:
       status_requested: "送信依頼済み"
       status_pending: "送信待ち"
       status_failed: "エラー"
+      delivery_result: "配信結果"
+      result_delivered: "配信済み"
+      result_bounced: "バウンス"
+      result_complained: "苦情"
+      result_delivery_delayed: "配信遅延"
     new:
       title: "新しいお知らせを作成"
     edit:

@@ -4,6 +4,7 @@ ja:
       event: "練習会"
       announcement: "お知らせ"
       announcement_template: "お知らせテンプレート"
+      announcement_delivery_result: "配信結果"
       venue: "会場"
       member: "メンバー"
       user: "ユーザー"
@@ -73,6 +74,10 @@ ja:
         error_message: "エラーメッセージ"
         note: "メモ"
         created_at: "作成日時"
+      announcement_delivery_result:
+        resend_id: "Resend ID"
+        address: "アドレス"
+        event: "イベント"
       venue:
         name: "管理名"
         url: "URL"
