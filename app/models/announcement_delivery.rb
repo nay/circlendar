@@ -139,7 +139,7 @@ class AnnouncementDelivery < ApplicationRecord
       next unless resend_ids[i]
       next if existing.include?(resend_ids[i])
 
-      results.build(resend_id: resend_ids[i], address: address)
+      results.build(resend_id: resend_ids[i], address: address, event: :requested)
     end
   end
 

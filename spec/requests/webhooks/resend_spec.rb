@@ -27,7 +27,7 @@ RSpec.describe "Webhooks::Resend", type: :request do
       expect(delivery.results.size).to eq(2)
       expect(delivery.results.map(&:resend_id)).to contain_exactly("resend_id_1", "resend_id_2")
       expect(delivery.results.map(&:address)).to contain_exactly("user1@example.com", "user2@example.com")
-      expect(delivery.results).to all(have_attributes(event: nil))
+      expect(delivery.results).to all(have_attributes(event: "requested"))
     end
 
     it "配信済みイベントで Result の event を更新する" do
@@ -70,6 +70,24 @@ RSpec.describe "Webhooks::Resend", type: :request do
       expect(result.event).to eq("bounced")
     end
 
+    it "delivered は delivery_delayed で逆行しない" do
+      delivery
+      post_webhook(type: "email.delivered", email_id: "resend_id_1")
+      post_webhook(type: "email.delivery_delayed", email_id: "resend_id_1")
+
+      result = AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1")
+      expect(result.event).to eq("delivered")
+    end
+
+    it "delivered → complained は許可される" do
+      delivery
+      post_webhook(type: "email.delivered", email_id: "resend_id_1")
+      post_webhook(type: "email.complained", email_id: "resend_id_1")
+
+      result = AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1")
+      expect(result.event).to eq("complained")
+    end
+
     it "対応する Result がない resend_id は無視する" do
       post_webhook(type: "email.delivered", email_id: "unknown_id")
 
@@ -83,7 +101,7 @@ RSpec.describe "Webhooks::Resend", type: :request do
 
       expect(response).to have_http_status(:ok)
       result = AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1")
-      expect(result.event).to be_nil
+      expect(result.event).to eq("requested")
     end
   end
 end
