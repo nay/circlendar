@@ -177,8 +177,9 @@ namespace :dev do
       next
     end
 
+    events = AnnouncementDeliveryResult::RESEND_EVENTS
     results.find_each do |result|
-      event = result.address.include?("bounced") ? :bounced : :delivered
+      event = events.sample
       result.update!(event: event)
       puts "#{result.resend_id} (#{result.address}) => #{event}"
     end

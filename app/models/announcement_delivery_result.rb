@@ -1,5 +1,5 @@
 class AnnouncementDeliveryResult < ApplicationRecord
-  RESEND_EVENTS = %i[delivered bounced complained delivery_delayed].freeze
+  RESEND_EVENTS = %i[delivered bounced complained delivery_delayed failed suppressed].freeze
 
   belongs_to :announcement_delivery
 
@@ -10,7 +10,7 @@ class AnnouncementDeliveryResult < ApplicationRecord
   validates :event, presence: true
 
   def self.update_event(resend_id:, event:)
-    non_overwritable = %w[bounced complained]
+    non_overwritable = %w[bounced complained failed suppressed]
     non_overwritable << "delivered" unless non_overwritable.include?(event)
 
     where(resend_id: resend_id)

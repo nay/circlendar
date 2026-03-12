@@ -96,6 +96,10 @@
                               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_complained") %></span>
                             <% when "delivery_delayed" %>
                               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><%= t("announcements.show.status_delivery_delayed") %></span>
+                            <% when "failed" %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
+                            <% when "suppressed" %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_suppressed") %></span>
                             <% when "requested" %>
                               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
                               <span class="text-gray-500 text-xs ml-1"><%= l(ad.requested_at, format: :long) %></span>
@@ -104,8 +108,6 @@
                               <% if ad.next_run_at %>
                                 <span class="text-gray-500 text-xs ml-1"><%= l(ad.next_run_at, format: :long) %> 以降</span>
                               <% end %>
-                            <% when "failed" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
                             <% end %>
                           </td>
                           <td class="px-3 py-2 text-red-600 text-xs"><%= ad.error_message %></td>
