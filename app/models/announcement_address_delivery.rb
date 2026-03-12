@@ -13,6 +13,17 @@ class AnnouncementAddressDelivery
     @error_message = delivery.error_message if failed?
   end
 
+  def delivery_status
+    return nil unless status
+    return "failed" if failed?
+
+    if delivery_result && !delivery_result.requested?
+      return delivery_result.event
+    end
+
+    status
+  end
+
   def failed?
     status == "failed"
   end
