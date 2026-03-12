@@ -38,12 +38,6 @@ class Webhooks::ResendController < ApplicationController
     email_id = params.dig(:data, :email_id)
     return unless email_id.present?
 
-    non_overwritable = %w[bounced complained]
-    non_overwritable << "delivered" unless non_overwritable.include?(event)
-
-    AnnouncementDeliveryResult
-      .where(resend_id: email_id)
-      .where.not(event: non_overwritable)
-      .update_all(event: event, updated_at: Time.current)
+    AnnouncementDeliveryResult.update_event(resend_id: email_id, event: event)
   end
 end
