@@ -6,16 +6,22 @@ class Webhooks::ResendController < ApplicationController
     verify_signature!
     process_event
     head :ok
+  rescue Svix::WebhookVerificationError => e
+    Rails.logger.warn "[Webhooks::Resend] Signature verification failed: #{e.message}"
+    head :unauthorized
   rescue StandardError => e
     Rails.logger.error "[Webhooks::Resend] #{e.class}: #{e.message}"
-    head :ok
+    head :internal_server_error
   end
 
   private
 
   def verify_signature!
     secret = ENV["RESEND_WEBHOOK_SIGNING_SECRET"]
-    return if secret.blank?
+    if secret.blank?
+      raise "RESEND_WEBHOOK_SIGNING_SECRET is not configured" if Rails.env.production?
+      return
+    end
 
     wh = Svix::Webhook.new(secret)
     wh.verify(request.raw_post, {
@@ -31,21 +37,11 @@ class Webhooks::ResendController < ApplicationController
 
     email_id = params.dig(:data, :email_id)
     return unless email_id.present?
-    address = Array(params.dig(:data, :to)).first
 
-    result = AnnouncementDeliveryResult.find_or_initialize_by(resend_id: email_id)
-    if result.new_record?
-      delivery = AnnouncementDelivery.where("resend_ids::jsonb @> ?", [ email_id ].to_json).first
-      return unless delivery
+    result = AnnouncementDeliveryResult.find_by(resend_id: email_id)
+    return unless result
+    return if result.bounced? || result.complained?
 
-      result.announcement_delivery = delivery
-      result.address = address || find_address_by_resend_id(delivery, email_id)
-    end
     result.update!(event: event)
-  end
-
-  def find_address_by_resend_id(delivery, resend_id)
-    index = delivery.resend_ids&.index(resend_id)
-    index ? delivery.addresses[index] : nil
   end
 end

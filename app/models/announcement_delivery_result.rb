@@ -7,5 +7,4 @@ class AnnouncementDeliveryResult < ApplicationRecord
 
   validates :resend_id, presence: true, uniqueness: true
   validates :address, presence: true
-  validates :event, presence: true
 end

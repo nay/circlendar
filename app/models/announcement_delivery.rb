@@ -8,6 +8,7 @@ class AnnouncementDelivery < ApplicationRecord
 
   validates :status, presence: true
 
+  before_save :build_results, if: -> { status_changed? && requested? }
   after_save :finish_announcement_delivery
 
   serialize :addresses, coder: JSON
@@ -127,6 +128,18 @@ class AnnouncementDelivery < ApplicationRecord
       update!(failed_addresses: new_failed, note: note)
     else
       update!(failed_addresses: new_failed, status: :failed, error_message: "送信可能なアドレスがありません", note: note)
+    end
+  end
+
+  def build_results
+    return unless resend_ids.present?
+
+    existing = results.map(&:resend_id).to_set
+    addresses.each_with_index do |address, i|
+      next unless resend_ids[i]
+      next if existing.include?(resend_ids[i])
+
+      results.build(resend_id: resend_ids[i], address: address)
     end
   end
 

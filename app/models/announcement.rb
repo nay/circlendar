@@ -79,10 +79,10 @@ class Announcement < ApplicationRecord
   end
 
   def load_delivery_results
-    resend_ids = deliveries.flat_map { |d| d.resend_ids || [] }.compact
-    return {} if resend_ids.empty?
+    delivery_ids = deliveries.map(&:id)
+    return {} if delivery_ids.empty?
 
-    AnnouncementDeliveryResult.where(resend_id: resend_ids).index_by(&:resend_id)
+    AnnouncementDeliveryResult.where(announcement_delivery_id: delivery_ids).index_by(&:resend_id)
   end
 
   def find_resend_id_for(delivery, address)

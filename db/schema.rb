@@ -35,7 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_000350) do
     t.string "address", null: false
     t.bigint "announcement_delivery_id", null: false
     t.datetime "created_at", null: false
-    t.string "event", null: false
+    t.string "event"
     t.string "resend_id", null: false
     t.datetime "updated_at", null: false
     t.index ["announcement_delivery_id"], name: "idx_on_announcement_delivery_id_8951ba860a"
