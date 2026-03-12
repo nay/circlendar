@@ -168,4 +168,22 @@ namespace :dev do
     puts "Users: admin1@example.com, admin2@example.com, member1@example.com, member2@example.com"
     puts "Password: circlendar"
   end
+
+  desc "Simulate webhook delivery results for requested AnnouncementDeliveryResults"
+  task simulate_webhook_results: :environment do
+    results = AnnouncementDeliveryResult.requested
+    if results.none?
+      puts "No requested results found."
+      next
+    end
+
+    events = AnnouncementDeliveryResult::RESEND_EVENTS
+    results.find_each do |result|
+      event = events.sample
+      result.update!(event: event)
+      puts "#{result.resend_id} (#{result.address}) => #{event}"
+    end
+
+    puts "Done: #{results.count} results updated."
+  end
 end

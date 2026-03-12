@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_235818) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_000350) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_235818) do
     t.index ["announcement_id"], name: "index_announcement_deliveries_on_announcement_id"
     t.index ["next_run_at"], name: "index_announcement_deliveries_on_next_run_at"
     t.index ["status"], name: "index_announcement_deliveries_on_status"
+  end
+
+  create_table "announcement_delivery_results", force: :cascade do |t|
+    t.string "address", null: false
+    t.bigint "announcement_delivery_id", null: false
+    t.datetime "created_at", null: false
+    t.string "event", default: "requested", null: false
+    t.string "resend_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_delivery_id"], name: "idx_on_announcement_delivery_id_8951ba860a"
+    t.index ["resend_id"], name: "index_announcement_delivery_results_on_resend_id", unique: true
   end
 
   create_table "announcement_templates", force: :cascade do |t|
@@ -156,6 +167,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_235818) do
   end
 
   add_foreign_key "announcement_deliveries", "announcements"
+  add_foreign_key "announcement_delivery_results", "announcement_deliveries"
   add_foreign_key "announcements", "announcement_templates"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "players"

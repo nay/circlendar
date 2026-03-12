@@ -47,8 +47,14 @@ class Announcement < ApplicationRecord
                               .includes(user: :mail_addresses)
                               .flat_map { |m| m.user.mail_addresses.map { |ma| [ ma.address, m ] } }
                               .to_h
+    result_by_resend_id = load_delivery_results
     pairs.map do |address, delivery|
-      AnnouncementAddressDelivery.new(address: address, delivery: delivery, member: member_by_address[address])
+      resend_id = find_resend_id_for(delivery, address)
+      AnnouncementAddressDelivery.new(
+        address: address, delivery: delivery,
+        member: member_by_address[address],
+        delivery_result: resend_id && result_by_resend_id[resend_id]
+      )
     end
   end
 
@@ -70,5 +76,19 @@ class Announcement < ApplicationRecord
     else
       (recipient_addresses || []).map { |a| [ a, nil ] }
     end
+  end
+
+  def load_delivery_results
+    delivery_ids = deliveries.map(&:id)
+    return {} if delivery_ids.empty?
+
+    AnnouncementDeliveryResult.where(announcement_delivery_id: delivery_ids).index_by(&:resend_id)
+  end
+
+  def find_resend_id_for(delivery, address)
+    return unless delivery&.resend_ids
+
+    index = delivery.addresses.index(address)
+    index ? delivery.resend_ids[index] : nil
   end
 end

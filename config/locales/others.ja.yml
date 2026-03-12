@@ -94,11 +94,16 @@ ja:
       already_sent: "送信済み"
       total_count: "全 %{count} 件"
       recipient: "送信先"
-      status: "ステータス"
+      delivery_status: "配信状況"
       error: "エラー詳細"
+      status_delivered: "配信済み"
+      status_bounced: "不達"
+      status_complained: "スパム報告"
+      status_delivery_delayed: "配信遅延"
+      status_failed: "送信失敗"
+      status_suppressed: "送信抑制"
       status_requested: "送信依頼済み"
       status_pending: "送信待ち"
-      status_failed: "エラー"
     new:
       title: "新しいお知らせを作成"
     edit:

@@ -28,6 +28,9 @@ gem "pagy"
 # Resend email API [https://github.com/resendlabs/resend-ruby]
 gem "resend"
 
+# Webhook signature verification [https://github.com/svix/svix-webhooks]
+gem "svix"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
