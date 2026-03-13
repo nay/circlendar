@@ -59,12 +59,22 @@ class AnnouncementDelivery < ApplicationRecord
       return
     end
 
-    response = self.class.client.send_batch(build_params(batch))
-    complete_batch!(batch, response, remaining)
-  rescue QuotaExceededError, Resend::Error::RateLimitExceededError
-    raise
-  rescue StandardError => e
-    retry_individually!(batch, remaining, batch_error: e)
+    # Phase 1: API呼び出し — 失敗したら個別リトライ（まだ送信されていない）
+    response = begin
+      self.class.client.send_batch(build_params(batch))
+    rescue Resend::Error::RateLimitExceededError
+      raise
+    rescue StandardError => e
+      retry_individually!(batch, remaining, batch_error: e)
+      return
+    end
+
+    # Phase 2: 後処理 — 送信済みなのでリトライ不可、最低限の状態を保存
+    begin
+      complete_batch!(batch, response, remaining)
+    rescue StandardError => e
+      handle_post_send_error!(batch, response, remaining, error: e)
+    end
   end
 
   private
@@ -77,7 +87,7 @@ class AnnouncementDelivery < ApplicationRecord
 
   def complete_batch!(batch, response, remaining)
     ids = response[:data].map { |r| r[:id] }
-    quota = response[:headers]&.dig("x-resend-daily-quota").to_i
+    quota = Array(response[:headers]&.dig("x-resend-daily-quota")).first.to_i
 
     if remaining.any?
       setting = Setting.instance
@@ -150,6 +160,20 @@ class AnnouncementDelivery < ApplicationRecord
     return if announcement.deliveries.pending.exists?
 
     announcement.update!(delivery_finished_at: Time.current)
+  end
+
+  def handle_post_send_error!(batch, response, remaining, error:)
+    ids = begin
+      response[:data]&.map { |r| r[:id] }
+    rescue StandardError
+      []
+    end
+    note = "バッチ送信成功後の処理でエラー（#{error.class}: #{error.message}）"
+    note += "、残り#{remaining.size}件を分割して新規delivery作成" if remaining.any?
+    transaction do
+      AnnouncementDelivery.create!(announcement: announcement, addresses: remaining) if remaining.any?
+      update!(addresses: batch, resend_ids: ids, status: :requested, requested_at: Time.current, note: note)
+    end
   end
 
   def build_retry_note(sent_addrs, new_failed, unsent: [], rate_limited: false, batch_error: nil)
