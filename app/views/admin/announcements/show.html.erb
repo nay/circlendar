@@ -78,8 +78,8 @@
                     <% address_deliveries.each do |ad| %>
                       <tr>
                         <td class="px-3 py-2 text-gray-900">
-                          <% if ad.member %>
-                            <%= link_to ad.member.name, admin_user_path(ad.member.user), class: "text-blue-600 hover:text-blue-700" %>
+                          <% if ad.user %>
+                            <%= link_to ad.user.name, admin_user_path(ad.user), class: "text-blue-600 hover:text-blue-700" %>
                             <span class="text-gray-500 text-xs ml-2"><%= ad.address %></span>
                           <% else %>
                             <%= ad.address %>
@@ -87,27 +87,11 @@
                         </td>
                         <% if @announcement.delivery_started_at? %>
                           <td class="px-3 py-2">
-                            <% case ad.delivery_status %>
-                            <% when "delivered" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_delivered") %></span>
-                            <% when "bounced" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_bounced") %></span>
-                            <% when "complained" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_complained") %></span>
-                            <% when "delivery_delayed" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><%= t("announcements.show.status_delivery_delayed") %></span>
-                            <% when "failed" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_failed") %></span>
-                            <% when "suppressed" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><%= t("announcements.show.status_suppressed") %></span>
-                            <% when "requested" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><%= t("announcements.show.status_requested") %></span>
+                            <%= render "delivery_status_badge", delivery_status: ad.delivery_status %>
+                            <% if ad.delivery_status == "requested" %>
                               <span class="text-gray-500 text-xs ml-1"><%= l(ad.requested_at, format: :long) %></span>
-                            <% when "pending" %>
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= t("announcements.show.status_pending") %></span>
-                              <% if ad.next_run_at %>
-                                <span class="text-gray-500 text-xs ml-1"><%= l(ad.next_run_at, format: :long) %> 以降</span>
-                              <% end %>
+                            <% elsif ad.delivery_status == "pending" && ad.next_run_at %>
+                              <span class="text-gray-500 text-xs ml-1"><%= l(ad.next_run_at, format: :long) %> 以降</span>
                             <% end %>
                           </td>
                           <td class="px-3 py-2 text-red-600 text-xs"><%= ad.error_message %></td>

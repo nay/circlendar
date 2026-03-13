@@ -61,7 +61,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def deliveries
-    @deliveries = @announcement.deliveries.order(id: :desc)
+    @deliveries = @announcement.deliveries.includes(results: { user_mail_address: :user }).order(id: :desc)
   end
 
   def pending_deliveries
@@ -140,7 +140,7 @@ class Admin::AnnouncementsController < Admin::BaseController
   end
 
   def set_announcement
-    @announcement = Announcement.find(params[:id])
+    @announcement = Announcement.includes(deliveries: { results: { user_mail_address: :user } }).find(params[:id])
   end
 
   def announcement_params

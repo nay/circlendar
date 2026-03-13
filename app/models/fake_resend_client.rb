@@ -5,7 +5,7 @@ class FakeResendClient
     end
     {
       data: params_array.map { { id: "fake_#{SecureRandom.uuid}" } },
-      headers: { "x-resend-daily-quota" => "0" }
+      headers: { "x-resend-daily-quota" => [ "0" ] }
     }
   end
 end
