@@ -145,11 +145,12 @@ class AnnouncementDelivery < ApplicationRecord
     return unless resend_ids.present?
 
     existing = results.map(&:resend_id).to_set
+    mail_address_by_address = UserMailAddress.where(address: addresses).index_by(&:address)
     addresses.each_with_index do |address, i|
       next unless resend_ids[i]
       next if existing.include?(resend_ids[i])
 
-      results.build(resend_id: resend_ids[i], address: address, event: :requested)
+      results.build(resend_id: resend_ids[i], address: address, event: :requested, user_mail_address: mail_address_by_address[address])
     end
   end
 

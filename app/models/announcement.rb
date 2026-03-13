@@ -41,19 +41,15 @@ class Announcement < ApplicationRecord
 
   def address_deliveries
     pairs = addresses_with_deliveries
-    all_addresses = pairs.map(&:first).uniq
-    member_by_address = Member.joins(user: :mail_addresses)
-                              .where(user_mail_addresses: { address: all_addresses })
-                              .includes(user: :mail_addresses)
-                              .flat_map { |m| m.user.mail_addresses.map { |ma| [ ma.address, m ] } }
-                              .to_h
     result_by_resend_id = load_delivery_results
+    mail_address_by_address = load_user_mail_addresses(pairs, result_by_resend_id)
     pairs.map do |address, delivery|
       resend_id = find_resend_id_for(delivery, address)
+      result = resend_id && result_by_resend_id[resend_id]
       AnnouncementAddressDelivery.new(
         address: address, delivery: delivery,
-        member: member_by_address[address],
-        delivery_result: resend_id && result_by_resend_id[resend_id]
+        user_mail_address: result&.user_mail_address || mail_address_by_address[address],
+        delivery_result: result
       )
     end
   end
@@ -78,11 +74,16 @@ class Announcement < ApplicationRecord
     end
   end
 
-  def load_delivery_results
-    delivery_ids = deliveries.map(&:id)
-    return {} if delivery_ids.empty?
+  def load_user_mail_addresses(pairs, result_by_resend_id)
+    addresses_with_results = result_by_resend_id.values.map(&:address).to_set
+    addresses_without_results = pairs.map(&:first).uniq.reject { |a| addresses_with_results.include?(a) }
+    return {} if addresses_without_results.empty?
 
-    AnnouncementDeliveryResult.where(announcement_delivery_id: delivery_ids).index_by(&:resend_id)
+    UserMailAddress.where(address: addresses_without_results).includes(:user).index_by(&:address)
+  end
+
+  def load_delivery_results
+    deliveries.flat_map(&:results).index_by(&:resend_id)
   end
 
   def find_resend_id_for(delivery, address)

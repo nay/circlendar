@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_000350) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_13_003202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,8 +38,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_000350) do
     t.string "event", default: "requested", null: false
     t.string "resend_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_mail_address_id"
     t.index ["announcement_delivery_id"], name: "idx_on_announcement_delivery_id_8951ba860a"
     t.index ["resend_id"], name: "index_announcement_delivery_results_on_resend_id", unique: true
+    t.index ["user_mail_address_id"], name: "index_announcement_delivery_results_on_user_mail_address_id"
   end
 
   create_table "announcement_templates", force: :cascade do |t|
@@ -168,6 +170,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_000350) do
 
   add_foreign_key "announcement_deliveries", "announcements"
   add_foreign_key "announcement_delivery_results", "announcement_deliveries"
+  add_foreign_key "announcement_delivery_results", "user_mail_addresses"
   add_foreign_key "announcements", "announcement_templates"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "players"
