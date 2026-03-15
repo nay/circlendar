@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get "signup/:token", to: "registrations#new", as: :signup
   post "signup/:token", to: "registrations#create"
 
+  get "line_login/authorize", to: "line_login#authorize", as: :line_login_authorize
+  get "line_login/callback", to: "line_login#callback", as: :line_login_callback
+
   get "confirm", to: "confirmations#show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

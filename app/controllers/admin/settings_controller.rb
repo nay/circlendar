@@ -22,6 +22,7 @@ class Admin::SettingsController < Admin::BaseController
   private
 
   def setting_params
-    params.require(:setting).permit(:circle_name, :announcement_batch_size, :announcement_daily_quota_threshold, :announcement_retry_interval_hours)
+    params.require(:setting).permit(:circle_name, :announcement_batch_size, :announcement_daily_quota_threshold, :announcement_retry_interval_hours,
+                                     :line_channel_id, :line_channel_secret)
   end
 end

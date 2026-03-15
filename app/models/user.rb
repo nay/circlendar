@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   validates :password, length: { maximum: 72 }, allow_blank: true
   validates :password, confirmation: true, allow_blank: true
-  validates :password, presence: true, unless: -> { provisional? || persisted? }
+  validates :password, presence: true, unless: -> { provisional? || persisted? || line_user_id.present? }
 
   scope :active, -> { where(disabled_at: nil) }
   scope :receives_announcements, -> { where(receives_announcements: true) }
@@ -129,6 +129,8 @@ class User < ApplicationRecord
   end
 
   def validate_mail_addresses_count
+    return if line_user_id.present?
+
     if mail_addresses.reject(&:marked_for_destruction?).empty?
       errors.add(:base, "メールアドレスは1件以上必要です")
     end

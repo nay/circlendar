@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def line_browser?
+    request.user_agent&.include?("Line/")
+  end
+
   def format_with_links(text)
     return "" if text.blank?
 
