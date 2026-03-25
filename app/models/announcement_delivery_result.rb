@@ -2,6 +2,7 @@ class AnnouncementDeliveryResult < ApplicationRecord
   RESEND_EVENTS = %i[delivered bounced complained delivery_delayed failed suppressed].freeze
 
   belongs_to :announcement_delivery
+  belongs_to :user_mail_address, optional: true
 
   enum :event, { requested: "requested", **RESEND_EVENTS.index_with(&:to_s) }
 

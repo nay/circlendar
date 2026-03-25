@@ -1,9 +1,9 @@
 class AnnouncementAddressDelivery
-  attr_reader :address, :member, :status, :requested_at, :next_run_at, :error_message, :delivery_result
+  attr_reader :address, :user_mail_address, :status, :requested_at, :next_run_at, :error_message, :delivery_result
 
-  def initialize(address:, member: nil, delivery: nil, delivery_result: nil)
+  def initialize(address:, user_mail_address: nil, delivery: nil, delivery_result: nil)
     @address = address
-    @member = member
+    @user_mail_address = user_mail_address
     @delivery_result = delivery_result
     return unless delivery
 
@@ -11,6 +11,10 @@ class AnnouncementAddressDelivery
     @requested_at = delivery.requested_at
     @next_run_at = delivery.next_run_at
     @error_message = delivery.error_message if failed?
+  end
+
+  def user
+    user_mail_address&.user
   end
 
   def delivery_status

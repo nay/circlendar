@@ -113,7 +113,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
           elsif params.first[:to] == [ "bad@example.com" ]
             raise Resend::Error::InvalidRequestError.new("invalid email", 422)
           else
-            { data: [ { id: "fake_ok" } ], headers: { "x-resend-daily-quota" => "1" } }
+            { data: [ { id: "fake_ok" } ], headers: { "x-resend-daily-quota" => [ "1" ] } }
           end
         end
 
@@ -138,7 +138,7 @@ RSpec.describe AnnouncementDelivery, type: :model do
             raise Resend::Error::InvalidRequestError.new("error", 422)
           elsif call_count == 2
             # a@example.com 成功
-            { data: [ { id: "fake_a" } ], headers: { "x-resend-daily-quota" => "1" } }
+            { data: [ { id: "fake_a" } ], headers: { "x-resend-daily-quota" => [ "1" ] } }
           else
             # b@example.com で429
             raise Resend::Error::RateLimitExceededError.new("rate limited", 429)
@@ -172,6 +172,47 @@ RSpec.describe AnnouncementDelivery, type: :model do
         d.reload
         expect(d.status).to eq("failed")
         expect(d.failed_addresses).to eq([ "bad@example.com" ])
+      end
+    end
+
+    context "バッチ送信成功後に後処理でエラーが発生した場合" do
+      it "二重送信せずに requested になり、resend_ids と note が保存される" do
+        d = create_delivery(addresses: [ "a@example.com", "b@example.com" ])
+
+        response = { data: [ { id: "id_a" }, { id: "id_b" } ], headers: { "x-resend-daily-quota" => [ "1" ] } }
+        allow(AnnouncementDelivery.client).to receive(:send_batch).once.and_return(response)
+
+        # complete_batch! 内でエラーを発生させる（ヘッダー解析失敗をシミュレート）
+        allow(d).to receive(:complete_batch!).and_raise(NoMethodError, "undefined method `to_i' for [\"1\"]:Array")
+
+        d.process!
+
+        d.reload
+        expect(d.status).to eq("requested")
+        expect(d.resend_ids).to eq([ "id_a", "id_b" ])
+        expect(d.requested_at).to be_present
+        expect(d.note).to include("バッチ送信成功後の処理でエラー")
+        expect(d.note).to include("NoMethodError")
+      end
+
+      it "remaining がある場合は新規 delivery が作成される" do
+        addresses = (1..15).map { |i| "user#{i}@example.com" }
+        d = create_delivery(addresses: addresses)
+
+        response = { data: (1..10).map { |i| { id: "id_#{i}" } }, headers: { "x-resend-daily-quota" => [ "5" ] } }
+        allow(AnnouncementDelivery.client).to receive(:send_batch).once.and_return(response)
+        allow(d).to receive(:complete_batch!).and_raise(StandardError, "unexpected error")
+
+        d.process!
+
+        d.reload
+        expect(d.status).to eq("requested")
+        expect(d.addresses.size).to eq(10)
+        expect(d.resend_ids.size).to eq(10)
+        expect(d.note).to include("残り5件を分割して新規delivery作成")
+
+        remaining = AnnouncementDelivery.where(announcement: announcement).pending.first
+        expect(remaining.addresses.size).to eq(5)
       end
     end
 
