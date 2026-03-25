@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_13_003202) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_25_223106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -170,7 +170,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_003202) do
 
   add_foreign_key "announcement_deliveries", "announcements"
   add_foreign_key "announcement_delivery_results", "announcement_deliveries"
-  add_foreign_key "announcement_delivery_results", "user_mail_addresses"
+  add_foreign_key "announcement_delivery_results", "user_mail_addresses", on_delete: :nullify
   add_foreign_key "announcements", "announcement_templates"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "players"
