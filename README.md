@@ -32,3 +32,23 @@
 * アプリ起動後
   * サークル設定で、サークル名を設定してください。
   * 最初の管理者のメールアドレスやパスワードを変更してください。
+
+### 送信キューの定期処理（Fly.io 前提）
+
+Resend の日次上限等で送信できなかった `AnnouncementDelivery` を時間おきに再試行するため、Fly.io の Scheduled Machines で `AnnouncementDelivery.process_queue!` を定期実行します。
+
+初回セットアップ（`<app>` は `fly.toml` の `app` 値、`<image>` は `fly releases --app <app>` で取得できる現在のイメージ）:
+
+```
+fly machine run <image> \
+  --app <app> \
+  --region nrt \
+  --schedule hourly \
+  -- bin/rails runner "AnnouncementDelivery.process_queue!"
+```
+
+デプロイで新イメージになったら Scheduled Machine も追従させる:
+
+```
+fly machine update <machine-id> --image <new-image> --app <app>
+```

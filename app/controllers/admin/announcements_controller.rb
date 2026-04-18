@@ -1,7 +1,4 @@
 class Admin::AnnouncementsController < Admin::BaseController
-  skip_forgery_protection only: :process_queue_api
-  skip_before_action :require_admin, only: :process_queue_api
-  before_action :authenticate_api_token!, only: :process_queue_api
   before_action :set_announcement, only: %i[ show edit update destroy send_email deliveries ]
 
   def index
@@ -75,11 +72,6 @@ class Admin::AnnouncementsController < Admin::BaseController
     redirect_to pending_deliveries_admin_announcements_path, notice: t("announcements.process_queue.success")
   end
 
-  def process_queue_api
-    AnnouncementDelivery.process_queue!
-    head :ok
-  end
-
   def send_email
     if @announcement.delivery_started_at?
       redirect_to [ :admin, @announcement ], alert: I18n.t("announcements.send_email.delivery_already_started")
@@ -132,11 +124,6 @@ class Admin::AnnouncementsController < Admin::BaseController
     end
 
     @announcement.apply_template
-  end
-
-  def authenticate_api_token!
-    token = request.headers["Authorization"]&.delete_prefix("Bearer ")
-    head :unauthorized unless token.present? && ActiveSupport::SecurityUtils.secure_compare(token, ENV.fetch("API_TOKEN"))
   end
 
   def set_announcement
