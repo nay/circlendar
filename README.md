@@ -44,7 +44,7 @@ fly machine run <image> \
   --app <app> \
   --region nrt \
   --schedule hourly \
-  -- bin/rails runner "AnnouncementDelivery.process_queue!"
+  -- bin/rails runner 'AnnouncementDelivery.process_queue!'
 ```
 
 デプロイで新イメージになったら Scheduled Machine も追従させる:
