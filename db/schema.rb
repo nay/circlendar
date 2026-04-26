@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_25_223106) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_26_081929) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -127,6 +127,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_223106) do
     t.integer "announcement_retry_interval_hours", default: 2, null: false
     t.string "circle_name"
     t.datetime "created_at", null: false
+    t.string "line_official_account_url"
+    t.text "referral_share_template", default: "%{circle_name}に練習に来ませんか？\n練習会のお知らせはLINE公式アカウントから受け取れます:\n%{line_url}\n\nすぐ登録するならこちら:\n%{signup_url}"
     t.string "signup_token"
     t.datetime "updated_at", null: false
   end

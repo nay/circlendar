@@ -40,8 +40,40 @@
           <%= form.label :announcement_retry_interval_hours, Setting.human_attribute_name(:announcement_retry_interval_hours), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.number_field :announcement_retry_interval_hours, min: 1, class: "appearance-none block w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
         </div>
+
+        <hr class="border-gray-200">
+
+        <div>
+          <%= form.label :line_official_account_url, Setting.human_attribute_name(:line_official_account_url), class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.url_field :line_official_account_url, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <%= form.label :referral_share_template, Setting.human_attribute_name(:referral_share_template), class: "block text-sm font-medium text-gray-700" %>
+            <button type="button" id="reset-referral-template-btn" class="text-xs text-blue-600 hover:text-blue-700 underline cursor-pointer">デフォルトに戻す</button>
+          </div>
+          <%= form.text_area :referral_share_template, rows: 8, class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm font-mono" %>
+          <p class="mt-1 text-xs text-gray-500">
+            プレースホルダ: <code class="px-1 py-0.5 bg-gray-100 rounded">%{circle_name}</code> / <code class="px-1 py-0.5 bg-gray-100 rounded">%{line_url}</code> / <code class="px-1 py-0.5 bg-gray-100 rounded">%{signup_url}</code> が紹介画面で置換されます。
+          </p>
+        </div>
       </div>
     </div>
+
+    <script type="application/json" id="referral-template-default"><%== Setting::DEFAULT_REFERRAL_SHARE_TEMPLATE.to_json %></script>
+    <script>
+      (function() {
+        const btn = document.getElementById('reset-referral-template-btn');
+        const textarea = document.querySelector('textarea[name="setting[referral_share_template]"]');
+        const defaultJson = document.getElementById('referral-template-default');
+        if (btn && textarea && defaultJson) {
+          btn.addEventListener('click', function() {
+            textarea.value = JSON.parse(defaultJson.textContent);
+          });
+        }
+      })();
+    </script>
 
     <div class="flex justify-end">
       <%= form.submit "更新", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" %>
