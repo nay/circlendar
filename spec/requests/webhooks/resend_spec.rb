@@ -103,5 +103,52 @@ RSpec.describe "Webhooks::Resend", type: :request do
       result = AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1")
       expect(result.event).to eq("requested")
     end
+
+    context "署名の secret が設定されている場合" do
+      let(:secret) { "whsec_#{Base64.strict_encode64("test-signing-secret")}" }
+      let(:body) { { type: "email.delivered", data: { email_id: "resend_id_1" } }.to_json }
+      let(:msg_id) { "msg_test" }
+      let(:timestamp) { Time.current.to_i.to_s }
+
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with("RESEND_WEBHOOK_SIGNING_SECRET").and_return(secret)
+      end
+
+      def post_signed_webhook
+        post webhooks_resend_path, params: body, headers: {
+          "CONTENT_TYPE" => "application/json",
+          "svix-id" => msg_id,
+          "svix-timestamp" => timestamp,
+          "svix-signature" => signature
+        }
+      end
+
+      context "正しい署名の場合" do
+        let(:signature) { Svix::Webhook.new(secret).sign(msg_id, timestamp, body) }
+
+        it "受け付けて Result の event を更新する" do
+          delivery
+
+          post_signed_webhook
+
+          expect(response).to have_http_status(:ok)
+          expect(AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1").event).to eq("delivered")
+        end
+      end
+
+      context "別の secret で作った署名の場合" do
+        let(:signature) { Svix::Webhook.new("whsec_#{Base64.strict_encode64("other-signing-secret")}").sign(msg_id, timestamp, body) }
+
+        it "401 を返し、Result の event を更新しない" do
+          delivery
+
+          post_signed_webhook
+
+          expect(response).to have_http_status(:unauthorized)
+          expect(AnnouncementDeliveryResult.find_by(resend_id: "resend_id_1").event).to eq("requested")
+        end
+      end
+    end
   end
 end
