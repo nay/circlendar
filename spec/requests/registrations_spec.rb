@@ -39,18 +39,12 @@ RSpec.describe "Registrations", type: :request do
     context "既存ユーザーが仮登録（管理者作成・パスワードなし）の場合" do
       let(:other_mail_address_count) { 0 }
       let!(:existing_user) do
-        user = User.create!(
-          email_address: "newuser@example.com",
-          provisional: true,
-          role: "member",
-          confirmed_at: Time.current
-        )
+        user = create(:user, :provisional, email_address: "newuser@example.com", name: "管理者が設定した名前")
         other_mail_address_count.times do |i|
           user.mail_addresses.create!(address: "other#{i}@example.com", confirmed_at: Time.current)
         end
         user
       end
-      let!(:existing_member) { Member.create!(name: "管理者が設定した名前", user: existing_user) }
 
       it "既存ユーザーを上書きし確認メール送信画面にリダイレクトする" do
         expect {
@@ -83,15 +77,8 @@ RSpec.describe "Registrations", type: :request do
 
     context "既存ユーザーがログイン済みの場合" do
       let!(:existing_user) do
-        User.create!(
-          email_address: "newuser@example.com",
-          password: "existing_password",
-          role: "member",
-          confirmed_at: Time.current,
-          last_accessed_at: 1.day.ago
-        )
+        create(:user, email_address: "newuser@example.com", password: "existing_password", last_accessed_at: 1.day.ago, name: "既存ユーザー")
       end
-      let!(:existing_member) { Member.create!(name: "既存ユーザー", user: existing_user) }
 
       it "ログイン画面にリダイレクトしメールアドレスを引き継ぐ" do
         post signup_path(token: signup_token), params: { user: user_params }

@@ -101,6 +101,11 @@ GEM
     drb (2.2.3)
     erb (6.0.7)
     erubi (1.13.1)
+    factory_bot (6.6.0)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     globalid (1.4.0)
       activesupport (>= 6.1)
     httparty (0.24.3)
@@ -359,6 +364,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  factory_bot_rails
   importmap-rails
   jbuilder
   letter_opener

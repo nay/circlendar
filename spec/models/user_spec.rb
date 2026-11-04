@@ -2,22 +2,10 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   describe "メールアドレスの重複バリデーション" do
-    let!(:existing_user) do
-      User.create!(
-        password: "password123",
-        role: "member",
-        mail_addresses: [ UserMailAddress.new(address: "existing@example.com", confirmed_at: Time.current) ]
-      )
-    end
+    let!(:existing_user) { create(:user, email_address: "existing@example.com") }
 
     context "他のユーザーと同じメールアドレスを追加した場合" do
-      let(:user) do
-        User.create!(
-          password: "password123",
-          role: "member",
-          mail_addresses: [ UserMailAddress.new(address: "unique@example.com", confirmed_at: Time.current) ]
-        )
-      end
+      let(:user) { create(:user, email_address: "unique@example.com") }
 
       it "具体的なアドレスを含むエラーメッセージが1つだけ表示される" do
         user.mail_addresses.build(address: "existing@example.com", confirmed_at: Time.current)
@@ -29,13 +17,7 @@ RSpec.describe User, type: :model do
     end
 
     context "自分の既存アドレスと同じアドレスを追加した場合" do
-      let(:user) do
-        User.create!(
-          password: "password123",
-          role: "member",
-          mail_addresses: [ UserMailAddress.new(address: "myaddr@example.com", confirmed_at: Time.current) ]
-        )
-      end
+      let(:user) { create(:user, email_address: "myaddr@example.com") }
 
       it "具体的なアドレスを含むエラーメッセージが1つだけ表示される" do
         user.mail_addresses.build(address: "myaddr@example.com", confirmed_at: Time.current)
@@ -48,7 +30,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "#provisional?" do
-    subject { User.new(password: password, provisional: provisional) }
+    subject { build(:user, password: password, provisional: provisional) }
 
     context "provisional が明示的に設定されていない場合" do
       let(:provisional) { nil }
@@ -78,10 +60,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "パスワードのバリデーション" do
-    subject(:user) do
-      User.new(password: password, provisional: provisional, role: "member",
-               mail_addresses: [ UserMailAddress.new(address: "test@example.com", confirmed_at: Time.current) ])
-    end
+    subject(:user) { build(:user, password: password, provisional: provisional) }
 
     context "provisional でない場合" do
       let(:provisional) { false }
@@ -107,13 +86,7 @@ RSpec.describe User, type: :model do
     end
 
     context "既存ユーザーの場合" do
-      let(:user) do
-        u = User.new(password: "password123", role: "member",
-                     mail_addresses: [ UserMailAddress.new(address: "test@example.com", confirmed_at: Time.current) ])
-        u.build_member(name: "元の名前")
-        u.save!
-        u
-      end
+      let(:user) { create(:user) }
 
       it "パスワードを指定せずにsaveできる" do
         expect(user.save).to be true

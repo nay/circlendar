@@ -1,12 +1,10 @@
 require "rails_helper"
 
 RSpec.describe AnnouncementDelivery, type: :model do
-  let(:announcement) do
-    Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", recipient_addresses: [ "a@example.com" ])
-  end
+  let(:announcement) { create(:announcement) }
 
   def create_delivery(addresses:, **attrs)
-    AnnouncementDelivery.create!(announcement: announcement, addresses: addresses, **attrs)
+    create(:announcement_delivery, announcement: announcement, addresses: addresses, **attrs)
   end
 
   describe ".process_queue!" do
