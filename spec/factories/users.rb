@@ -10,6 +10,18 @@ FactoryBot.define do
       role { "admin" }
     end
 
+    trait :unconfirmed do
+      confirmed_at { nil }
+
+      after(:create) do |user|
+        user.generate_confirmation_token!
+      end
+    end
+
+    trait :disabled do
+      disabled_at { Time.current }
+    end
+
     trait :provisional do
       password { nil }
       provisional { true }
