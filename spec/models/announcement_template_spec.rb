@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe AnnouncementTemplate, type: :model do
   describe "#valid?" do
-    let(:template) { AnnouncementTemplate.new(subject:, body:) }
+    let(:template) { build(:announcement_template, subject:, body:) }
     let(:subject) { "練習会のお知らせ" }
     let(:body) { "{{練習会サマリー}}" }
 

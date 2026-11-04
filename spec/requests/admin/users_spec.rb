@@ -1,18 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin::Users", type: :request do
-  let(:user) do
-    User.create!(
-      email_address: "admin@example.com",
-      password: "password123",
-      role: "admin",
-      confirmed_at: Time.current
-    )
-  end
-
-  let!(:member) do
-    Member.create!(name: "管理者", user: user)
-  end
+  let(:user) { create(:user, :admin, email_address: "admin@example.com") }
 
   before do
     post session_path, params: { email_address: user.email_address, password: "password123" }
@@ -25,15 +14,8 @@ RSpec.describe "Admin::Users", type: :request do
     end
 
     context "メールアドレスで検索した場合" do
-      let!(:other_user) do
-        u = User.create!(
-          email_address: "other@example.com",
-          password: "password123",
-          role: "member",
-          confirmed_at: Time.current
-        )
-        Member.create!(name: "他のユーザー", user: u)
-        u
+      before do
+        create(:user, email_address: "other@example.com", name: "他のユーザー")
       end
 
       it "一致するユーザーが表示される" do
@@ -95,16 +77,7 @@ RSpec.describe "Admin::Users", type: :request do
 
   describe "PATCH /admin/users/:id" do
     context "仮登録に戻す場合" do
-      let!(:target_user) do
-        u = User.create!(
-          email_address: "target@example.com",
-          password: "password123",
-          role: "member",
-          confirmed_at: Time.current
-        )
-        Member.create!(name: "対象ユーザー", user: u)
-        u
-      end
+      let!(:target_user) { create(:user) }
 
       it "password_digestがNULLになる" do
         patch admin_user_path(target_user), params: { user: { provisional: "1" } }

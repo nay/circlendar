@@ -1,13 +1,9 @@
 require "rails_helper"
 
 RSpec.describe "Webhooks::Resend", type: :request do
-  let(:announcement) do
-    Announcement.create!(subject: "テスト", body: "本文", to_address: "admin@example.com", recipient_addresses: [ "a@example.com" ])
-  end
-
   let(:delivery) do
-    AnnouncementDelivery.create!(
-      announcement: announcement,
+    create(
+      :announcement_delivery,
       addresses: [ "user1@example.com", "user2@example.com" ],
       resend_ids: [ "resend_id_1", "resend_id_2" ],
       status: :requested,
