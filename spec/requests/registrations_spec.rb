@@ -7,6 +7,42 @@ RSpec.describe "Registrations", type: :request do
     Setting.instance.update!(signup_token: signup_token)
   end
 
+  describe "GET /signup/:token" do
+    context "トークンが正しい場合" do
+      context "ログインしていない場合" do
+        it "参加登録の画面を表示する" do
+          get signup_path(token: signup_token)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context "ログインしている場合" do
+        before do
+          sign_in(create(:user))
+        end
+
+        it "ダッシュボードに移る" do
+          get signup_path(token: signup_token)
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+
+    context "トークンが正しくない場合" do
+      it "404を返す" do
+        get signup_path(token: "invalid_token")
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "GET /signup/sent" do
+    it "確認メールを送ったことを伝える画面を表示する" do
+      get confirmation_sent_path
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   describe "POST /signup/:token" do
     let(:user_params) do
       {
@@ -20,75 +56,99 @@ RSpec.describe "Registrations", type: :request do
       }
     end
 
-    context "新規メールアドレスの場合" do
-      it "ユーザーが作成され確認メール送信画面にリダイレクトする" do
-        expect {
-          post signup_path(token: signup_token), params: { user: user_params }
-        }.to change(User, :count).by(1).and change(Member, :count).by(1)
-
-        expect(response).to redirect_to(confirmation_sent_path)
-
-        user = User.last
-        expect(user.email_address).to eq "newuser@example.com"
-        expect(user.member.name).to eq "テストユーザー"
-        expect(user.confirmed_at).to be_nil
-        expect(user.confirmation_token).to be_present
-      end
-    end
-
-    context "既存ユーザーが仮登録（管理者作成・パスワードなし）の場合" do
-      let(:other_mail_address_count) { 0 }
-      let!(:existing_user) do
-        user = create(:user, :provisional, email_address: "newuser@example.com", name: "管理者が設定した名前")
-        other_mail_address_count.times do |i|
-          user.mail_addresses.create!(address: "other#{i}@example.com", confirmed_at: Time.current)
-        end
-        user
-      end
-
-      it "既存ユーザーを上書きし確認メール送信画面にリダイレクトする" do
-        expect {
-          post signup_path(token: signup_token), params: { user: user_params }
-        }.to change(User, :count).by(0).and change(Member, :count).by(0)
-
-        expect(response).to redirect_to(confirmation_sent_path)
-
-        existing_user.reload
-        expect(existing_user.authenticate("password123")).to be_truthy
-        expect(existing_user.member.name).to eq "テストユーザー"
-        expect(existing_user.member.organization_name).to eq "テスト団体"
-        expect(existing_user.confirmed_at).to be_nil
-        expect(existing_user.confirmation_token).to be_present
-      end
-
-      context "複数のメールアドレスがある場合" do
-        let(:other_mail_address_count) { 2 }
-
-        it "サインアップに使用したメールアドレス以外は削除される" do
+    context "トークンが正しい場合" do
+      context "新規メールアドレスの場合" do
+        it "ユーザーが作成され確認メール送信画面にリダイレクトする" do
           expect {
             post signup_path(token: signup_token), params: { user: user_params }
-          }.to change { existing_user.mail_addresses.count }.from(3).to(1)
+          }.to change(User, :count).by(1).and change(Member, :count).by(1)
+
+          expect(response).to redirect_to(confirmation_sent_path)
+
+          user = User.last
+          expect(user.email_address).to eq "newuser@example.com"
+          expect(user.member.name).to eq "テストユーザー"
+          expect(user.confirmed_at).to be_nil
+          expect(user.confirmation_token).to be_present
+        end
+
+        context "確認用のパスワードが一致しない場合" do
+          let(:user_params) { super().merge(password_confirmation: "other_password") }
+
+          it "ユーザーを作成せず、参加登録の画面を再表示する" do
+            expect {
+              post signup_path(token: signup_token), params: { user: user_params }
+            }.not_to change(User, :count)
+
+            expect(response).to have_http_status(:unprocessable_content)
+          end
+        end
+      end
+
+      context "既存ユーザーが仮登録（管理者作成・パスワードなし）の場合" do
+        let(:other_mail_address_count) { 0 }
+        let!(:existing_user) do
+          user = create(:user, :provisional, email_address: "newuser@example.com", name: "管理者が設定した名前")
+          other_mail_address_count.times do |i|
+            user.mail_addresses.create!(address: "other#{i}@example.com", confirmed_at: Time.current)
+          end
+          user
+        end
+
+        it "既存ユーザーを上書きし確認メール送信画面にリダイレクトする" do
+          expect {
+            post signup_path(token: signup_token), params: { user: user_params }
+          }.to change(User, :count).by(0).and change(Member, :count).by(0)
+
+          expect(response).to redirect_to(confirmation_sent_path)
 
           existing_user.reload
-          expect(existing_user.mail_addresses.sole.address).to eq "newuser@example.com"
+          expect(existing_user.authenticate("password123")).to be_truthy
+          expect(existing_user.member.name).to eq "テストユーザー"
+          expect(existing_user.member.organization_name).to eq "テスト団体"
+          expect(existing_user.confirmed_at).to be_nil
+          expect(existing_user.confirmation_token).to be_present
+        end
+
+        context "複数のメールアドレスがある場合" do
+          let(:other_mail_address_count) { 2 }
+
+          it "サインアップに使用したメールアドレス以外は削除される" do
+            expect {
+              post signup_path(token: signup_token), params: { user: user_params }
+            }.to change { existing_user.mail_addresses.count }.from(3).to(1)
+
+            existing_user.reload
+            expect(existing_user.mail_addresses.sole.address).to eq "newuser@example.com"
+          end
+        end
+      end
+
+      context "既存ユーザーがログイン済みの場合" do
+        let!(:existing_user) do
+          create(:user, email_address: "newuser@example.com", password: "existing_password", last_accessed_at: 1.day.ago, name: "既存ユーザー")
+        end
+
+        it "ログイン画面にリダイレクトしメールアドレスを引き継ぐ" do
+          post signup_path(token: signup_token), params: { user: user_params }
+
+          expect(response).to redirect_to(new_session_path(email_address: "newuser@example.com"))
+          expect(flash[:notice]).to be_present
+
+          existing_user.reload
+          expect(existing_user.authenticate("existing_password")).to be_truthy
+          expect(existing_user.member.name).to eq "既存ユーザー"
         end
       end
     end
 
-    context "既存ユーザーがログイン済みの場合" do
-      let!(:existing_user) do
-        create(:user, email_address: "newuser@example.com", password: "existing_password", last_accessed_at: 1.day.ago, name: "既存ユーザー")
-      end
+    context "トークンが正しくない場合" do
+      it "ユーザーを作成せず、404を返す" do
+        expect {
+          post signup_path(token: "invalid_token"), params: { user: user_params }
+        }.not_to change(User, :count)
 
-      it "ログイン画面にリダイレクトしメールアドレスを引き継ぐ" do
-        post signup_path(token: signup_token), params: { user: user_params }
-
-        expect(response).to redirect_to(new_session_path(email_address: "newuser@example.com"))
-        expect(flash[:notice]).to be_present
-
-        existing_user.reload
-        expect(existing_user.authenticate("existing_password")).to be_truthy
-        expect(existing_user.member.name).to eq "既存ユーザー"
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
