@@ -11,7 +11,7 @@ RSpec.describe "出欠回答", type: :system do
 
   context "スマホの画面幅の場合" do
     before do
-      driven_by :selenium, using: :headless_chrome, screen_size: [ 375, 812 ]
+      driven_by_headless_chrome(screen_size: [ 375, 812 ], name: :selenium_mobile)
     end
 
     it "ログインして出欠を回答し、ログアウトできる" do
