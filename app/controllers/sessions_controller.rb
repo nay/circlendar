@@ -8,21 +8,15 @@ class SessionsController < ApplicationController
   end
 
   def create
-    mail_address = UserMailAddress.find_by(address: params[:email_address])
-    user = mail_address&.user
+    mail_address = UserMailAddress.authenticate(address: params[:email_address], password: params[:password])
 
-    if user && !user.disabled? && user.authenticate(params[:password])
-      if mail_address.confirmed?
-        start_new_session_for user
-        redirect_to after_authentication_url
-      else
-        redirect_to new_session_path, alert: I18n.t("sessions.create.unconfirmed")
-      end
-    else
-      # タイミング攻撃対策: ユーザーが見つからない場合もbcryptハッシュ計算を実行し、
-      # ユーザーの有無で応答時間が変わらないようにする
-      User.new(password: params[:password]) unless user
+    if mail_address.nil?
       redirect_to new_session_path, alert: I18n.t("sessions.create.failure")
+    elsif mail_address.confirmed?
+      start_new_session_for mail_address.user
+      redirect_to after_authentication_url
+    else
+      redirect_to new_session_path, alert: I18n.t("sessions.create.unconfirmed")
     end
   end
 
