@@ -48,10 +48,11 @@ RSpec.describe "Sessions", type: :request do
       context "メールアドレスが確認されていないユーザーの場合" do
         let(:user) { create(:user, :unconfirmed) }
 
-        it "ログインせず、ログイン画面に戻る" do
+        it "ログインせず、ログイン画面に戻って、メールアドレスの確認を促す" do
           sign_in(user)
 
           expect(response).to redirect_to(new_session_path)
+          expect(flash[:alert]).to eq I18n.t("sessions.create.unconfirmed")
           get root_path
           expect(response).to redirect_to(new_session_path)
         end
@@ -59,13 +60,28 @@ RSpec.describe "Sessions", type: :request do
     end
 
     context "パスワードが誤っている場合" do
-      it "ログインせず、ログイン画面に戻ってエラーを表示する" do
-        sign_in(user, password: "wrong_password")
+      context "メールアドレスが確認済みのユーザーの場合" do
+        it "ログインせず、ログイン画面に戻ってエラーを表示する" do
+          sign_in(user, password: "wrong_password")
 
-        expect(response).to redirect_to(new_session_path)
-        expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
-        get root_path
-        expect(response).to redirect_to(new_session_path)
+          expect(response).to redirect_to(new_session_path)
+          expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
+          get root_path
+          expect(response).to redirect_to(new_session_path)
+        end
+      end
+
+      context "メールアドレスが確認されていないユーザーの場合" do
+        let(:user) { create(:user, :unconfirmed) }
+
+        it "ログインせず、ログイン画面に戻って、確認済みのユーザーと同じエラーを表示する" do
+          sign_in(user, password: "wrong_password")
+
+          expect(response).to redirect_to(new_session_path)
+          expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
+          get root_path
+          expect(response).to redirect_to(new_session_path)
+        end
       end
     end
   end

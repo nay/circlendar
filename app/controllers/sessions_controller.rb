@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    mail_address = UserMailAddress.confirmed.find_by(address: params[:email_address])
+    mail_address = UserMailAddress.find_by(address: params[:email_address])
     user = mail_address&.user
 
     if user && !user.disabled? && user.authenticate(params[:password])
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
         start_new_session_for user
         redirect_to after_authentication_url
       else
-        redirect_to new_session_path, alert: "メールアドレスが確認されていません。確認メールのリンクをクリックしてください。"
+        redirect_to new_session_path, alert: I18n.t("sessions.create.unconfirmed")
       end
     else
       # タイミング攻撃対策: ユーザーが見つからない場合もbcryptハッシュ計算を実行し、
