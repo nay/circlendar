@@ -12,23 +12,38 @@ RSpec.describe "Sessions", type: :request do
 
   describe "POST /session" do
     context "パスワードが正しい場合" do
-      context "有効で、メールアドレスが確認済みのユーザーの場合" do
-        it "ログインしてダッシュボードに移る" do
-          sign_in(user)
+      context "有効なユーザーの場合" do
+        context "メールアドレスが確認済みの場合" do
+          it "ログインしてダッシュボードに移る" do
+            sign_in(user)
 
-          expect(response).to redirect_to(root_path)
-          get root_path
-          expect(response).to have_http_status(:ok)
-        end
-
-        context "ログインが必要な画面を開こうとしていた場合" do
-          before do
-            get edit_profile_path
+            expect(response).to redirect_to(root_path)
+            get root_path
+            expect(response).to have_http_status(:ok)
           end
 
-          it "ログイン後に、開こうとしていた画面に移る" do
+          context "ログインが必要な画面を開こうとしていた場合" do
+            before do
+              get edit_profile_path
+            end
+
+            it "ログイン後に、開こうとしていた画面に移る" do
+              sign_in(user)
+              expect(response).to redirect_to(edit_profile_url)
+            end
+          end
+        end
+
+        context "メールアドレスが確認されていない場合" do
+          let(:user) { create(:user, :unconfirmed) }
+
+          it "ログインせず、ログイン画面に戻って、メールアドレスの確認を促す" do
             sign_in(user)
-            expect(response).to redirect_to(edit_profile_url)
+
+            expect(response).to redirect_to(new_session_path)
+            expect(flash[:alert]).to eq I18n.t("sessions.create.unconfirmed")
+            get root_path
+            expect(response).to redirect_to(new_session_path)
           end
         end
       end
@@ -41,19 +56,6 @@ RSpec.describe "Sessions", type: :request do
 
           expect(response).to redirect_to(new_session_path)
           expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
-          get root_path
-          expect(response).to redirect_to(new_session_path)
-        end
-      end
-
-      context "メールアドレスが確認されていないユーザーの場合" do
-        let(:user) { create(:user, :unconfirmed) }
-
-        it "ログインせず、ログイン画面に戻って、メールアドレスの確認を促す" do
-          sign_in(user)
-
-          expect(response).to redirect_to(new_session_path)
-          expect(flash[:alert]).to eq I18n.t("sessions.create.unconfirmed")
           get root_path
           expect(response).to redirect_to(new_session_path)
         end

@@ -10,12 +10,12 @@ class UserMailAddress < ApplicationRecord
   validates :address, presence: true, uniqueness: true
   validate :validate_count, on: :create
 
-  # パスワードが正しく、無効化されていないユーザーのアドレスを返す。
+  # パスワードが正しく、無効化されていないユーザーのアドレスを返す。確認されていないアドレスも返すので、確認済みかは呼び出し側で見る。
   # 応答時間からアドレスの有無や状態を推し量れないよう、どの経路でも bcrypt を1回だけ計算する
   def self.authenticate(address:, password:)
-    return nil if password.blank?
+    return nil if password.nil? || password.empty?
 
-    mail_address = find_by(address:)
+    mail_address = eager_load(:user).find_by(address:) # アドレスの有無でクエリの本数が変わらないよう、user も同じクエリで読む
     user = mail_address&.user
     if user&.password_digest.present?
       mail_address if user.authenticate(password) && !user.disabled?

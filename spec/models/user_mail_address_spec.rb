@@ -15,16 +15,26 @@ RSpec.describe UserMailAddress, type: :model do
     end
 
     context "アドレスが登録されている場合" do
-      let!(:mail_address) { user.mail_addresses.first }
+      let!(:mail_address) { user.mail_addresses.first } # ユーザーを作るときの bcrypt を数えないよう、先に作っておく
 
       context "パスワードを設定済みのユーザーの場合" do
         let(:user) { create(:user) }
 
         context "パスワードが正しい場合" do
           context "有効なユーザーの場合" do
-            it "そのアドレスを返し、bcrypt を1回計算する" do
-              expect_bcrypt_once
-              expect(UserMailAddress.authenticate(address: mail_address.address, password: "password123")).to eq mail_address
+            context "アドレスが確認済みの場合" do
+              it "そのアドレスを返し、bcrypt を1回計算する" do
+                expect_bcrypt_once
+                expect(UserMailAddress.authenticate(address: mail_address.address, password: "password123")).to eq mail_address
+              end
+            end
+
+            context "アドレスが確認されていない場合" do
+              let(:user) { create(:user, :unconfirmed) }
+
+              it "確認されていないそのアドレスを返す" do
+                expect(UserMailAddress.authenticate(address: mail_address.address, password: "password123")).to eq mail_address
+              end
             end
           end
 
