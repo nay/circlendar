@@ -9,7 +9,6 @@ class UserMailAddress < ApplicationRecord
   validate :validate_count, on: :create
 
   # パスワードが正しく、無効化されていないユーザーのアドレスを返す。確認されていないアドレスも返すので、ログインさせる前に confirmed? を確かめる。
-  # 応答時間からアドレスの有無や状態を推し量れないよう、どの経路でも bcrypt を1回だけ計算する
   def self.find_with_correct_password(address:, password:)
     return nil if password.nil? || password.empty?
 
@@ -18,7 +17,7 @@ class UserMailAddress < ApplicationRecord
     if user&.password_digest.present?
       mail_address if user.authenticate(password) && !user.disabled?
     else
-      User.new(password:) # 該当なし・仮登録のときのダミー計算
+      User.new(password:) # 該当なし・仮登録でも bcrypt を1回計算し、応答時間からアドレスの有無や状態を推し量れないようにする
       nil
     end
   end
