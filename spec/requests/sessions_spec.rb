@@ -49,15 +49,30 @@ RSpec.describe "Sessions", type: :request do
       end
 
       context "無効化されているユーザーの場合" do
-        let(:user) { create(:user, :disabled) }
+        context "メールアドレスが確認済みの場合" do
+          let(:user) { create(:user, :disabled) }
 
-        it "ログインせず、ログイン画面に戻ってエラーを表示する" do
-          sign_in(user)
+          it "ログインせず、ログイン画面に戻ってエラーを表示する" do
+            sign_in(user)
 
-          expect(response).to redirect_to(new_session_path)
-          expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
-          get root_path
-          expect(response).to redirect_to(new_session_path)
+            expect(response).to redirect_to(new_session_path)
+            expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
+            get root_path
+            expect(response).to redirect_to(new_session_path)
+          end
+        end
+
+        context "メールアドレスが確認されていない場合" do
+          let(:user) { create(:user, :disabled, :unconfirmed) }
+
+          it "ログインせず、ログイン画面に戻って、メールアドレスの確認を促さずにエラーを表示する" do
+            sign_in(user)
+
+            expect(response).to redirect_to(new_session_path)
+            expect(flash[:alert]).to eq I18n.t("sessions.create.failure")
+            get root_path
+            expect(response).to redirect_to(new_session_path)
+          end
         end
       end
     end

@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    mail_address = UserMailAddress.authenticate(address: params[:email_address], password: params[:password])
+    mail_address = UserMailAddress.find_with_correct_password(address: params[:email_address], password: params[:password])
 
     if mail_address.nil?
       redirect_to new_session_path, alert: I18n.t("sessions.create.failure")

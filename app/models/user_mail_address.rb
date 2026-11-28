@@ -3,16 +3,14 @@ class UserMailAddress < ApplicationRecord
 
   belongs_to :user
 
-  scope :confirmed, -> { where.not(confirmed_at: nil) }
-
   normalizes :address, with: ->(e) { e.strip.downcase }
 
   validates :address, presence: true, uniqueness: true
   validate :validate_count, on: :create
 
-  # パスワードが正しく、無効化されていないユーザーのアドレスを返す。確認されていないアドレスも返すので、確認済みかは呼び出し側で見る。
+  # パスワードが正しく、無効化されていないユーザーのアドレスを返す。確認されていないアドレスも返すので、ログインさせる前に confirmed? を確かめる。
   # 応答時間からアドレスの有無や状態を推し量れないよう、どの経路でも bcrypt を1回だけ計算する
-  def self.authenticate(address:, password:)
+  def self.find_with_correct_password(address:, password:)
     return nil if password.nil? || password.empty?
 
     mail_address = eager_load(:user).find_by(address:) # アドレスの有無でクエリの本数が変わらないよう、user も同じクエリで読む
