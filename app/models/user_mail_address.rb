@@ -8,7 +8,7 @@ class UserMailAddress < ApplicationRecord
   validates :address, presence: true, uniqueness: true
   validate :validate_count, on: :create
 
-  # パスワードが正しく、無効化されていないユーザーのアドレスを返す。確認されていないアドレスも返すので、ログインさせる前に confirmed? を確かめる。
+  # 確認されていないアドレスも返すので、ログインさせる前に confirmed? を確かめる
   def self.find_with_correct_password(address:, password:)
     return nil if password.nil? || password.empty?
 
