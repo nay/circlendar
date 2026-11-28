@@ -3,12 +3,24 @@ class UserMailAddress < ApplicationRecord
 
   belongs_to :user
 
-  scope :confirmed, -> { where.not(confirmed_at: nil) }
-
   normalizes :address, with: ->(e) { e.strip.downcase }
 
   validates :address, presence: true, uniqueness: true
   validate :validate_count, on: :create
+
+  # 確認されていないアドレスも返すので、ログインさせる前に confirmed? を確かめる
+  def self.find_with_correct_password(address:, password:)
+    return nil if password.nil? || password.empty?
+
+    mail_address = eager_load(:user).find_by(address:) # アドレスの有無でクエリの本数が変わらないよう、user も同じクエリで読む
+    user = mail_address&.user
+    if user&.password_digest.present?
+      mail_address if user.authenticate(password) && !user.disabled?
+    else
+      User.new(password:) # 該当なし・仮登録でも bcrypt を1回計算し、応答時間からアドレスの有無や状態を推し量れないようにする
+      nil
+    end
+  end
 
   def confirmed?
     confirmed_at.present?
